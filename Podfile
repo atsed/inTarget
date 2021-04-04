@@ -6,6 +6,12 @@ target 'inTarget' do
   use_frameworks!
 
   # Pods for inTarget
-pod 'PinLayout'
+  pod 'PinLayout'
 
+  # add pods for desired Firebase products
+  # https://firebase.google.com/docs/ios/setup#available-pods
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
+  pod 'Firebase/Core'
+  
 end

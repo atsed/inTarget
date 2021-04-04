@@ -25,6 +25,7 @@
 		42D0FFCC26187625007A5C2A /* GothamPro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFB926176A46007A5C2A /* GothamPro.ttf */; };
 		42D0FFCD26187625007A5C2A /* GothamProNarrow-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFC026176A46007A5C2A /* GothamProNarrow-Bold.ttf */; };
 		42D0FFCE26187625007A5C2A /* GothamProNarrow-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFBB26176A46007A5C2A /* GothamProNarrow-Medium.ttf */; };
+		42D0FFDA2619D8C0007A5C2A /* GoogleService-Info-2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFD92619D8C0007A5C2A /* GoogleService-Info-2.plist */; };
 		BFC6FA71E3EA6C041E36973F /* Pods_inTarget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2336901CCF1B02267FC7A104 /* Pods_inTarget.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,7 @@
 		42D0FFBF26176A46007A5C2A /* GothamPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamPro-Light.ttf"; sourceTree = "<group>"; };
 		42D0FFC026176A46007A5C2A /* GothamProNarrow-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamProNarrow-Bold.ttf"; sourceTree = "<group>"; };
 		42D0FFC126176A47007A5C2A /* GothamPro-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamPro-Bold.ttf"; sourceTree = "<group>"; };
+		42D0FFD92619D8C0007A5C2A /* GoogleService-Info-2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-2.plist"; sourceTree = "<group>"; };
 		65D843BEBAA19DEC713B2A58 /* Pods-inTarget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-inTarget.debug.xcconfig"; path = "Target Support Files/Pods-inTarget/Pods-inTarget.debug.xcconfig"; sourceTree = "<group>"; };
 		B68D36AFB8FE3D5C066DCF2D /* Pods-inTarget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-inTarget.release.xcconfig"; path = "Target Support Files/Pods-inTarget/Pods-inTarget.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -112,6 +114,7 @@
 				42D0FF9E261765AF007A5C2A /* Assets.xcassets */,
 				42D0FFA0261765AF007A5C2A /* LaunchScreen.storyboard */,
 				42D0FFA3261765AF007A5C2A /* Info.plist */,
+				42D0FFD92619D8C0007A5C2A /* GoogleService-Info-2.plist */,
 			);
 			path = "Supporting files";
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 				42D0FFCA26187625007A5C2A /* GothamPro-Medium.ttf in Resources */,
 				42D0FFCB26187625007A5C2A /* GothamPro-MediumItalic.ttf in Resources */,
 				42D0FFCC26187625007A5C2A /* GothamPro.ttf in Resources */,
+				42D0FFDA2619D8C0007A5C2A /* GoogleService-Info-2.plist in Resources */,
 				42D0FFCD26187625007A5C2A /* GothamProNarrow-Bold.ttf in Resources */,
 				42D0FFCE26187625007A5C2A /* GothamProNarrow-Medium.ttf in Resources */,
 				42D0FFA2261765AF007A5C2A /* LaunchScreen.storyboard in Resources */,

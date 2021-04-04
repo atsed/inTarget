@@ -20,6 +20,21 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>GothamPro-Black.ttf</string>
+		<string>GothamPro-BlackItalic.ttf</string>
+		<string>GothamPro-Bold.ttf</string>
+		<string>GothamPro-BoldItalic.ttf</string>
+		<string>GothamPro-Italic.ttf</string>
+		<string>GothamPro-Light.ttf</string>
+		<string>GothamPro-LightItalic.ttf</string>
+		<string>GothamPro-Medium.ttf</string>
+		<string>GothamPro-MediumItalic.ttf</string>
+		<string>GothamPro.ttf</string>
+		<string>GothamProNarrow-Bold.ttf</string>
+		<string>GothamProNarrow-Medium.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -61,21 +76,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>GothamPro-Black.ttf</string>
-		<string>GothamPro-BlackItalic.ttf</string>
-		<string>GothamPro-Bold.ttf</string>
-		<string>GothamPro-BoldItalic.ttf</string>
-		<string>GothamPro-Italic.ttf</string>
-		<string>GothamPro-Light.ttf</string>
-		<string>GothamPro-LightItalic.ttf</string>
-		<string>GothamPro-Medium.ttf</string>
-		<string>GothamPro-MediumItalic.ttf</string>
-		<string>GothamPro.ttf</string>
-		<string>GothamProNarrow-Bold.ttf</string>
-		<string>GothamProNarrow-Medium.ttf</string>
 	</array>
 </dict>
 </plist>
