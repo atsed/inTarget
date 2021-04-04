@@ -16,23 +16,35 @@ class AuthViewController: UIViewController {
     private let containerTextView = UIView()
     private let loginField = UITextField()
     private let passwordField = UITextField()
+    private let loginSeparator = UIView()
+    private let passwordSeparator = UIView()
     private let signInButton = UIButton()
     private let containerSignUp = UIView()
     private let signUpButton = UIButton()
     private let signUpLabel = UILabel()
+    private let scrollView = UIScrollView()
     
+    private var kbFrameSize : CGRect = .zero
+        
     private let quotes = [
         ["""
 "Если вы работаете
 над поставленными целями,
 то эти цели будут работать на вас"
 """, "- Джим Рон"],
-        ["\"Успех — это успеть\"", "- Марина Цветаева"],
-        ["\"Цели — это мечты с дедлайнами\"", "- Диана Скарф "]
+        ["""
+"Успех — это успеть"
+""", "- Марина Цветаева"],
+        ["""
+Цели — это мечты с дедлайнами"
+""", "- Диана Скарф "]
     ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkKeyboardNotifications()
+        hideKeyboardWhenTappedAround()
+        
         view.backgroundColor = .background
         
         headLabel.text = "inTarget"
@@ -40,7 +52,6 @@ class AuthViewController: UIViewController {
         headLabel.font = UIFont(name: "Noteworthy", size: 46)
         
         let randomOfQuotes = Int.random(in: 0..<quotes.count)
-        print(quotes[randomOfQuotes][0])
         quoteLabel.text = quotes[randomOfQuotes][0]
         quoteLabel.font = UIFont(name: "GothamPro-Light", size: 18)
         quoteLabel.textColor = .darkGray
@@ -52,9 +63,11 @@ class AuthViewController: UIViewController {
         authorLabel.textColor = .darkGray
         
         loginField.placeholder = "Email"
+        loginSeparator.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         
         passwordField.placeholder = "Пароль"
         passwordField.isSecureTextEntry = true
+        passwordSeparator.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         
         
         [loginField, passwordField].forEach {
@@ -81,16 +94,54 @@ class AuthViewController: UIViewController {
         
         signUpLabel.text = "У вас нет аккаунта? "
         signUpLabel.font = UIFont(name: "GothamPro", size: 15)
+        signUpLabel.textColor = .darkGray
         
         [signUpLabel, signUpButton].forEach {
             containerSignUp.addSubview($0)
         }
         
-        [headLabel, quoteLabel, authorLabel, containerTextView, signInButton, containerSignUp].forEach { view.addSubview($0) }
+        [headLabel, quoteLabel, authorLabel, containerTextView, loginSeparator, passwordSeparator, signInButton, containerSignUp].forEach {scrollView.addSubview($0) }
+        
+        scrollView.keyboardDismissMode = .onDrag
+        
+        view.addSubview(scrollView)
+    }
+    
+    deinit {
+        removeKeyboardNotifications()
+    }
+    
+    func checkKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(kbDidHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+    }
+    
+    func removeKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc
+    func kbDidShow(_ notification : Notification) {
+        let userInfo = notification.userInfo
+        kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  + kbFrameSize.height)
+    }
+    
+    @objc
+    func kbDidHide() {
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
+        scrollView.contentOffset = CGPoint.zero
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        scrollView.pin
+            .vertically()
+            .horizontally()
         
         headLabel.pin
             .top(view.pin.safeArea.top + 34)
@@ -122,12 +173,22 @@ class AuthViewController: UIViewController {
         passwordField.pin
             .horizontally(16)
             .height(60)
-            .below(of: loginField, aligned: .center)
+            .below(of: loginField)
             .marginTop(8)
                 
         containerTextView.pin
             .wrapContent()
             .center()
+        
+        loginSeparator.pin
+            .below(of: loginField)
+            .horizontally(16)
+            .height(0.1)
+        
+        passwordSeparator.pin
+            .below(of: passwordField)
+            .horizontally(16)
+            .height(0.1)
         
         containerSignUp.pin
             .bottom(view.pin.safeArea.top + 8)
@@ -150,10 +211,11 @@ class AuthViewController: UIViewController {
             .height(56)
             .above(of: signUpButton, aligned: .center)
             .marginBottom(20)
+        
     }
     
-
 }
+
 
 extension UIColor {
 //    static let background = UIColor(red: 20/256,
@@ -171,5 +233,19 @@ extension UIColor {
                                     blue: 234/256,
                                     alpha: 1)
 
+}
+
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc
+    func dismissKeyboard() {
+        view.endEditing(true)
+        
+    }
 }
 
