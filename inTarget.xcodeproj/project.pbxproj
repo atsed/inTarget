@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1F05261A35D900BE996C /* SignUpController.swift */; };
 		42D000322619DFF1007A5C2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42D000312619DFF1007A5C2A /* GoogleService-Info.plist */; };
 		42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D0FF95261765AE007A5C2A /* AppDelegate.swift */; };
 		42D0FF98261765AE007A5C2A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D0FF97261765AE007A5C2A /* SceneDelegate.swift */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		2336901CCF1B02267FC7A104 /* Pods_inTarget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_inTarget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		42CE1F05261A35D900BE996C /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		42D000312619DFF1007A5C2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		42D0FF92261765AE007A5C2A /* inTarget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inTarget.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		42D0FF95261765AE007A5C2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				42D0FF99261765AE007A5C2A /* AuthViewController.swift */,
+				42CE1F05261A35D900BE996C /* SignUpController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				42D0FF9A261765AE007A5C2A /* AuthViewController.swift in Sources */,
 				42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */,
 				42D0FF98261765AE007A5C2A /* SceneDelegate.swift in Sources */,
+				42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,6 +462,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

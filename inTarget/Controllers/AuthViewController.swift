@@ -63,12 +63,10 @@ class AuthViewController: UIViewController {
         authorLabel.textColor = .darkGray
         
         loginField.placeholder = "Email"
-        loginSeparator.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-        
         passwordField.placeholder = "Пароль"
         passwordField.isSecureTextEntry = true
-        passwordSeparator.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         
+        [loginSeparator, passwordSeparator].forEach { ($0).backgroundColor = .separator }
         
         [loginField, passwordField].forEach {
             ($0).font = UIFont.systemFont(ofSize: 17, weight: .regular)
@@ -96,15 +94,21 @@ class AuthViewController: UIViewController {
         signUpLabel.font = UIFont(name: "GothamPro", size: 15)
         signUpLabel.textColor = .darkGray
         
-        [signUpLabel, signUpButton].forEach {
-            containerSignUp.addSubview($0)
-        }
-        
-        [headLabel, quoteLabel, authorLabel, containerTextView, loginSeparator, passwordSeparator, signInButton, containerSignUp].forEach {scrollView.addSubview($0) }
-        
         scrollView.keyboardDismissMode = .onDrag
         
+        signUpButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
+        
+        [signUpLabel, signUpButton].forEach { containerSignUp.addSubview($0) }
+        [headLabel, quoteLabel, authorLabel, containerTextView, loginSeparator, passwordSeparator, signInButton, containerSignUp].forEach {scrollView.addSubview($0) }
         view.addSubview(scrollView)
+        
+    }
+    
+    @objc
+    private func didTapSignUpButton() {
+        let signUpController = SignUpController()
+        signUpController.modalPresentationStyle = .fullScreen
+        present(signUpController, animated: true, completion: nil)
     }
     
     deinit {
@@ -112,8 +116,9 @@ class AuthViewController: UIViewController {
     }
     
     func checkKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+         NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(kbDidHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
 
     }
     
@@ -127,7 +132,7 @@ class AuthViewController: UIViewController {
         let userInfo = notification.userInfo
         kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
         scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  + kbFrameSize.height)
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height - view.safeAreaInsets.bottom + kbFrameSize.height )
     }
     
     @objc
@@ -135,6 +140,7 @@ class AuthViewController: UIViewController {
         scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
         scrollView.contentOffset = CGPoint.zero
     }
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -151,8 +157,7 @@ class AuthViewController: UIViewController {
         quoteLabel.pin
             .below(of: headLabel)
             .marginTop(50)
-            .left(30)
-            .right(30)
+            .horizontally(30)
             .sizeToFit()
             .hCenter()
         
@@ -174,7 +179,6 @@ class AuthViewController: UIViewController {
             .horizontally(16)
             .height(60)
             .below(of: loginField)
-            .marginTop(8)
                 
         containerTextView.pin
             .wrapContent()
@@ -222,20 +226,33 @@ extension UIColor {
 //                                green: 21/256,
 //                                blue: 24/256,
 //                                alpha: 1)
+    
     static let background = UIColor.white
     
 //    static let accent = UIColor(red: 167/256,
 //                                green: 238/256,
 //                                blue: 237/256,
 //                                alpha: 1)
+    
     static let accent = UIColor(red: 97/256,
                                     green: 62/256,
                                     blue: 234/256,
                                     alpha: 1)
+    
+    static let separator = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
 
 }
 
 extension UIViewController {
+//    var kbFrameSize : CGRect  = {
+//        get {
+//            return self.kbFrameSize
+//
+//        }
+//        set{ self.kbFrameSize = newValue }
+//    }
+    //static var kbFrameSize : CGRect = .zero
+    
     func hideKeyboardWhenTappedAround() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
         tap.cancelsTouchesInView = false
