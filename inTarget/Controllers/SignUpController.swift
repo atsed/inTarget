@@ -182,15 +182,13 @@ inTarget
         
         signUpLabel.pin
             .bottom(view.pin.safeArea.bottom)
-            .left(30)
-            .right(30)
+            .horizontally(30)
             .sizeToFit()
-            .hCenter()
         
         signUpButton.pin
             .horizontally(16)
             .height(56)
-            .above(of: signUpLabel, aligned: .center)
+            .above(of: signUpLabel)
             .marginBottom(20)
         
     }

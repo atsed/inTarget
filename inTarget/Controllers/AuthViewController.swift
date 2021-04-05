@@ -159,14 +159,12 @@ class AuthViewController: UIViewController {
             .marginTop(50)
             .horizontally(30)
             .sizeToFit()
-            .hCenter()
         
         authorLabel.pin
             .below(of: quoteLabel)
             .margin(10)
             .right(20)
             .sizeToFit()
-            .hCenter()
         
         containerTextView.pin.horizontally()
         
@@ -213,7 +211,7 @@ class AuthViewController: UIViewController {
         signInButton.pin
             .horizontally(16)
             .height(56)
-            .above(of: signUpButton, aligned: .center)
+            .above(of: signUpButton)
             .marginBottom(20)
         
     }
