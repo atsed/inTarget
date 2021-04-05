@@ -242,14 +242,6 @@ extension UIColor {
 }
 
 extension UIViewController {
-//    var kbFrameSize : CGRect  = {
-//        get {
-//            return self.kbFrameSize
-//
-//        }
-//        set{ self.kbFrameSize = newValue }
-//    }
-    //static var kbFrameSize : CGRect = .zero
     
     func hideKeyboardWhenTappedAround() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
