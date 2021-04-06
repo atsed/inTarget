@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		046E220E261CB6B10070D5D1 /* AimsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E220D261CB6B10070D5D1 /* AimsController.swift */; };
+		04D39AB7261C5D4D0092486F /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39AB6261C5D4D0092486F /* MainTabBarController.swift */; };
+		04D39ABA261C5F3C0092486F /* NewAimController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39AB9261C5F3C0092486F /* NewAimController.swift */; };
+		04D39ABD261C5F6E0092486F /* MyAimController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABC261C5F6E0092486F /* MyAimController.swift */; };
+		04D39AC0261C5F7F0092486F /* ParticipantsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABF261C5F7F0092486F /* ParticipantsController.swift */; };
 		42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1F05261A35D900BE996C /* SignUpController.swift */; };
 		42D000322619DFF1007A5C2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42D000312619DFF1007A5C2A /* GoogleService-Info.plist */; };
 		42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D0FF95261765AE007A5C2A /* AppDelegate.swift */; };
 		42D0FF98261765AE007A5C2A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D0FF97261765AE007A5C2A /* SceneDelegate.swift */; };
 		42D0FF9A261765AE007A5C2A /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D0FF99261765AE007A5C2A /* AuthViewController.swift */; };
-		42D0FF9D261765AE007A5C2A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FF9B261765AE007A5C2A /* Main.storyboard */; };
 		42D0FF9F261765AF007A5C2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FF9E261765AF007A5C2A /* Assets.xcassets */; };
 		42D0FFA2261765AF007A5C2A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFA0261765AF007A5C2A /* LaunchScreen.storyboard */; };
 		42D0FFC326187625007A5C2A /* GothamPro-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFB826176A46007A5C2A /* GothamPro-Black.ttf */; };
@@ -31,6 +35,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		046E220D261CB6B10070D5D1 /* AimsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AimsController.swift; sourceTree = "<group>"; };
+		04D39AB6261C5D4D0092486F /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		04D39AB9261C5F3C0092486F /* NewAimController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAimController.swift; sourceTree = "<group>"; };
+		04D39ABC261C5F6E0092486F /* MyAimController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAimController.swift; sourceTree = "<group>"; };
+		04D39ABF261C5F7F0092486F /* ParticipantsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsController.swift; sourceTree = "<group>"; };
 		2336901CCF1B02267FC7A104 /* Pods_inTarget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_inTarget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42CE1F05261A35D900BE996C /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		42D000312619DFF1007A5C2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -38,7 +47,6 @@
 		42D0FF95261765AE007A5C2A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		42D0FF97261765AE007A5C2A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		42D0FF99261765AE007A5C2A /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
-		42D0FF9C261765AE007A5C2A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		42D0FF9E261765AF007A5C2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		42D0FFA1261765AF007A5C2A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		42D0FFA3261765AF007A5C2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -112,7 +120,6 @@
 			children = (
 				42D0FF95261765AE007A5C2A /* AppDelegate.swift */,
 				42D0FF97261765AE007A5C2A /* SceneDelegate.swift */,
-				42D0FF9B261765AE007A5C2A /* Main.storyboard */,
 				42D0FF9E261765AF007A5C2A /* Assets.xcassets */,
 				42D0FFA0261765AF007A5C2A /* LaunchScreen.storyboard */,
 				42D0FFA3261765AF007A5C2A /* Info.plist */,
@@ -126,6 +133,11 @@
 			children = (
 				42D0FF99261765AE007A5C2A /* AuthViewController.swift */,
 				42CE1F05261A35D900BE996C /* SignUpController.swift */,
+				04D39AB6261C5D4D0092486F /* MainTabBarController.swift */,
+				046E220D261CB6B10070D5D1 /* AimsController.swift */,
+				04D39AB9261C5F3C0092486F /* NewAimController.swift */,
+				04D39ABC261C5F6E0092486F /* MyAimController.swift */,
+				04D39ABF261C5F7F0092486F /* ParticipantsController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -231,7 +243,6 @@
 				42D0FFCE26187625007A5C2A /* GothamProNarrow-Medium.ttf in Resources */,
 				42D0FFA2261765AF007A5C2A /* LaunchScreen.storyboard in Resources */,
 				42D0FF9F261765AF007A5C2A /* Assets.xcassets in Resources */,
-				42D0FF9D261765AE007A5C2A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,9 +295,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				046E220E261CB6B10070D5D1 /* AimsController.swift in Sources */,
+				04D39ABA261C5F3C0092486F /* NewAimController.swift in Sources */,
 				42D0FF9A261765AE007A5C2A /* AuthViewController.swift in Sources */,
+				04D39ABD261C5F6E0092486F /* MyAimController.swift in Sources */,
 				42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */,
 				42D0FF98261765AE007A5C2A /* SceneDelegate.swift in Sources */,
+				04D39AC0261C5F7F0092486F /* ParticipantsController.swift in Sources */,
+				04D39AB7261C5D4D0092486F /* MainTabBarController.swift in Sources */,
 				42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,14 +310,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		42D0FF9B261765AE007A5C2A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				42D0FF9C261765AE007A5C2A /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		42D0FFA0261765AF007A5C2A /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

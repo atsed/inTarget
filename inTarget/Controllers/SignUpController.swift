@@ -70,7 +70,7 @@ class SignUpController : UIViewController {
         signUpButton.backgroundColor = .accent
         signUpButton.layer.cornerRadius = 14
         signUpButton.layer.masksToBounds = true
-        
+        signUpButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
         signUpLabel.text = """
 Нажимая “Присоединиться”, вы принимаете Условия
 использования и Политику конфиденциальности
@@ -190,7 +190,6 @@ inTarget
             .height(56)
             .above(of: signUpLabel)
             .marginBottom(20)
-        
     }
     
     @objc
@@ -198,4 +197,11 @@ inTarget
         dismiss(animated: true, completion: nil)
     }
     
+    @objc
+    private func didTapSignUpButton(){
+        let mainTabBarViewController = MainTabBarController()
+        mainTabBarViewController.modalPresentationStyle = .fullScreen
+        present(mainTabBarViewController, animated: true, completion: nil)
+    }
 }
+

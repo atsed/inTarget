@@ -45,6 +45,7 @@ class AuthViewController: UIViewController {
         checkKeyboardNotifications()
         hideKeyboardWhenTappedAround()
         
+        
         view.backgroundColor = .background
         
         headLabel.text = "inTarget"
@@ -96,6 +97,8 @@ class AuthViewController: UIViewController {
         
         scrollView.keyboardDismissMode = .onDrag
         
+        signInButton.addTarget(self, action: #selector(didTapSignInButton), for: .touchUpInside)
+        
         signUpButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
         
         [signUpLabel, signUpButton].forEach { containerSignUp.addSubview($0) }
@@ -107,8 +110,17 @@ class AuthViewController: UIViewController {
     @objc
     private func didTapSignUpButton() {
         let signUpController = SignUpController()
+        
         signUpController.modalPresentationStyle = .fullScreen
         present(signUpController, animated: true, completion: nil)
+    }
+    @objc
+    private func didTapSignInButton(){
+        let mainTabBarViewController = MainTabBarController()
+        mainTabBarViewController.modalPresentationStyle = .fullScreen
+        present(mainTabBarViewController, animated: true, completion: nil)
+        
+        UserDefaults.standard.setValue(true, forKey: "isAuth")
     }
     
     deinit {
