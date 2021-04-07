@@ -40,6 +40,11 @@ class AuthViewController: UIViewController {
 """, "- Диана Скарф "]
     ]
     
+    enum NetworkError: Error {
+        case emptyField
+        case incorrectField
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         checkKeyboardNotifications()
@@ -63,6 +68,11 @@ class AuthViewController: UIViewController {
         authorLabel.font = UIFont(name: "GothamPro-LightItalic", size: 18)
         authorLabel.textColor = .darkGray
         
+        errorLabel.text = ""
+        errorLabel.textColor = .red
+        errorLabel.textAlignment = .center
+        errorLabel.font = UIFont(name: "GothamPro-Light", size: 17)
+        
         loginField.placeholder = "Email"
         passwordField.placeholder = "Пароль"
         passwordField.isSecureTextEntry = true
@@ -70,7 +80,7 @@ class AuthViewController: UIViewController {
         [loginSeparator, passwordSeparator].forEach { ($0).backgroundColor = .separator }
         
         [loginField, passwordField].forEach {
-            ($0).font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            ($0).font = UIFont(name: "GothamPro", size: 18)
             ($0).borderStyle = .none
             ($0).layer.cornerRadius = 6
             ($0).layer.masksToBounds = true
@@ -102,57 +112,10 @@ class AuthViewController: UIViewController {
         signUpButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
         
         [signUpLabel, signUpButton].forEach { containerSignUp.addSubview($0) }
-        [headLabel, quoteLabel, authorLabel, containerTextView, loginSeparator, passwordSeparator, signInButton, containerSignUp].forEach {scrollView.addSubview($0) }
+        [headLabel, quoteLabel, authorLabel, errorLabel, containerTextView, loginSeparator, passwordSeparator, signInButton, containerSignUp].forEach {scrollView.addSubview($0) }
         view.addSubview(scrollView)
         
     }
-    
-    @objc
-    private func didTapSignUpButton() {
-        let signUpController = SignUpController()
-        
-        signUpController.modalPresentationStyle = .fullScreen
-        present(signUpController, animated: true, completion: nil)
-    }
-    @objc
-    private func didTapSignInButton(){
-        let mainTabBarViewController = MainTabBarController()
-        mainTabBarViewController.modalPresentationStyle = .fullScreen
-        present(mainTabBarViewController, animated: true, completion: nil)
-        
-        UserDefaults.standard.setValue(true, forKey: "isAuth")
-    }
-    
-    deinit {
-        removeKeyboardNotifications()
-    }
-    
-    func checkKeyboardNotifications() {
-         NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(kbDidHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-
-    }
-    
-    func removeKeyboardNotifications() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    @objc
-    func kbDidShow(_ notification : Notification) {
-        let userInfo = notification.userInfo
-        kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height - view.safeAreaInsets.bottom + kbFrameSize.height )
-    }
-    
-    @objc
-    func kbDidHide() {
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
-        scrollView.contentOffset = CGPoint.zero
-    }
-    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -194,6 +157,11 @@ class AuthViewController: UIViewController {
             .wrapContent()
             .center()
         
+        errorLabel.pin
+            .above(of: containerTextView)
+            .horizontally(16)
+            .height(17)
+        
         loginSeparator.pin
             .below(of: loginField)
             .horizontally(16)
@@ -225,6 +193,64 @@ class AuthViewController: UIViewController {
             .height(56)
             .above(of: signUpButton)
             .marginBottom(20)
+        
+    }
+    
+    deinit {
+        removeKeyboardNotifications()
+    }
+    
+    func checkKeyboardNotifications() {
+         NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(kbDidHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+
+    }
+    
+    func removeKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc
+    func kbDidShow(_ notification : Notification) {
+        let userInfo = notification.userInfo
+        kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height - view.safeAreaInsets.bottom + kbFrameSize.height )
+    }
+    
+    @objc
+    func kbDidHide() {
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
+        scrollView.contentOffset = CGPoint.zero
+    }
+    
+    @objc
+    private func didTapSignUpButton() {
+        let signUpController = SignUpController()
+        
+        signUpController.modalPresentationStyle = .fullScreen
+        present(signUpController, animated: true, completion: nil)
+    }
+    @objc
+    private func didTapSignInButton(){
+        let auth = AuthModel()
+        
+        auth.signIn(loginField, passwordField) { isSignin, errorMessage  in
+            if isSignin == true {
+                self.errorLabel.text = ""
+                let mainTabBarViewController = MainTabBarController()
+                mainTabBarViewController.modalPresentationStyle = .fullScreen
+                self.present(mainTabBarViewController, animated: true, completion: nil)
+                
+                UserDefaults.standard.setValue(true, forKey: "isAuth")
+            } else if isSignin == false {
+                self.errorLabel.text = errorMessage
+                self.errorLabel.alpha = 1
+                self.animateErrorLable(self.errorLabel)
+            }
+        }
         
     }
     
@@ -265,6 +291,14 @@ extension UIViewController {
     func dismissKeyboard() {
         view.endEditing(true)
         
+    }
+    
+    func animateErrorLable(_ errorLabel : UILabel) {
+        UIView.animate(withDuration: 3, delay: 3, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.curveEaseInOut], animations: { 
+            errorLabel.alpha = 0
+        }) { complete in
+            errorLabel.alpha = 0
+        }
     }
 }
 

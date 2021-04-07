@@ -1,5 +1,5 @@
 //
-//  ParticipantsController.swift
+//  MembersController.swift
 //  inTarget
 //
 //  Created by Георгий on 06.04.2021.
@@ -9,7 +9,7 @@
 import UIKit
 import PinLayout
 
-class ParticipantsController: UIViewController {
+class MembersController: UIViewController {
     
     let logoutButton = UIButton()
     
@@ -34,6 +34,9 @@ class ParticipantsController: UIViewController {
     @objc
     func didTapLogoutButton() {
         UserDefaults.standard.setValue(false, forKey: "isAuth")
+        let authViewController = AuthViewController()
+        authViewController.modalPresentationStyle = .fullScreen
+        present(authViewController, animated: false, completion: nil)
     }
 }
 

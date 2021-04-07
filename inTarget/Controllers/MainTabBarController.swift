@@ -9,10 +9,10 @@ import UIKit
 import PinLayout
 
 final class MainTabBarController: UITabBarController {
-    let vc1 = AimsController()
-    let vc2 = NewAimController()
-    let vc3 = MyAimController()
-    let vc4 = ParticipantsController()
+    private let vc1 = TargetsController()
+    private let vc2 = NewTargetController()
+    private let vc3 = MyTargetController()
+    private let vc4 = MembersController()
     
     override func viewDidLoad() {
         super.viewDidLoad()

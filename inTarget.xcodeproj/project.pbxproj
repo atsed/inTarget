@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		046E220E261CB6B10070D5D1 /* AimsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E220D261CB6B10070D5D1 /* AimsController.swift */; };
+		046E220E261CB6B10070D5D1 /* TargetsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E220D261CB6B10070D5D1 /* TargetsController.swift */; };
 		04D39AB7261C5D4D0092486F /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39AB6261C5D4D0092486F /* MainTabBarController.swift */; };
-		04D39ABA261C5F3C0092486F /* NewAimController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39AB9261C5F3C0092486F /* NewAimController.swift */; };
-		04D39ABD261C5F6E0092486F /* MyAimController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABC261C5F6E0092486F /* MyAimController.swift */; };
-		04D39AC0261C5F7F0092486F /* ParticipantsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABF261C5F7F0092486F /* ParticipantsController.swift */; };
+		04D39ABA261C5F3C0092486F /* NewTargetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39AB9261C5F3C0092486F /* NewTargetController.swift */; };
+		04D39ABD261C5F6E0092486F /* MyTargetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABC261C5F6E0092486F /* MyTargetController.swift */; };
+		04D39AC0261C5F7F0092486F /* MembersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABF261C5F7F0092486F /* MembersController.swift */; };
+		4227B661261E050600F9097F /* SignUpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B660261E050600F9097F /* SignUpModel.swift */; };
 		42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1F05261A35D900BE996C /* SignUpController.swift */; };
 		42D000322619DFF1007A5C2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42D000312619DFF1007A5C2A /* GoogleService-Info.plist */; };
 		42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D0FF95261765AE007A5C2A /* AppDelegate.swift */; };
@@ -31,16 +32,18 @@
 		42D0FFCC26187625007A5C2A /* GothamPro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFB926176A46007A5C2A /* GothamPro.ttf */; };
 		42D0FFCD26187625007A5C2A /* GothamProNarrow-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFC026176A46007A5C2A /* GothamProNarrow-Bold.ttf */; };
 		42D0FFCE26187625007A5C2A /* GothamProNarrow-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 42D0FFBB26176A46007A5C2A /* GothamProNarrow-Medium.ttf */; };
+		42E63A8F261D22B500185433 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E63A8E261D22B500185433 /* AuthModel.swift */; };
 		BFC6FA71E3EA6C041E36973F /* Pods_inTarget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2336901CCF1B02267FC7A104 /* Pods_inTarget.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		046E220D261CB6B10070D5D1 /* AimsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AimsController.swift; sourceTree = "<group>"; };
+		046E220D261CB6B10070D5D1 /* TargetsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetsController.swift; sourceTree = "<group>"; };
 		04D39AB6261C5D4D0092486F /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
-		04D39AB9261C5F3C0092486F /* NewAimController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAimController.swift; sourceTree = "<group>"; };
-		04D39ABC261C5F6E0092486F /* MyAimController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAimController.swift; sourceTree = "<group>"; };
-		04D39ABF261C5F7F0092486F /* ParticipantsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantsController.swift; sourceTree = "<group>"; };
+		04D39AB9261C5F3C0092486F /* NewTargetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTargetController.swift; sourceTree = "<group>"; };
+		04D39ABC261C5F6E0092486F /* MyTargetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTargetController.swift; sourceTree = "<group>"; };
+		04D39ABF261C5F7F0092486F /* MembersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembersController.swift; sourceTree = "<group>"; };
 		2336901CCF1B02267FC7A104 /* Pods_inTarget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_inTarget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4227B660261E050600F9097F /* SignUpModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpModel.swift; sourceTree = "<group>"; };
 		42CE1F05261A35D900BE996C /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		42D000312619DFF1007A5C2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		42D0FF92261765AE007A5C2A /* inTarget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inTarget.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +65,7 @@
 		42D0FFBF26176A46007A5C2A /* GothamPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamPro-Light.ttf"; sourceTree = "<group>"; };
 		42D0FFC026176A46007A5C2A /* GothamProNarrow-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamProNarrow-Bold.ttf"; sourceTree = "<group>"; };
 		42D0FFC126176A47007A5C2A /* GothamPro-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GothamPro-Bold.ttf"; sourceTree = "<group>"; };
+		42E63A8E261D22B500185433 /* AuthModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
 		65D843BEBAA19DEC713B2A58 /* Pods-inTarget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-inTarget.debug.xcconfig"; path = "Target Support Files/Pods-inTarget/Pods-inTarget.debug.xcconfig"; sourceTree = "<group>"; };
 		B68D36AFB8FE3D5C066DCF2D /* Pods-inTarget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-inTarget.release.xcconfig"; path = "Target Support Files/Pods-inTarget/Pods-inTarget.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,6 +113,7 @@
 		42D0FF94261765AE007A5C2A /* inTarget */ = {
 			isa = PBXGroup;
 			children = (
+				42E63A8D261D22B500185433 /* Models */,
 				42D0FFB126176688007A5C2A /* Controllers */,
 				42D0FFB026176676007A5C2A /* Supporting files */,
 			);
@@ -134,10 +139,10 @@
 				42D0FF99261765AE007A5C2A /* AuthViewController.swift */,
 				42CE1F05261A35D900BE996C /* SignUpController.swift */,
 				04D39AB6261C5D4D0092486F /* MainTabBarController.swift */,
-				046E220D261CB6B10070D5D1 /* AimsController.swift */,
-				04D39AB9261C5F3C0092486F /* NewAimController.swift */,
-				04D39ABC261C5F6E0092486F /* MyAimController.swift */,
-				04D39ABF261C5F7F0092486F /* ParticipantsController.swift */,
+				046E220D261CB6B10070D5D1 /* TargetsController.swift */,
+				04D39AB9261C5F3C0092486F /* NewTargetController.swift */,
+				04D39ABC261C5F6E0092486F /* MyTargetController.swift */,
+				04D39ABF261C5F7F0092486F /* MembersController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -159,6 +164,15 @@
 				42D0FFBB26176A46007A5C2A /* GothamProNarrow-Medium.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		42E63A8D261D22B500185433 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				42E63A8E261D22B500185433 /* AuthModel.swift */,
+				4227B660261E050600F9097F /* SignUpModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		52357751BF21DF589C6CD04B /* Frameworks */ = {
@@ -295,15 +309,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				046E220E261CB6B10070D5D1 /* AimsController.swift in Sources */,
-				04D39ABA261C5F3C0092486F /* NewAimController.swift in Sources */,
+				046E220E261CB6B10070D5D1 /* TargetsController.swift in Sources */,
+				04D39ABA261C5F3C0092486F /* NewTargetController.swift in Sources */,
 				42D0FF9A261765AE007A5C2A /* AuthViewController.swift in Sources */,
-				04D39ABD261C5F6E0092486F /* MyAimController.swift in Sources */,
+				04D39ABD261C5F6E0092486F /* MyTargetController.swift in Sources */,
 				42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */,
 				42D0FF98261765AE007A5C2A /* SceneDelegate.swift in Sources */,
-				04D39AC0261C5F7F0092486F /* ParticipantsController.swift in Sources */,
+				04D39AC0261C5F7F0092486F /* MembersController.swift in Sources */,
 				04D39AB7261C5D4D0092486F /* MainTabBarController.swift in Sources */,
+				4227B661261E050600F9097F /* SignUpModel.swift in Sources */,
 				42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */,
+				42E63A8F261D22B500185433 /* AuthModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
