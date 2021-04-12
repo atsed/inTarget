@@ -22,7 +22,7 @@ final class MainTabBarController: UITabBarController {
     }
     
     func setupTabBar(){
-        vc1.tabBarItem.image = UIImage(named: "reports")
+        vc1.tabBarItem.image = UIImage(named: "icon1")
         vc2.tabBarItem.image = UIImage(named: "Glyph")
         vc3.tabBarItem.image = UIImage(named: "support")
         vc4.tabBarItem.image = UIImage(named: "Vector")
