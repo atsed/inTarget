@@ -17,14 +17,15 @@ final class TargetsController: UIViewController {
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.showsHorizontalScrollIndicator = false
         cv.register(CustomCell.self, forCellWithReuseIdentifier: "cell")
-
+        cv.register(UniqueCell.self, forCellWithReuseIdentifier: "uniqueCell")
         return cv
     }()
     
     let data = [
         Task(title: "IOS курс", image: #imageLiteral(resourceName: "artur"), date: "10 мая 2021"),
-        Task(title: "МГТУ", image: #imageLiteral(resourceName: "bmstu"), date: "1 апреля 2021")
+        Task(title: "МГТУ", image: #imageLiteral(resourceName: "bmstu"), date: "2 апреля 2021")
     ]
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +45,6 @@ final class TargetsController: UIViewController {
         collectionView.backgroundColor = .white
         collectionView.layer.cornerRadius = 30
         collectionView.layer.masksToBounds = false
-        
         collectionView.delegate = self
         collectionView.dataSource = self
     }
@@ -69,18 +69,56 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return data.count
+        return data.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CustomCell
-        cell.data = data[indexPath.row]
-        cell.setup()
+        let uniqueCell = collectionView.dequeueReusableCell(withReuseIdentifier: "uniqueCell", for: indexPath) as! UniqueCell
+        while indexPath.row >= data.count {
+            uniqueCell.setupSpecialCell()
+            return uniqueCell
+        }
+            cell.data = data[indexPath.row]
+            cell.setup()
+        
         return cell
     }
 }
+class UniqueCell: UICollectionViewCell{
+    
+    private lazy var button: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "bmstu")
+        button.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
+        button.setImage(image, for: .normal)
+        return button
+    }()
+    
+    func setupSpecialCell(){
+        contentView.addSubview(button)
+        
+        backgroundColor = .white
+        layer.cornerRadius = 30
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowOffset = CGSize(width: 6.0, height: 10.0)
+        layer.shadowRadius = 6.0
+        layer.shadowOpacity = 1.0
+        layer.masksToBounds = false
+        
+        setupConstraints()
+    }
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            button.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
+            button.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 100),
+            button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            button.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
 
+        ])
+    }
+}
 class CustomCell: UICollectionViewCell {
     
     var data: Task?
@@ -134,6 +172,7 @@ class CustomCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+
     
     func setup() {
         contentView.addSubview(imageView)
