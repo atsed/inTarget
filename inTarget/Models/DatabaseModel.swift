@@ -29,11 +29,8 @@ class DatabaseModel {
         
     }
     
-//    func checkUser() {
-//        guard let currentUser = Auth.auth().currentUser else { return }
-//        let user = UserDataModel(user: currentUser)
-//        //print("COLLECTION: \(userCollection.document("test@mai.ru"))")
-//        //userCollection.getDocuments(completion: (document))
-//        print("DONE: \(user)")
-//    }
+    func createTask(_ title : String, _ data : String) {
+        
+    }
+    
 }
