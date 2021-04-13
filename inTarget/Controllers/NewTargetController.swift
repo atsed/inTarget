@@ -21,6 +21,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     private let createButton = UIButton()
     private let scrollView = UIScrollView()
     private let datePicker = UIDatePicker()
+    private let newDatePicker = UIDatePicker()
     
     private var kbFrameSize : CGRect = .zero
     
@@ -37,6 +38,10 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
         titleField.placeholder = "Наименование цели"
+        
+        newDatePicker.datePickerMode = .date
+        newDatePicker.backgroundColor = .background
+        newDatePicker.subviews[0].subviews[0].subviews[0].alpha = 0
         
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -90,7 +95,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         scrollView.keyboardDismissMode = .onDrag
         
         [addImageView, deleteImageButton].forEach { addImageContainer.addSubview($0)}
-        [headLabel, titleField, dateField, descriptionField, addImageButton, addImageContainer, createButton].forEach { scrollView.addSubview($0) }
+        [headLabel, titleField, dateField, descriptionField, addImageButton, addImageContainer, createButton, newDatePicker].forEach { scrollView.addSubview($0) }
         view.addSubview(scrollView)
     }
     
@@ -112,10 +117,15 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .below(of: headLabel)
             .marginTop(30)
         
+        newDatePicker.pin
+            .below(of: titleField)
+            .horizontally(16)
+            .marginTop(16)
+        
         dateField.pin
             .horizontally(16)
             .height(60)
-            .below(of: titleField)
+            .below(of: newDatePicker)
             .marginTop(16)
         
         descriptionField.pin
