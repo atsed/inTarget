@@ -174,7 +174,7 @@ class AuthViewController: UIViewController {
             .height(0.1)
         
         containerSignUp.pin
-            .bottom(view.pin.safeArea.top + 8)
+            .bottom(view.pin.safeArea.bottom + 22)
         
         signUpLabel.pin
             .sizeToFit()

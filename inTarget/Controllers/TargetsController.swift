@@ -9,20 +9,7 @@ import PinLayout
 import UIKit
 
 final class TargetsController: UIViewController {
-    
-    private let headLabel: UILabel = {
-        let headLabel = UILabel()
-        headLabel.text = "Цели"
-        headLabel.textColor = .black
-        headLabel.font = UIFont(name: "GothamPro", size: 34)
-        return headLabel
-    }()
-    
-    let data = [
-        Task(title: "IOS курс", image: #imageLiteral(resourceName: "artur"), date: "10 мая 2021"),
-        Task(title: "МГТУ", image: #imageLiteral(resourceName: "bmstu"), date: "1 апреля 2021")
-    ]
-    
+    private let headLabel = UILabel()
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -33,21 +20,22 @@ final class TargetsController: UIViewController {
 
         return cv
     }()
-        
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        headLabel.pin
-            .top(view.pin.safeArea.top + 30)
-            .left(view.pin.safeArea.left + 30)
-            .sizeToFit()
-    }
-
+    
+    let data = [
+        Task(title: "IOS курс", image: #imageLiteral(resourceName: "artur"), date: "10 мая 2021"),
+        Task(title: "МГТУ", image: #imageLiteral(resourceName: "bmstu"), date: "1 апреля 2021")
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         view.addSubview(collectionView)
         view.addSubview(headLabel)
+        
+        headLabel.text = "Цели"
+        headLabel.textColor = .black
+        headLabel.font = UIFont(name: "GothamPro", size: 34)
+        
         collectionView.backgroundColor = .white
         collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 170).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
@@ -60,6 +48,15 @@ final class TargetsController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
     }
+        
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        headLabel.pin
+            .top(view.pin.safeArea.top + 30)
+            .left(view.pin.safeArea.left + 30)
+            .sizeToFit()
+    }
+
 }
 
 extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
