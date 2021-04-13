@@ -148,10 +148,11 @@ extension PinLayout {
             return self
         }
 
-        let imageSize = imageView.frame.size
-//        guard Pin.logWarnings && Pin.activeWarnings.aspectRatioImageNotSet else { return self }
-//        warnWontBeApplied("the layouted UIImageView's image hasn't been set (aspectRatioImageNotSet)", context)
-//        return self
+        guard let imageSize = imageView.image?.size else {
+            guard Pin.logWarnings && Pin.activeWarnings.aspectRatioImageNotSet else { return self }
+            warnWontBeApplied("the layouted UIImageView's image hasn't been set (aspectRatioImageNotSet)", context)
+            return self
+        }
 
         return setAdjustSizeType(.aspectRatio(imageSize.width / imageSize.height), context)
     }

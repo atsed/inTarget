@@ -31,6 +31,9 @@ class SignUpModel {
                 return
             }
             if error == nil && user != nil  {
+                let database = DatabaseModel()
+                database.createDatabase(name: nameText, surname: surnameText)
+                
                 completion(true, "True")
                 return
             }

@@ -1559,13 +1559,11 @@ static const size_t SRFrameHeaderOverhead = 32;
 
         case NSStreamEventHasBytesAvailable: {
             SRFastLog(@"NSStreamEventHasBytesAvailable %@", aStream);
-
-            #define FSRWEB_SOCKET_BUFFER_SIZE 2048
-            uint8_t buffer[FSRWEB_SOCKET_BUFFER_SIZE];
-
+            const NSUInteger bufferSize = 2048;
+            uint8_t buffer[bufferSize];
 
             while (_inputStream.hasBytesAvailable) {
-                NSInteger bytes_read = [_inputStream read:buffer maxLength:FSRWEB_SOCKET_BUFFER_SIZE];
+                NSInteger bytes_read = [_inputStream read:buffer maxLength:bufferSize];
 
                 if (bytes_read > 0) {
                     [_readBuffer appendBytes:buffer length:bytes_read];
@@ -1573,7 +1571,7 @@ static const size_t SRFrameHeaderOverhead = 32;
                     [self _failWithError:_inputStream.streamError];
                 }
 
-                if (bytes_read != FSRWEB_SOCKET_BUFFER_SIZE) {
+                if (bytes_read != bufferSize) {
                     break;
                 }
             };

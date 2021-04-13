@@ -8,13 +8,6 @@
 import PinLayout
 import UIKit
 
-struct CustomData{
-    var title: String
-    var image: UIImage
-    var year: String
-    var underTask: Int
-}
-
 final class TargetsController: UIViewController {
     
     private let headLabel: UILabel = {
@@ -26,8 +19,8 @@ final class TargetsController: UIViewController {
     }()
     
     let data = [
-        CustomData(title: "IOS курс", image: #imageLiteral(resourceName: "artur"), year: "2021", underTask: 10),
-        CustomData(title: "МГТУ", image: #imageLiteral(resourceName: "bmstu"), year: "2021", underTask: 8)
+        Task(title: "IOS курс", image: #imageLiteral(resourceName: "artur"), date: "10 мая 2021"),
+        Task(title: "МГТУ", image: #imageLiteral(resourceName: "bmstu"), date: "1 апреля 2021")
     ]
     
     private let collectionView: UICollectionView = {
@@ -47,7 +40,6 @@ final class TargetsController: UIViewController {
             .top(view.pin.safeArea.top + 30)
             .left(view.pin.safeArea.left + 30)
             .sizeToFit()
-            .hCenter()
     }
 
     
@@ -94,7 +86,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
 
 class CustomCell: UICollectionViewCell {
     
-    var data: CustomData?
+    var data: Task?
     
     private lazy var progressBar: UIProgressView = {
         let progressBar = UIProgressView(progressViewStyle: .bar)
@@ -116,24 +108,24 @@ class CustomCell: UICollectionViewCell {
         return imageView
     }()
     
-    private lazy var underTaskCount: UILabel = {
-        let underTaskCount = UILabel()
-        let labelUnderTask : String = " подзадач"
-        underTaskCount.text = String(data?.underTask ?? 0) + labelUnderTask
-        underTaskCount.font = UIFont(name: "GothamPro", size: 10)
-        underTaskCount.textColor = .black
-        underTaskCount.translatesAutoresizingMaskIntoConstraints = false
-        return underTaskCount
+    private lazy var underTasksCount: UILabel = {
+        let underTasksCount = UILabel()
+        let labelUnderTasks : String = " подзадач"
+        underTasksCount.text = String(data?.underTasks.count ?? 0) + labelUnderTasks
+        underTasksCount.font = UIFont(name: "GothamPro", size: 15)
+        underTasksCount.textColor = .black
+        underTasksCount.translatesAutoresizingMaskIntoConstraints = false
+        return underTasksCount
     }()
 
     
     private lazy var yearLabel: UILabel = {
-        let year = UILabel()
-        year.text = data?.year
-        year.font = UIFont(name: "GothamPro", size: 11)
-        year.textColor = .gray
-        year.translatesAutoresizingMaskIntoConstraints = false
-        return year
+        let date = UILabel()
+        date.text = data?.date
+        date.font = UIFont(name: "GothamPro", size: 11)
+        date.textColor = .separator
+        date.translatesAutoresizingMaskIntoConstraints = false
+        return date
     }()
     
     
@@ -150,7 +142,7 @@ class CustomCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         contentView.addSubview(label)
         contentView.addSubview(yearLabel)
-        contentView.addSubview(underTaskCount)
+        contentView.addSubview(underTasksCount)
         contentView.addSubview(progressBar)
         
         backgroundColor = .white
@@ -176,10 +168,10 @@ class CustomCell: UICollectionViewCell {
             yearLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             yearLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            underTaskCount.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -50),
-            underTaskCount.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            underTaskCount.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            underTaskCount.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            underTasksCount.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -50),
+            underTasksCount.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            underTasksCount.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            underTasksCount.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -120),
             label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),

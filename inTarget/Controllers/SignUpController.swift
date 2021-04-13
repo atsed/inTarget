@@ -56,6 +56,7 @@ class SignUpController : UIViewController {
         nameField.placeholder = "Имя"
         surnameField.placeholder = "Фамилия"
         loginField.placeholder = "Email"
+        loginField.autocapitalizationType = .none
         passwordField.placeholder = "Пароль"
         passwordField.isSecureTextEntry = true
         

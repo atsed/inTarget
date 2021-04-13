@@ -74,6 +74,7 @@ class AuthViewController: UIViewController {
         errorLabel.font = UIFont(name: "GothamPro-Light", size: 17)
         
         loginField.placeholder = "Email"
+        loginField.autocapitalizationType = .none
         passwordField.placeholder = "Пароль"
         passwordField.isSecureTextEntry = true
         
