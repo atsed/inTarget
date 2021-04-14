@@ -12,6 +12,7 @@
 		04D39ABA261C5F3C0092486F /* NewTargetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39AB9261C5F3C0092486F /* NewTargetController.swift */; };
 		04D39ABD261C5F6E0092486F /* MyTargetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABC261C5F6E0092486F /* MyTargetController.swift */; };
 		04D39AC0261C5F7F0092486F /* MembersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABF261C5F7F0092486F /* MembersController.swift */; };
+		4202FF142627577D00613A38 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4202FF132627577D00613A38 /* ImageLoader.swift */; };
 		4227B661261E050600F9097F /* SignUpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B660261E050600F9097F /* SignUpModel.swift */; };
 		4227B67A26246CEC00F9097F /* UserDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B67926246CEC00F9097F /* UserDataModel.swift */; };
 		4227B68026247A2300F9097F /* DatabaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B67F26247A2300F9097F /* DatabaseModel.swift */; };
@@ -46,6 +47,7 @@
 		04D39AB9261C5F3C0092486F /* NewTargetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTargetController.swift; sourceTree = "<group>"; };
 		04D39ABC261C5F6E0092486F /* MyTargetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTargetController.swift; sourceTree = "<group>"; };
 		04D39ABF261C5F7F0092486F /* MembersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembersController.swift; sourceTree = "<group>"; };
+		4202FF132627577D00613A38 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		4227B660261E050600F9097F /* SignUpModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpModel.swift; sourceTree = "<group>"; };
 		4227B67926246CEC00F9097F /* UserDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataModel.swift; sourceTree = "<group>"; };
 		4227B67F26247A2300F9097F /* DatabaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseModel.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				4227B67926246CEC00F9097F /* UserDataModel.swift */,
 				4227B68226247DB300F9097F /* UnderTask.swift */,
 				4227B6D22624D2D900F9097F /* Task.swift */,
+				4202FF132627577D00613A38 /* ImageLoader.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				42D0FF9A261765AE007A5C2A /* AuthViewController.swift in Sources */,
 				4227B68326247DB300F9097F /* UnderTask.swift in Sources */,
 				04D39ABD261C5F6E0092486F /* MyTargetController.swift in Sources */,
+				4202FF142627577D00613A38 /* ImageLoader.swift in Sources */,
 				42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */,
 				4227B6D32624D2D900F9097F /* Task.swift in Sources */,
 				42D0FF98261765AE007A5C2A /* SceneDelegate.swift in Sources */,
@@ -404,7 +408,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -459,7 +463,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

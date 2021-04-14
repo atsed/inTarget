@@ -18,9 +18,9 @@ class AuthViewController: UIViewController {
     private let passwordField = UITextField()
     private let loginSeparator = UIView()
     private let passwordSeparator = UIView()
-    private let signInButton = UIButton()
+    private let signInButton = UIButton(type: .system)
     private let containerSignUp = UIView()
-    private let signUpButton = UIButton()
+    private let signUpButton = UIButton(type: .system)
     private let signUpLabel = UILabel()
     private let scrollView = UIScrollView()
     
@@ -92,6 +92,9 @@ class AuthViewController: UIViewController {
         signInButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
         signInButton.setTitleColor(.background, for: .normal)
         signInButton.backgroundColor = .accent
+        signInButton.setTitleColor(.lightGray, for: .selected)
+        //signInButton.setTitleColor(.red, for: .highlighted)
+        
         
         signUpButton.setTitle("Зарегистрируйтесь", for: .normal)
         signUpButton.titleLabel?.font = UIFont(name: "GothamPro", size: 15)
@@ -174,7 +177,7 @@ class AuthViewController: UIViewController {
             .height(0.1)
         
         containerSignUp.pin
-            .bottom(view.pin.safeArea.bottom + 22)
+            .bottom(view.pin.safeArea.bottom + 30)
         
         signUpLabel.pin
             .sizeToFit()
@@ -217,14 +220,14 @@ class AuthViewController: UIViewController {
     func kbDidShow(_ notification : Notification) {
         let userInfo = notification.userInfo
         kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
         scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height - view.safeAreaInsets.bottom + kbFrameSize.height )
+        scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
     }
     
     @objc
     func kbDidHide() {
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
         scrollView.contentOffset = CGPoint.zero
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
     }
     
     @objc

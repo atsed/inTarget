@@ -11,23 +11,19 @@ import PinLayout
 
 class NewTargetController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     private let headLabel = UILabel()
+    private let errorLabel = UILabel()
     private let titleField = UITextField()
-    private let dateField = UITextField()
-    private let descriptionField = UITextField()
+    private let datePicker = UIDatePicker()
     private let addImageButton = UIButton()
     private let addImageView = UIImageView()
     private let deleteImageButton = UIButton()
     private let addImageContainer = UIView()
-    private let createButton = UIButton()
+    private let createButton = UIButton(type: .system)
     private let scrollView = UIScrollView()
-    private let datePicker = UIDatePicker()
-    private let newDatePicker = UIDatePicker()
     
-    private var kbFrameSize : CGRect = .zero
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkKeyboardNotifications()
         hideKeyboardWhenTappedAround()
         
         view.backgroundColor = .background
@@ -38,35 +34,23 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
         titleField.placeholder = "Наименование цели"
+        titleField.borderStyle = .roundedRect
         
-        newDatePicker.datePickerMode = .date
-        newDatePicker.backgroundColor = .background
-        newDatePicker.subviews[0].subviews[0].subviews[0].alpha = 0
+        errorLabel.text = ""
+        errorLabel.textColor = .red
+        errorLabel.textAlignment = .center
+        errorLabel.font = UIFont(name: "GothamPro-Light", size: 17)
         
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(didTapDatePickerButton))
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        toolBar.setItems([flexSpace, doneButton], animated: true)
         datePicker.datePickerMode = .date
-        dateField.inputAccessoryView = toolBar
         if #available(iOS 14, *) {
-            datePicker.preferredDatePickerStyle = .compact
+            datePicker.preferredDatePickerStyle = .inline
             datePicker.sizeToFit()
-            datePicker.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height / 2)
-        } else {
-            datePicker.preferredDatePickerStyle = .wheels
-            datePicker.sizeToFit()
-        }
 
-        dateField.placeholder = "Срок выполнения"
-        dateField.inputView = datePicker
-        
-        descriptionField.placeholder = "Описание"
-        descriptionField.contentVerticalAlignment = .top
-        [titleField, dateField, descriptionField].forEach {
-            ($0).borderStyle = .roundedRect
+        } else {
+            datePicker.sizeToFit()
         }
+        datePicker.tintColor = .accent
+        datePicker.subviews[0].subviews[0].subviews[0].tintColor = .accent
         
         addImageButton.setTitle("+ Фото цели", for: .normal)
         addImageButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
@@ -91,11 +75,11 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         createButton.layer.cornerRadius = 14
         createButton.layer.masksToBounds = true
         createButton.addTarget(self, action: #selector(didTapCreateButton), for: .touchUpInside)
-        
+
         scrollView.keyboardDismissMode = .onDrag
         
         [addImageView, deleteImageButton].forEach { addImageContainer.addSubview($0)}
-        [headLabel, titleField, dateField, descriptionField, addImageButton, addImageContainer, createButton, newDatePicker].forEach { scrollView.addSubview($0) }
+        [headLabel, titleField, errorLabel, datePicker, addImageButton, addImageContainer, createButton].forEach { scrollView.addSubview($0) }
         view.addSubview(scrollView)
     }
     
@@ -103,6 +87,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         super.viewDidLayoutSubviews()
         
         scrollView.pin
+            .all()
             .vertically()
             .horizontally()
         
@@ -115,29 +100,22 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .horizontally(16)
             .height(60)
             .below(of: headLabel)
-            .marginTop(30)
+            .marginTop(40)
         
-        newDatePicker.pin
+        errorLabel.pin
+            .horizontally(16)
+            .height(17)
+            .above(of: titleField)
+            .marginBottom(8)
+        
+        datePicker.pin
             .below(of: titleField)
-            .horizontally(16)
-            .marginTop(16)
-        
-        dateField.pin
-            .horizontally(16)
-            .height(60)
-            .below(of: newDatePicker)
-            .marginTop(16)
-        
-        descriptionField.pin
-            .horizontally(16)
-            .height(138)
-            .below(of: dateField)
+            .horizontally(20)
             .marginTop(16)
         
         addImageButton.pin
             .sizeToFit()
-            .below(of: descriptionField)
-            .marginTop(16)
+            .below(of: datePicker)
             .left(16)
         
         addImageContainer.pin
@@ -160,9 +138,18 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         createButton.pin
             .horizontally(16)
             .height(56)
-            .bottom(view.pin.safeArea.bottom + 20)
+            .below(of: addImageContainer)
+            .marginTop(16)
+        
+        didPerformLayout()
             
     }
+    
+    private func didPerformLayout() {
+        if self.view.bounds.height < createButton.frame.maxY + 16 {
+            scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: createButton.frame.maxY + 16)
+        } else { return }
+        }
     
     @objc
     private func didTapAddImageButton() {
@@ -175,12 +162,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func didTapCreateButton() {
-        
-    }
-    
-    @objc private func didTapDatePickerButton() {
-        getDateFromPicker()
-        view.endEditing(true)
+        //let date = getDateFromPicker()
     }
     
     @objc
@@ -201,36 +183,11 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         self.deleteImageButton.alpha = 1
     }
     
-    func getDateFromPicker() {
+    func getDateFromPicker() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMMM yyyy"
-        dateField.text = formatter.string(from: datePicker.date)
+        let dateString = formatter.string(from: datePicker.date)
+        return(dateString)
     }
-    
-    deinit {
-        removeKeyboardNotifications()
-    }
-    
-    func checkKeyboardNotifications() {
-         NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(kbDidHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    func removeKeyboardNotifications() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    @objc
-    func kbDidShow(_ notification : Notification) {
-        let userInfo = notification.userInfo
-        kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  + kbFrameSize.height)
-    }
-    
-    @objc
-    func kbDidHide() {
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
-        scrollView.contentOffset = CGPoint.zero
-    }
+
 }

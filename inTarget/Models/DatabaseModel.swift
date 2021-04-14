@@ -7,7 +7,6 @@
 
 import Foundation
 import Firebase
-import FirebaseFirestore
 
 class DatabaseModel {
     let database = Firestore.firestore().collection("users")
@@ -15,22 +14,27 @@ class DatabaseModel {
     func createDatabase(name: String, surname: String) {
         guard let currentUser = Auth.auth().currentUser else { return }
         let userData = UserDataModel(user: currentUser, name: name, surName: surname)
-
-        //print("userData: \(userData)")
-        database.document(userData.email).setData(["name" : userData.name,
-                                                   "uid" : userData.uid,
-                                                   "surname" : userData.surName,
-                                                   "email" : userData.email,
-                                                   "avatar" : userData.avatar,
-                                                   "friends" : userData.friends,
-                                                   "groups" : userData.groups,
-                                                   "tasks" : userData.tasks])
-
+        let data = ["name" : userData.name,
+                    "uid" : userData.uid,
+                    "surname" : userData.surName,
+                    "email" : userData.email,
+                    "avatar" : userData.avatar,
+                    "friends" : userData.friends,
+                    "groups" : userData.groups,
+                    "tasks" : userData.tasks] as [String : Any]
         
+        database.document(userData.uid).setData(data)
     }
     
-    func createTask(_ title : String, _ data : String) {
-        
+    func createTask(_ titleText : String, _ date : String, _ image : String, comletion: @escaping (Result<String, Error>) -> Void) {
+//        guard let title = titleText,
+//              let imageN = image,
+//              let dateN = date,
+//              title != "",
+//              imageN != "" else {
+//            comletion(.failure())
+//            return
+//        }
     }
     
 }

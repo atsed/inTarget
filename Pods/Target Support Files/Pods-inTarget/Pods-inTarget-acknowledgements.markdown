@@ -1496,7 +1496,7 @@ Copyright 2020 Google
    limitations under the License.
 
 
-## FirebaseFirestoreSwift
+## FirebaseInstallations
 
 
                                  Apache License
@@ -1702,7 +1702,7 @@ Copyright 2020 Google
    limitations under the License.
 
 
-## FirebaseInstallations
+## FirebaseStorage
 
 
                                  Apache License
