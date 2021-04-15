@@ -21,14 +21,14 @@ final class MainTabBarController: UITabBarController {
         setupTabBar()
     }
     
-    func setupTabBar(){
+    func setupTabBar() {
         vc1.tabBarItem.image = UIImage(named: "icon1")
         vc2.tabBarItem.image = UIImage(named: "Glyph")
         vc3.tabBarItem.image = UIImage(named: "support")
         vc4.tabBarItem.image = UIImage(named: "Vector")
-        [vc1, vc2, vc3, vc4].forEach {$0.tabBarItem.badgeColor = .accent}
         
         setViewControllers([vc1, vc2, vc3, vc4], animated: false)
     }
+   
 }
 
