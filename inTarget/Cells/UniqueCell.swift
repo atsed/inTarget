@@ -4,8 +4,6 @@
 //
 //  Created by Георгий on 15.04.2021.
 //
-
-import Foundation
 import UIKit
 
 public class UniqueCell: UICollectionViewCell {
@@ -14,7 +12,7 @@ public class UniqueCell: UICollectionViewCell {
         lazy var button: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "plus.circle")
-        button.frame = CGRect(x: 110, y: 40, width: 100, height: 100)
+        button.frame = CGRect(x: 100, y: 30, width: 120, height: 120)
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill

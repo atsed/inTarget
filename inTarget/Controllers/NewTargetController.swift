@@ -11,8 +11,8 @@ import PinLayout
 
 class NewTargetController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     private let headLabel = UILabel()
-    private let errorLabel = UILabel()
     private let titleField = UITextField()
+    private let titleSeparator = UIView()
     private let datePicker = UIDatePicker()
     private let addImageButton = UIButton()
     private let addImageView = UIImageView()
@@ -34,11 +34,9 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
         titleField.placeholder = "Наименование цели"
-        titleField.borderStyle = .roundedRect
+        titleField.borderStyle = .none
         
-        errorLabel.textColor = .red
-        errorLabel.textAlignment = .center
-        errorLabel.font = UIFont(name: "GothamPro-Light", size: 17)
+        titleSeparator.backgroundColor = .separator
         
         datePicker.datePickerMode = .date
         if #available(iOS 14, *) {
@@ -77,7 +75,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         scrollView.keyboardDismissMode = .onDrag
         
         [addImageView, deleteImageButton].forEach { addImageContainer.addSubview($0)}
-        [headLabel, titleField, errorLabel, datePicker, addImageButton, addImageContainer, createButton].forEach { scrollView.addSubview($0) }
+        [headLabel, titleField, titleSeparator, datePicker, addImageButton, addImageContainer, createButton].forEach { scrollView.addSubview($0) }
         view.addSubview(scrollView)
     }
     
@@ -98,13 +96,12 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .horizontally(16)
             .height(60)
             .below(of: headLabel)
-            .marginTop(40)
+            .marginTop(20)
         
-        errorLabel.pin
+        titleSeparator.pin
+            .below(of: titleField)
             .horizontally(16)
-            .height(17)
-            .above(of: titleField)
-            .marginBottom(8)
+            .height(0.1)
         
         datePicker.pin
             .below(of: titleField)
@@ -137,7 +134,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .horizontally(16)
             .height(56)
             .below(of: addImageContainer)
-            .marginTop(16)
+            .marginTop(8)
         
         didPerformLayout()
             
@@ -163,7 +160,8 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func didTapCreateButton() {
-        //let date = getDateFromPicker()
+        animatePlaceholderColor(titleField, titleSeparator)
+        animateButtonTitleColor(addImageButton)
     }
     
     @objc

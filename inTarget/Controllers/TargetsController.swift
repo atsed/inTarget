@@ -59,10 +59,8 @@ final class TargetsController: UIViewController {
             .sizeToFit()
     }
     
-    @objc func buttonAction() {
-        let newTargetController = NewTargetController()
-        newTargetController.modalPresentationStyle = .fullScreen
-        present(newTargetController, animated: true, completion: nil)
+    @objc func didTapAddButton() {
+        tabBarController?.selectedIndex = 1
     }
 }
 
@@ -83,7 +81,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CustomCell
         let uniqueCell = collectionView.dequeueReusableCell(withReuseIdentifier: "uniqueCell", for: indexPath) as! UniqueCell
-        uniqueCell.button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        uniqueCell.button.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
         while indexPath.row >= data.count {
             uniqueCell.setupSpecialCell()
             return uniqueCell
