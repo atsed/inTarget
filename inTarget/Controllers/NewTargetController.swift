@@ -36,7 +36,6 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         titleField.placeholder = "Наименование цели"
         titleField.borderStyle = .roundedRect
         
-        errorLabel.text = ""
         errorLabel.textColor = .red
         errorLabel.textAlignment = .center
         errorLabel.font = UIFont(name: "GothamPro-Light", size: 17)
@@ -75,7 +74,6 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         createButton.layer.cornerRadius = 14
         createButton.layer.masksToBounds = true
         createButton.addTarget(self, action: #selector(didTapCreateButton), for: .touchUpInside)
-
         scrollView.keyboardDismissMode = .onDrag
         
         [addImageView, deleteImageButton].forEach { addImageContainer.addSubview($0)}
@@ -87,12 +85,12 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         super.viewDidLayoutSubviews()
         
         scrollView.pin
-            .all()
-            .vertically()
+            .top(view.pin.safeArea.top)
+            .bottom()
             .horizontally()
         
         headLabel.pin
-            .top(view.pin.safeArea.top + 30)
+            .top(30)
             .left(view.pin.safeArea.left + 30)
             .sizeToFit()
         
@@ -146,10 +144,13 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     }
     
     private func didPerformLayout() {
-        if self.view.bounds.height < createButton.frame.maxY + 16 {
+        let tabbar = tabBarController?.tabBar.bounds.height ?? 0
+
+        if self.view.bounds.height - tabbar < createButton.frame.maxY {
             scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: createButton.frame.maxY + 16)
+            return
         } else { return }
-        }
+    }
     
     @objc
     private func didTapAddImageButton() {
