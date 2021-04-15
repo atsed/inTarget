@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         UITabBar.appearance().isTranslucent = false
-        
+        UITabBar.appearance().tintColor = .accent
         return true
     }
 
