@@ -10,7 +10,7 @@ import UIKit
 
 class CustomCell: UICollectionViewCell {
     
-    var data: Task?
+    var data: BADTask?
     
     private lazy var progressBar: UIProgressView = {
         let progressBar = UIProgressView(progressViewStyle: .bar)
@@ -24,7 +24,7 @@ class CustomCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = data?.image
+        imageView.image = data?.BADimage
         imageView.layer.cornerRadius = 30
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill

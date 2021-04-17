@@ -8,9 +8,13 @@
 import UIKit
 
 struct Task {
-    var title: String = ""
-    var image: UIImage = #imageLiteral(resourceName: "artur")
-    var date: String = ""
-    var description: String = ""
+    var title: String
+    var date: String
+    var image : String
     var underTasks: Array<UnderTask> = []
+    init(title: String, date: String, image: String) {
+        self.title = title
+        self.date = date
+        self.image = image
+    }
 }

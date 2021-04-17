@@ -20,7 +20,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     private let addImageContainer = UIView()
     private let createButton = UIButton(type: .system)
     private let scrollView = UIScrollView()
-    
+    private var image = UIImage()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -155,13 +155,48 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         imagePicker.allowsEditing = true
         imagePicker.delegate = self
         present(imagePicker, animated: true)
-        
     }
     
     @objc
     private func didTapCreateButton() {
-        animatePlaceholderColor(titleField, titleSeparator)
-        animateButtonTitleColor(addImageButton)
+        guard let title = self.titleField.text, title != "" else {
+            self.animatePlaceholderColor(self.titleField, self.titleSeparator)
+            return }
+        
+        let database = DatabaseModel()
+        let date = getDateFromPicker()
+        let imageLoader = ImageLoader()
+        var imageName = ""
+        var tasksCount = 0
+        
+        imageLoader.uploadImage(self.image) { (result) in
+            switch result {
+            case .success(let randomName):
+                imageName = randomName
+                database.getTasksCount() { (result) in
+                    switch result {
+                    case .success(let count):
+                        tasksCount = count
+                        database.createTask(tasksCount, title, date, imageName) { (result) in
+                            switch result {
+                            case .success(_):
+                                print("ЗДЕСЬ НУЖНО ОТКРЫТЬ ЭКРАН ЦЕЛИ")
+                                self.titleField.text = ""
+                                self.didTapDeleteImageButton()
+                            case .failure(let error):
+                                print("\(error)")
+                            
+                            }
+                        }
+                    case .failure(_):
+                        return
+                    }
+                }
+            case .failure(_):
+                self.animateButtonTitleColor(self.addImageButton)
+                return
+            }
+        }
     }
     
     @objc
@@ -172,11 +207,11 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
-        guard let image = info[.editedImage] as? UIImage else {
+        guard let addImage = info[.editedImage] as? UIImage else {
             print("No image found")
             return
         }
-        
+        self.image = addImage
         self.addImageView.image = image
         self.addImageView.alpha = 0.5
         self.deleteImageButton.alpha = 1

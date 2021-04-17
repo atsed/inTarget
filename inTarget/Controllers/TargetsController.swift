@@ -24,8 +24,8 @@ final class TargetsController: UIViewController {
     
     
     let data = [
-        Task(title: "IOS курс", image: #imageLiteral(resourceName: "artur"), date: "10 мая 2021"),
-        Task(title: "МГТУ", image: #imageLiteral(resourceName: "bmstu"), date: "2 апреля 2021")
+        BADTask(title: "IOS курс", date: "10 мая 2021", BADimage: #imageLiteral(resourceName: "artur")),
+        BADTask(title: "МГТУ", date: "2 апреля 2021", BADimage: #imageLiteral(resourceName: "bmstu"))
     ]
    
     

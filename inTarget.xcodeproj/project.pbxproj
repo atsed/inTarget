@@ -20,6 +20,7 @@
 		4227B68026247A2300F9097F /* DatabaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B67F26247A2300F9097F /* DatabaseModel.swift */; };
 		4227B68326247DB300F9097F /* UnderTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B68226247DB300F9097F /* UnderTask.swift */; };
 		4227B6D32624D2D900F9097F /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B6D22624D2D900F9097F /* Task.swift */; };
+		42C52A3B262A4D010090A570 /* BADTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C52A3A262A4D010090A570 /* BADTask.swift */; };
 		42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1F05261A35D900BE996C /* SignUpController.swift */; };
 		42D000322619DFF1007A5C2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42D000312619DFF1007A5C2A /* GoogleService-Info.plist */; };
 		42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D0FF95261765AE007A5C2A /* AppDelegate.swift */; };
@@ -57,6 +58,7 @@
 		4227B67F26247A2300F9097F /* DatabaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseModel.swift; sourceTree = "<group>"; };
 		4227B68226247DB300F9097F /* UnderTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderTask.swift; sourceTree = "<group>"; };
 		4227B6D22624D2D900F9097F /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		42C52A3A262A4D010090A570 /* BADTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BADTask.swift; sourceTree = "<group>"; };
 		42CE1F05261A35D900BE996C /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		42D000312619DFF1007A5C2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		42D0FF92261765AE007A5C2A /* inTarget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = inTarget.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,10 +198,11 @@
 				42E63A8E261D22B500185433 /* AuthModel.swift */,
 				4227B660261E050600F9097F /* SignUpModel.swift */,
 				4227B67F26247A2300F9097F /* DatabaseModel.swift */,
+				4202FF132627577D00613A38 /* ImageLoader.swift */,
 				4227B67926246CEC00F9097F /* UserDataModel.swift */,
 				4227B68226247DB300F9097F /* UnderTask.swift */,
 				4227B6D22624D2D900F9097F /* Task.swift */,
-				4202FF132627577D00613A38 /* ImageLoader.swift */,
+				42C52A3A262A4D010090A570 /* BADTask.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 				4202FF142627577D00613A38 /* ImageLoader.swift in Sources */,
 				42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */,
 				4227B6D32624D2D900F9097F /* Task.swift in Sources */,
+				42C52A3B262A4D010090A570 /* BADTask.swift in Sources */,
 				42D0FF98261765AE007A5C2A /* SceneDelegate.swift in Sources */,
 				04D39AC0261C5F7F0092486F /* MembersController.swift in Sources */,
 				04D39AB7261C5D4D0092486F /* MainTabBarController.swift in Sources */,
