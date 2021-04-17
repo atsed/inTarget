@@ -6,10 +6,25 @@
 //
 import UIKit
 
+protocol UniqueCellDelegate: AnyObject {
+    func didTapActionButton()
+}
+
 public class UniqueCell: UICollectionViewCell {
     
-
-        lazy var button: UIButton = {
+    weak var delegate: UniqueCellDelegate?
+    
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        setup()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    lazy var button: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "plus.circle")
         button.frame = CGRect(x: 100, y: 30, width: 120, height: 120)
@@ -22,7 +37,7 @@ public class UniqueCell: UICollectionViewCell {
     }()
     
 
-    func setupSpecialCell(){
+    private func setup() {
         contentView.addSubview(button)
         
         backgroundColor = .white
@@ -32,6 +47,12 @@ public class UniqueCell: UICollectionViewCell {
         layer.shadowRadius = 6.0
         layer.shadowOpacity = 1.0
         layer.masksToBounds = false
+        
+        button.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
     }
     
+    @objc
+    func didTapAddButton() {
+        delegate?.didTapActionButton()
+    }
 }

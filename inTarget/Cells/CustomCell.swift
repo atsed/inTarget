@@ -10,7 +10,14 @@ import UIKit
 
 class CustomCell: UICollectionViewCell {
     
-    var data: BADTask?
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var progressBar: UIProgressView = {
         let progressBar = UIProgressView(progressViewStyle: .bar)
@@ -24,7 +31,6 @@ class CustomCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = data?.BADimage
         imageView.layer.cornerRadius = 30
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -34,8 +40,6 @@ class CustomCell: UICollectionViewCell {
     
     private lazy var underTasksCount: UILabel = {
         let underTasksCount = UILabel()
-        let labelUnderTasks : String = " подзадач"
-        underTasksCount.text = String(data?.underTasks.count ?? 0) + labelUnderTasks
         underTasksCount.font = UIFont(name: "GothamPro", size: 15)
         underTasksCount.textColor = .black
         underTasksCount.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +49,6 @@ class CustomCell: UICollectionViewCell {
     
     private lazy var yearLabel: UILabel = {
         let date = UILabel()
-        date.text = data?.date
         date.font = UIFont(name: "GothamPro", size: 11)
         date.textColor = .separator
         date.translatesAutoresizingMaskIntoConstraints = false
@@ -55,7 +58,6 @@ class CustomCell: UICollectionViewCell {
     
     private lazy var label: UILabel = {
         let label = UILabel()
-        label.text = data?.title
         label.font = UIFont(name: "GothamPro", size: 24)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -63,7 +65,7 @@ class CustomCell: UICollectionViewCell {
     }()
 
     
-    func setup() {
+    private func setup() {
         contentView.addSubview(imageView)
         contentView.addSubview(label)
         contentView.addSubview(yearLabel)
@@ -79,6 +81,39 @@ class CustomCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         setupConstraints()
+    }
+    
+    func configure(with task: Task) {
+        let labelUnderTasks : String = " подзадач"
+        label.text = task.title
+        underTasksCount.text = String(task.underTasks.count) + labelUnderTasks
+        
+        let oldDAteFormatter = DateFormatter()
+        oldDAteFormatter.dateFormat = "dd MM yyyy"
+        guard let oldDate = oldDAteFormatter.date(from: task.date) else {
+            return
+        }
+        
+        let newDAteFormatter = DateFormatter()
+        newDAteFormatter.dateFormat = "dd MMMM yyyy"
+        let newDate = newDAteFormatter.string(from: oldDate)
+        
+        yearLabel.text = newDate
+        
+        InjectionHelper.imageLoader.downloadImage(task.image) { [weak self] result in
+            switch result {
+            case .success(let image):
+                self?.imageView.image = image
+            case .failure:
+                return
+            }
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        imageView.image = nil
     }
     
     private func setupConstraints() {
@@ -105,6 +140,3 @@ class CustomCell: UICollectionViewCell {
         ])
     }
 }
-
-
-

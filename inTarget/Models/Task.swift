@@ -8,10 +8,11 @@
 import UIKit
 
 struct Task {
-    var title: String
-    var date: String
-    var image : String
-    var underTasks: Array<UnderTask> = []
+    let title: String
+    let date: String
+    let image : String
+    let underTasks: [UnderTask] = []
+    
     init(title: String, date: String, image: String) {
         self.title = title
         self.date = date

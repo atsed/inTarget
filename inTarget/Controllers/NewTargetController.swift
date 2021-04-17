@@ -20,6 +20,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     private let addImageContainer = UIView()
     private let createButton = UIButton(type: .system)
     private let scrollView = UIScrollView()
+    
     private var image = UIImage()
     
     override func viewDidLoad() {
@@ -27,7 +28,6 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         hideKeyboardWhenTappedAround()
         
         view.backgroundColor = .background
-        
         
         headLabel.text = "Новая цель"
         headLabel.textColor = .black
@@ -137,16 +137,16 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .marginTop(8)
         
         didPerformLayout()
-            
     }
     
     private func didPerformLayout() {
-        let tabbar = tabBarController?.tabBar.bounds.height ?? 0
+        let tabbarHeight = tabBarController?.tabBar.bounds.height ?? 0
 
-        if self.view.bounds.height - tabbar < createButton.frame.maxY {
-            scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: createButton.frame.maxY + 16)
+        guard view.bounds.height - tabbarHeight < createButton.frame.maxY else {
             return
-        } else { return }
+        }
+        
+        scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: createButton.frame.maxY + 16)
     }
     
     @objc
@@ -159,17 +159,24 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func didTapCreateButton() {
-        guard let title = self.titleField.text, title != "" else {
+        guard let title = self.titleField.text,
+              title != "" else {
+            
             self.animatePlaceholderColor(self.titleField, self.titleSeparator)
-            return }
+            return
+        }
         
         let database = DatabaseModel()
         let date = getDateFromPicker()
-        let imageLoader = ImageLoader()
+        let imageLoader = InjectionHelper.imageLoader
         var imageName = ""
         var tasksCount = 0
         
-        imageLoader.uploadImage(self.image) { (result) in
+        imageLoader.uploadImage(image) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
             switch result {
             case .success(let randomName):
                 imageName = randomName
@@ -201,8 +208,8 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func didTapDeleteImageButton() {
-        self.addImageView.image = .none
-        self.deleteImageButton.alpha = 0
+        addImageView.image = .none
+        deleteImageButton.alpha = 0
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -211,17 +218,17 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             print("No image found")
             return
         }
-        self.image = addImage
-        self.addImageView.image = image
-        self.addImageView.alpha = 0.5
-        self.deleteImageButton.alpha = 1
+        image = addImage
+        addImageView.image = image
+        addImageView.alpha = 0.5
+        deleteImageButton.alpha = 1
     }
     
     func getDateFromPicker() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMMM yyyy"
+        formatter.dateFormat = "dd MM yyyy"
         let dateString = formatter.string(from: datePicker.date)
-        return(dateString)
+        return (dateString)
     }
 
 }

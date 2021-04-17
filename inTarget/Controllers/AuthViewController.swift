@@ -25,7 +25,7 @@ class AuthViewController: UIViewController {
     private let scrollView = UIScrollView()
     
     private var kbFrameSize : CGRect = .zero
-        
+    
     private let quotes = [
         ["""
 "Если вы работаете
@@ -47,9 +47,9 @@ class AuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         checkKeyboardNotifications()
         hideKeyboardWhenTappedAround()
-        
         
         view.backgroundColor = .background
         
@@ -58,6 +58,7 @@ class AuthViewController: UIViewController {
         headLabel.font = UIFont(name: "Noteworthy", size: 46)
         
         let randomOfQuotes = Int.random(in: 0..<quotes.count)
+        
         quoteLabel.text = quotes[randomOfQuotes][0]
         quoteLabel.font = UIFont(name: "GothamPro-Light", size: 18)
         quoteLabel.textColor = .darkGray
@@ -93,8 +94,6 @@ class AuthViewController: UIViewController {
         signInButton.setTitleColor(.background, for: .normal)
         signInButton.backgroundColor = .accent
         signInButton.setTitleColor(.lightGray, for: .selected)
-        //signInButton.setTitleColor(.red, for: .highlighted)
-        
         
         signUpButton.setTitle("Зарегистрируйтесь", for: .normal)
         signUpButton.titleLabel?.font = UIFont(name: "GothamPro", size: 15)
@@ -112,7 +111,6 @@ class AuthViewController: UIViewController {
         scrollView.keyboardDismissMode = .onDrag
         
         signInButton.addTarget(self, action: #selector(didTapSignInButton), for: .touchUpInside)
-        
         signUpButton.addTarget(self, action: #selector(didTapSignUpButton), for: .touchUpInside)
         
         [signUpLabel, signUpButton].forEach { containerSignUp.addSubview($0) }
@@ -156,7 +154,7 @@ class AuthViewController: UIViewController {
             .horizontally(16)
             .height(60)
             .below(of: loginField)
-                
+        
         containerTextView.pin
             .wrapContent()
             .center()
@@ -205,10 +203,8 @@ class AuthViewController: UIViewController {
     }
     
     func checkKeyboardNotifications() {
-         NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(kbDidHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-
     }
     
     func removeKeyboardNotifications() {
@@ -220,14 +216,18 @@ class AuthViewController: UIViewController {
     func kbDidShow(_ notification : Notification) {
         let userInfo = notification.userInfo
         kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height - view.safeAreaInsets.bottom + kbFrameSize.height )
+        
+        scrollView.contentSize = CGSize(width: view.bounds.size.width,
+                                        height: view.bounds.size.height - view.safeAreaInsets.bottom + kbFrameSize.height)
+        
         scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
     }
     
     @objc
     func kbDidHide() {
         scrollView.contentOffset = CGPoint.zero
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
+        scrollView.contentSize = CGSize(width: view.bounds.size.width,
+                                        height: view.bounds.size.height  - kbFrameSize.height)
     }
     
     @objc
@@ -262,67 +262,24 @@ class AuthViewController: UIViewController {
 
 
 extension UIColor {
-//    static let background = UIColor(red: 20/256,
-//                                green: 21/256,
-//                                blue: 24/256,
-//                                alpha: 1)
+    //    static let background = UIColor(red: 20/256,
+    //                                green: 21/256,
+    //                                blue: 24/256,
+    //                                alpha: 1)
     
     static let background = UIColor.white
     
-//    static let accent = UIColor(red: 167/256,
-//                                green: 238/256,
-//                                blue: 237/256,
-//                                alpha: 1)
+    //    static let accent = UIColor(red: 167/256,
+    //                                green: 238/256,
+    //                                blue: 237/256,
+    //                                alpha: 1)
     
     static let accent = UIColor(red: 97/256,
-                                    green: 62/256,
-                                    blue: 234/256,
-                                    alpha: 1)
+                                green: 62/256,
+                                blue: 234/256,
+                                alpha: 1)
     
     static let separator = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-
 }
 
-extension UIViewController {
-    
-    func hideKeyboardWhenTappedAround() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    
-    @objc
-    func dismissKeyboard() {
-        view.endEditing(true)
-        
-    }
-    
-    func animateErrorLable(_ errorLabel : UILabel) {
-        UIView.animate(withDuration: 3, delay: 3, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.curveEaseInOut], animations: { 
-            errorLabel.alpha = 0
-        }) { complete in
-            errorLabel.alpha = 0
-        }
-    }
-    
-    func animatePlaceholderColor(_ titleField : UITextField, _ titleSeparator : UIView) {
-        let redColor = UIColor.red.withAlphaComponent(0.5)
-        let grayColor = UIColor.gray.withAlphaComponent(0.5)
-        titleField.attributedPlaceholder = NSAttributedString(string: titleField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor : redColor])
-        titleSeparator.backgroundColor = redColor
-        
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { (timer) in
-            titleField.attributedPlaceholder = NSAttributedString(string: titleField.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor : grayColor])
-            titleSeparator.backgroundColor = .separator
-        }
-    }
-    
-    func animateButtonTitleColor(_ button : UIButton) {
-        button.setTitleColor(UIColor.red.withAlphaComponent(0.5), for: .normal)
-        Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false) { (timer) in
-            button.setTitleColor(.accent, for: .normal)
-        }
-    }
-    
-}
 

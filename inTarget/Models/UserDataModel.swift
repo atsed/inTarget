@@ -8,16 +8,15 @@
 import Foundation
 import Firebase
 
-
 struct UserDataModel {
     var uid : String
     var email : String
     var avatar: String = ""
-    var friends : Array<String> = []
-    var groups : Array<String> = []
+    var friends : [String] = []
+    var groups : [String] = []
     var name : String
     var surName : String
-    var tasks : Array<Task> = []
+    var tasks : [Task] = []
     
     init(user: User, name : String, surName : String) {
         self.uid = user.uid

@@ -21,16 +21,27 @@ final class TargetsController: UIViewController {
         return cv
     }()
     
+    private let dataBase = DatabaseModel()
     
-    
-    let data = [
-        BADTask(title: "IOS курс", date: "10 мая 2021", BADimage: #imageLiteral(resourceName: "artur")),
-        BADTask(title: "МГТУ", date: "2 апреля 2021", BADimage: #imageLiteral(resourceName: "bmstu"))
-    ]
-   
+    var data: [Task] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setup()
+        
+        dataBase.getTasks { [weak self] result in
+            switch result {
+            case .success(let tasks):
+                self?.data = tasks
+                self?.collectionView.reloadData()
+            case .failure:
+                return
+            }
+        }
+    }
+    
+    private func setup() {
         view.backgroundColor = .white
         view.addSubview(collectionView)
         view.addSubview(headLabel)
@@ -40,10 +51,6 @@ final class TargetsController: UIViewController {
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
         collectionView.backgroundColor = .white
-        collectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 170).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-        collectionView.heightAnchor.constraint(equalTo: collectionView.widthAnchor, multiplier: 0.5).isActive = true
         collectionView.backgroundColor = .white
         collectionView.layer.cornerRadius = 30
         collectionView.layer.masksToBounds = false
@@ -53,10 +60,17 @@ final class TargetsController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
         headLabel.pin
             .top(view.pin.safeArea.top + 30)
             .left(view.pin.safeArea.left + 30)
             .sizeToFit()
+        
+        collectionView.pin
+            .below(of: headLabel)
+            .marginTop(30)
+            .horizontally()
+            .height(177)
     }
     
     @objc func didTapAddButton() {
@@ -69,7 +83,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/1.1, height: collectionView.frame.width/2)
+        return CGSize(width: collectionView.frame.width/1.1, height: 177)
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -79,17 +93,30 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CustomCell
-        let uniqueCell = collectionView.dequeueReusableCell(withReuseIdentifier: "uniqueCell", for: indexPath) as! UniqueCell
-        uniqueCell.button.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
-        while indexPath.row >= data.count {
-            uniqueCell.setupSpecialCell()
+        
+        if indexPath.row == data.count {
+            guard let uniqueCell = collectionView.dequeueReusableCell(withReuseIdentifier: "uniqueCell", for: indexPath) as? UniqueCell else {
+                return UICollectionViewCell()
+            }
+            
+            uniqueCell.delegate = self
             return uniqueCell
         }
-            cell.data = data[indexPath.row]
-            cell.setup()
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? CustomCell else {
+            return UICollectionViewCell()
+        }
+    
+        let task = data[indexPath.row]
+        cell.configure(with: task)
         
         return cell
     }
 
+}
+
+extension TargetsController: UniqueCellDelegate {
+    func didTapActionButton() {
+        didTapAddButton()
+    }
 }

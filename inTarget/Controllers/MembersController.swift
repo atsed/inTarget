@@ -5,7 +5,6 @@
 //  Created by Георгий on 06.04.2021.
 //
 
-
 import UIKit
 import PinLayout
 
@@ -15,6 +14,10 @@ class MembersController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setup()
+    }
+    
+    private func setup() {
         view.backgroundColor = .green
         view.addSubview(logoutButton)
         
@@ -34,8 +37,10 @@ class MembersController: UIViewController {
     @objc
     func didTapLogoutButton() {
         UserDefaults.standard.setValue(false, forKey: "isAuth")
+        
         let authViewController = AuthViewController()
         authViewController.modalPresentationStyle = .fullScreen
+        
         present(authViewController, animated: false, completion: nil)
     }
 }

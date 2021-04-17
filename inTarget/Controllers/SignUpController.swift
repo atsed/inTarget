@@ -35,11 +35,13 @@ class SignUpController : UIViewController {
         view.backgroundColor = .background
         
         navigationBar.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 0)
-        let navItem = UINavigationItem()
         let backItem = UIBarButtonItem(image: UIImage.init(systemName: "chevron.backward"), style: .plain, target: nil, action: #selector(didTapBackButton))
         backItem.tintColor = .accent
+        
+        let navItem = UINavigationItem()
         navItem.leftBarButtonItem = backItem
         navigationBar.setItems([navItem], animated: false)
+        
         navigationBar.setBackgroundImage(UIImage(), for:UIBarMetrics.default)
         navigationBar.isTranslucent = true
         navigationBar.shadowImage = UIImage()
@@ -52,7 +54,7 @@ class SignUpController : UIViewController {
         errorLabel.textColor = .red
         errorLabel.textAlignment = .center
         errorLabel.font = UIFont(name: "GothamPro-Light", size: 17)
-                
+        
         nameField.placeholder = "Имя"
         surnameField.placeholder = "Фамилия"
         loginField.placeholder = "Email"
@@ -106,7 +108,7 @@ inTarget
             .top(view.pin.safeArea.top)
             .horizontally(0)
             .height(40)
-            //.sizeToFit()
+        //.sizeToFit()
         
         headLabel.pin
             .top(view.pin.safeArea.top + 34)
@@ -176,40 +178,39 @@ inTarget
             .marginBottom(20)
     }
     
-        @objc
-        private func didTapBackButton() {
-            dismiss(animated: true, completion: nil)
-        }
+    @objc
+    private func didTapBackButton() {
+        dismiss(animated: true, completion: nil)
+    }
     
-        @objc
-        private func didTapSignUpButton(){
-            let signUp = SignUpModel()
-    
-            signUp.singUp(nameField, surnameField, loginField, passwordField) {
-                isSignUp, errorMessage in
-                if isSignUp == true {
-                    let mainTabBarViewController = MainTabBarController()
-                    mainTabBarViewController.modalPresentationStyle = .fullScreen
-                    self.present(mainTabBarViewController, animated: true, completion: nil)
-    
-                    UserDefaults.standard.setValue(true, forKey: "isAuth")
-                } else if isSignUp == false {
-                    self.errorLabel.text = errorMessage
-                    self.errorLabel.alpha = 1
-                    self.animateErrorLable(self.errorLabel)
-                }
+    @objc
+    private func didTapSignUpButton(){
+        let signUp = SignUpModel()
+        
+        signUp.singUp(nameField, surnameField, loginField, passwordField) { isSignUp, errorMessage in
+            if isSignUp == true {
+                let mainTabBarViewController = MainTabBarController()
+                mainTabBarViewController.modalPresentationStyle = .fullScreen
+                self.present(mainTabBarViewController, animated: true, completion: nil)
+                
+                UserDefaults.standard.setValue(true, forKey: "isAuth")
+            } else if isSignUp == false {
+                self.errorLabel.text = errorMessage
+                self.errorLabel.alpha = 1
+                self.animateErrorLable(self.errorLabel)
             }
         }
+    }
     
     deinit {
         removeKeyboardNotifications()
     }
-
+    
     func checkKeyboardNotifications() {
-         NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(kbDidShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(kbDidHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    
     func removeKeyboardNotifications() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -222,12 +223,12 @@ inTarget
         scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  + kbFrameSize.height)
         scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height / 2)
     }
-
+    
     @objc
     func kbDidHide() {
         scrollView.contentOffset = CGPoint.zero
         scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
     }
-
-
+    
+    
 }
