@@ -38,8 +38,7 @@ class DatabaseModel {
         }
     }
     
-    func createTask(_ count: Int,
-                    _ title: String,
+    func createTask(_ title: String,
                     _ date: String,
                     _ image: String,
                     completion: @escaping (Result<String, Error>) -> Void) {
@@ -49,7 +48,7 @@ class DatabaseModel {
         }
         
         let randomName = UUID().uuidString
-        let task = Task(title: title, date: date, image: image)
+        let task = Task(randomName: randomName, title: title, date: date, image: image)
         let data = ["\(randomName)" : ["title" : task.title,
                     "date" : task.date,
                     "image" : task.image,
@@ -89,14 +88,14 @@ class DatabaseModel {
             
             var completionTasks: [Task] = []
             
-            tasks.forEach { _, task in
+            tasks.forEach { randomName, task in
                 guard let date = task["date"] as? String,
                       let image = task["image"] as? String,
                       let title = task["title"] as? String else {
                     return
                 }
                 
-                completionTasks.append(Task(title: title, date: date, image: image))
+                completionTasks.append(Task(randomName: randomName, title: title, date: date, image: image))
             }
             
             let formatter = DateFormatter()

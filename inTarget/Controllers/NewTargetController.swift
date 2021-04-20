@@ -159,8 +159,12 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func didTapCreateButton() {
+//        //УБРАТЬ
+//        self.tabBarController?.selectedIndex = 3
+//        (self.tabBarController as? MainTabBarController)?.openGoal(with: "something")
+//        //
         guard let title = self.titleField.text,
-              title != "" else {
+              !title.isEmpty else {
             
             self.animatePlaceholderColor(self.titleField, self.titleSeparator)
             return
@@ -170,7 +174,6 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         let date = getDateFromPicker()
         let imageLoader = InjectionHelper.imageLoader
         var imageName = ""
-        var tasksCount = 0
         
         imageLoader.uploadImage(image) { [weak self] result in
             guard let self = self else {
@@ -180,23 +183,18 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             switch result {
             case .success(let randomName):
                 imageName = randomName
-                database.getTasksCount() { (result) in
+                database.createTask(title, date, imageName) { [weak self] (result) in
                     switch result {
-                    case .success(let count):
-                        tasksCount = count
-                        database.createTask(tasksCount, title, date, imageName) { (result) in
-                            switch result {
-                            case .success(_):
-                                print("ЗДЕСЬ НУЖНО ОТКРЫТЬ ЭКРАН ЦЕЛИ")
-                                self.titleField.text = ""
-                                self.didTapDeleteImageButton()
-                            case .failure(let error):
-                                print("\(error)")
-                            
-                            }
-                        }
-                    case .failure(_):
-                        return
+                    case .success(_):
+                        let targetsController = TargetsController()
+                        targetsController.reloadTasks()
+                        self?.tabBarController?.selectedIndex = 3
+                        (self?.tabBarController as? MainTabBarController)?.openGoal(with: "something")
+                        self?.titleField.text = ""
+                        self?.didTapDeleteImageButton()
+                    case .failure(let error):
+                        print("\(error)")
+                        
                     }
                 }
             case .failure(_):

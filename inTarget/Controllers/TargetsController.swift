@@ -29,16 +29,7 @@ final class TargetsController: UIViewController {
         super.viewDidLoad()
         
         setup()
-        
-        dataBase.getTasks { [weak self] result in
-            switch result {
-            case .success(let tasks):
-                self?.data = tasks
-                self?.collectionView.reloadData()
-            case .failure:
-                return
-            }
-        }
+        reloadTasks()
     }
     
     private func setup() {
@@ -75,6 +66,19 @@ final class TargetsController: UIViewController {
     
     @objc func didTapAddButton() {
         tabBarController?.selectedIndex = 1
+    }
+    
+    public func reloadTasks() {
+        dataBase.getTasks { result in
+            switch result {
+            case .success(let tasks):
+                self.data = tasks
+                print("DATA: \(String(describing: self.data))")
+                self.collectionView.reloadData()
+            case .failure:
+                return
+            }
+        }
     }
 }
 

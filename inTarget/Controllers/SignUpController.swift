@@ -35,7 +35,7 @@ class SignUpController : UIViewController {
         view.backgroundColor = .background
         
         navigationBar.frame = CGRect(x: 0, y: 0, width: view.frame.size.width, height: 0)
-        let backItem = UIBarButtonItem(image: UIImage.init(systemName: "chevron.backward"), style: .plain, target: nil, action: #selector(didTapBackButton))
+        let backItem = UIBarButtonItem(image: UIImage.init(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(didTapBackButton))
         backItem.tintColor = .accent
         
         let navItem = UINavigationItem()
@@ -108,7 +108,6 @@ inTarget
             .top(view.pin.safeArea.top)
             .horizontally(0)
             .height(40)
-        //.sizeToFit()
         
         headLabel.pin
             .top(view.pin.safeArea.top + 34)

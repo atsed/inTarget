@@ -8,12 +8,14 @@
 import UIKit
 
 struct Task {
+    let randomName : String
     let title: String
     let date: String
     let image : String
     let underTasks: [UnderTask] = []
     
-    init(title: String, date: String, image: String) {
+    init(randomName : String, title: String, date: String, image: String) {
+        self.randomName = randomName
         self.title = title
         self.date = date
         self.image = image

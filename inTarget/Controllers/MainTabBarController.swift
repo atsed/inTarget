@@ -11,8 +11,8 @@ import PinLayout
 final class MainTabBarController: UITabBarController {
     private let vc1 = TargetsController()
     private let vc2 = NewTargetController()
-    private let vc3 = MyTargetController()
-    private let vc4 = MembersController()
+    private let vc3 = MembersController()
+    private let vc4 = UINavigationController(rootViewController: MyTargetsController())
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,5 +29,9 @@ final class MainTabBarController: UITabBarController {
         
         setViewControllers([vc1, vc2, vc3, vc4], animated: false)
     }
+    
+    func openGoal(with data: String) {
+        self.selectedIndex = 3
+        (vc4.topViewController as? MyTargetsController)?.yourFunction()
+    }
 }
-
