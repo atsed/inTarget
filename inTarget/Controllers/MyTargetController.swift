@@ -15,13 +15,15 @@ class MyTargetController: UIViewController {
     
     private var kbFrameSize : CGRect = .zero
     
+    var taskName = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         checkKeyboardNotifications()
         hideKeyboardWhenTappedAround()
         
         view.backgroundColor = .background
-        
+        print("taskName: \(taskName)")
         //imageView.image
         
         [imageView].forEach { scrollView.addSubview($0) }

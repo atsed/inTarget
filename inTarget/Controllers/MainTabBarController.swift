@@ -30,8 +30,12 @@ final class MainTabBarController: UITabBarController {
         setViewControllers([vc1, vc2, vc3, vc4], animated: false)
     }
     
-    func openGoal(with data: String) {
+    func reloadVC1() {
+        vc1.reloadTasks()
+    }
+    
+    func openGoal(with taskName: String) {
         self.selectedIndex = 3
-        (vc4.topViewController as? MyTargetsController)?.yourFunction()
+        (vc4.topViewController as? MyTargetsController)?.pushMyTargetController(taskName: taskName)
     }
 }

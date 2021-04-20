@@ -30,8 +30,10 @@ class MyTargetsController: UIViewController {
         self.navigationController?.isNavigationBarHidden = true
     }
     
-    public func yourFunction() {
-        self.navigationController?.pushViewController(MyTargetController(), animated: true)
+    public func pushMyTargetController(taskName : String) {
+        let myTargetController = MyTargetController()
+        myTargetController.taskName = taskName
+        self.navigationController?.pushViewController(myTargetController, animated: true)
     }
     
     private func setup() {

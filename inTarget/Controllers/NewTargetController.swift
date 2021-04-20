@@ -159,10 +159,6 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func didTapCreateButton() {
-//        //УБРАТЬ
-//        self.tabBarController?.selectedIndex = 3
-//        (self.tabBarController as? MainTabBarController)?.openGoal(with: "something")
-//        //
         guard let title = self.titleField.text,
               !title.isEmpty else {
             
@@ -181,15 +177,13 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             }
             
             switch result {
-            case .success(let randomName):
-                imageName = randomName
+            case .success(let imageRandomName):
+                imageName = imageRandomName
                 database.createTask(title, date, imageName) { [weak self] (result) in
                     switch result {
-                    case .success(_):
-                        let targetsController = TargetsController()
-                        targetsController.reloadTasks()
-                        self?.tabBarController?.selectedIndex = 3
-                        (self?.tabBarController as? MainTabBarController)?.openGoal(with: "something")
+                    case .success(let taskName):
+                        (self?.tabBarController as? MainTabBarController)?.reloadVC1()
+                        (self?.tabBarController as? MainTabBarController)?.openGoal(with: taskName)
                         self?.titleField.text = ""
                         self?.didTapDeleteImageButton()
                     case .failure(let error):

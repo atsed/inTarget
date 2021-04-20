@@ -54,14 +54,14 @@ class DatabaseModel {
                     "image" : task.image,
                     "under tasks" : task.underTasks] as [String : Any]]
         
-        database.document(currentUser.uid).setData(["tasks" : data], merge: true) { ( error ) in
+        database.document(currentUser.uid).setData(["tasks" : data], merge: true) { error in
             let result = Result {
             }
             
             switch result {
             case .success():
                 print("crateTask: GOOD JOB")
-                completion(.success(""))
+                completion(.success(randomName))
             case .failure(let error):
                 print("crateTask: BAD RESULT \(error)")
                 completion(.failure(error))
