@@ -183,6 +183,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
                     switch result {
                     case .success(let taskName):
                         (self?.tabBarController as? MainTabBarController)?.reloadVC1()
+                        (self?.tabBarController as? MainTabBarController)?.reloadVC4()
                         (self?.tabBarController as? MainTabBarController)?.openGoal(with: taskName)
                         self?.titleField.text = ""
                         self?.didTapDeleteImageButton()

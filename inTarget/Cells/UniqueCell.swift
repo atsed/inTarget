@@ -27,7 +27,6 @@ public class UniqueCell: UICollectionViewCell {
     lazy var button: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "plus.circle")
-        button.frame = CGRect(x: 100, y: 30, width: 120, height: 120)
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill
@@ -39,7 +38,7 @@ public class UniqueCell: UICollectionViewCell {
 
     private func setup() {
         contentView.addSubview(button)
-        
+
         backgroundColor = .white
         layer.cornerRadius = 30
         layer.shadowColor = UIColor.gray.cgColor
@@ -49,10 +48,21 @@ public class UniqueCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         button.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
+        setupConstraints()
     }
     
     @objc
     func didTapAddButton() {
         delegate?.didTapActionButton()
+    }
+    
+    private func setupConstraints() {
+        
+        button.pin
+            .hCenter()
+            .vCenter()
+            .height(120)
+            .width(120)
+            
     }
 }
