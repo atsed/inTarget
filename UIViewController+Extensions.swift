@@ -20,6 +20,18 @@ extension UIViewController {
         view.endEditing(true)
     }
     
+    func swapDate(date : String) -> String {
+        let oldDAteFormatter = DateFormatter()
+        oldDAteFormatter.dateFormat = "dd MM yyyy"
+        guard let oldDate = oldDAteFormatter.date(from: date) else {
+            return ""
+        }
+        let newDAteFormatter = DateFormatter()
+        newDAteFormatter.dateFormat = "dd MMMM yyyy"
+        let newDate = newDAteFormatter.string(from: oldDate)
+        return newDate
+    }
+    
     func animateErrorLable(_ errorLabel : UILabel) {
         UIView.animate(withDuration: 3,
                        delay: 3,

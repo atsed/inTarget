@@ -12,7 +12,8 @@ struct Task {
     let title: String
     let date: String
     let image : String
-    let underTasks: [UnderTask] = []
+    //Заменить var на let
+    var underTasks: [UnderTask] = []
     
     init(randomName : String, title: String, date: String, image: String) {
         self.randomName = randomName

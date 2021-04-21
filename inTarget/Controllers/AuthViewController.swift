@@ -279,6 +279,11 @@ extension UIColor {
                                 blue: 234/256,
                                 alpha: 1)
     
+    static let lightAccent = UIColor(red: 237/256,
+                                     green: 237/256,
+                                     blue: 246/256,
+                                     alpha: 1)
+    
     static let separator = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
 }
 

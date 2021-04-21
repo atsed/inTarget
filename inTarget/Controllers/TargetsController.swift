@@ -42,7 +42,6 @@ final class TargetsController: UIViewController {
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
         collectionView.backgroundColor = .white
-        collectionView.backgroundColor = .white
         collectionView.layer.cornerRadius = 30
         collectionView.layer.masksToBounds = false
         collectionView.delegate = self
@@ -73,7 +72,6 @@ final class TargetsController: UIViewController {
             switch result {
             case .success(let tasks):
                 self.data = tasks
-                print("DATA: \(String(describing: self.data))")
                 self.collectionView.reloadData()
             case .failure:
                 return

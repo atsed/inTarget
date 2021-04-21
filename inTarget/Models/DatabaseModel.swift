@@ -112,6 +112,38 @@ class DatabaseModel {
         }
     }
     
+    func getTask(taskName : String, completion: @escaping (Result<Task, Error>) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            return
+        }
+        
+        database.document(user.uid).getDocument { (document, error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let userData = document?.data(),
+                  let tasks = userData["tasks"] as? [String: [String: Any]] else {
+                completion(.failure(ImageLoader.ImageLoaderError.unexpected))
+                return
+            }
+            
+            var resultTask: Task = Task(randomName: "", title: "", date: "", image: "")
+            let selectTask = tasks[taskName]
+            guard let date = selectTask?["date"] as? String,
+                  let image = selectTask?["image"] as? String,
+                  let title = selectTask?["title"] as? String else {
+                return
+            }
+            
+            resultTask = Task(randomName: taskName, title: title, date: date, image: image)
+            
+            completion(.success(resultTask))
+        }
+        
+    }
+    
     func getTasksCount(completion: @escaping (Result<Int, Error>) -> Void) {
         guard let currentUser = Auth.auth().currentUser else {
             return
