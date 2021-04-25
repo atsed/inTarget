@@ -5,8 +5,8 @@
 //  Created by Георгий on 06.04.2021.
 //
 
-import PinLayout
 import UIKit
+import PinLayout
 
 final class TargetsController: UIViewController {
     private let headLabel = UILabel()
@@ -16,8 +16,8 @@ final class TargetsController: UIViewController {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.showsHorizontalScrollIndicator = false
-        cv.register(CustomCell.self, forCellWithReuseIdentifier: "cell")
-        cv.register(UniqueCell.self, forCellWithReuseIdentifier: "uniqueCell")
+        cv.register(TaskCell.self, forCellWithReuseIdentifier: "TaskCell")
+        cv.register(NewTaskCell.self, forCellWithReuseIdentifier: "NewTaskCell")
         return cv
     }()
     
@@ -63,8 +63,14 @@ final class TargetsController: UIViewController {
             .height(177)
     }
     
-    @objc func didTapAddButton() {
+    @objc
+    func didTapAddButton() {
         tabBarController?.selectedIndex = 1
+    }
+    
+    @objc
+    func didTapOpenButton(taskID : String) {
+        (self.tabBarController as? MainTabBarController)?.openGoal(with: taskID)
     }
     
     public func reloadTasks() {
@@ -97,27 +103,32 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.row == data.count {
-            guard let uniqueCell = collectionView.dequeueReusableCell(withReuseIdentifier: "uniqueCell", for: indexPath) as? UniqueCell else {
+            guard let newTaskCell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewTaskCell", for: indexPath) as? NewTaskCell else {
                 return UICollectionViewCell()
             }
             
-            uniqueCell.delegate = self
-            return uniqueCell
+            newTaskCell.delegate = self
+            return newTaskCell
         }
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? CustomCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
             return UICollectionViewCell()
         }
     
         let task = data[indexPath.row]
         cell.configure(with: task)
+        cell.delegate = self
         
         return cell
     }
 
 }
 
-extension TargetsController: UniqueCellDelegate {
+extension TargetsController: TaskCellDelegate, NewTaskCellDelegate {
+    func didTapOpenTaskButton(taskID : String) {
+        didTapOpenButton(taskID: taskID)
+    }
+    
     func didTapActionButton() {
         didTapAddButton()
     }

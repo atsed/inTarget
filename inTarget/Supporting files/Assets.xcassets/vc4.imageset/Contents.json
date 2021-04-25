@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "image 4.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -10,6 +9,7 @@
       "scale" : "2x"
     },
     {
+      "filename" : "menu-three-outlined-rounded-lines-symbol.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

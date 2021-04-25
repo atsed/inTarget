@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		046E220E261CB6B10070D5D1 /* TargetsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046E220D261CB6B10070D5D1 /* TargetsController.swift */; };
-		0481A74E262838680027AD5D /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0481A74D262838680027AD5D /* CustomCell.swift */; };
-		0481A751262838E00027AD5D /* UniqueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0481A750262838E00027AD5D /* UniqueCell.swift */; };
+		0481A74E262838680027AD5D /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0481A74D262838680027AD5D /* TaskCell.swift */; };
+		0481A751262838E00027AD5D /* NewTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0481A750262838E00027AD5D /* NewTaskCell.swift */; };
 		04D39AB7261C5D4D0092486F /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39AB6261C5D4D0092486F /* MainTabBarController.swift */; };
 		04D39ABA261C5F3C0092486F /* NewTargetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39AB9261C5F3C0092486F /* NewTargetController.swift */; };
 		04D39ABD261C5F6E0092486F /* MyTargetsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D39ABC261C5F6E0092486F /* MyTargetsController.swift */; };
@@ -19,6 +19,7 @@
 		420822B0262FB059006870C4 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420822AF262FB059006870C4 /* String+Extensions.swift */; };
 		420822B426309E49006870C4 /* UnderTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420822B326309E49006870C4 /* UnderTaskCell.swift */; };
 		420822B726309F12006870C4 /* NewUnderTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420822B626309F12006870C4 /* NewUnderTaskCell.swift */; };
+		420822C12633504A006870C4 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420822C02633504A006870C4 /* UIImage+Extensions.swift */; };
 		4227B661261E050600F9097F /* SignUpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B660261E050600F9097F /* SignUpModel.swift */; };
 		4227B67A26246CEC00F9097F /* UserDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B67926246CEC00F9097F /* UserDataModel.swift */; };
 		4227B68026247A2300F9097F /* DatabaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4227B67F26247A2300F9097F /* DatabaseModel.swift */; };
@@ -51,8 +52,8 @@
 
 /* Begin PBXFileReference section */
 		046E220D261CB6B10070D5D1 /* TargetsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetsController.swift; sourceTree = "<group>"; };
-		0481A74D262838680027AD5D /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
-		0481A750262838E00027AD5D /* UniqueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniqueCell.swift; sourceTree = "<group>"; };
+		0481A74D262838680027AD5D /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
+		0481A750262838E00027AD5D /* NewTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTaskCell.swift; sourceTree = "<group>"; };
 		04D39AB6261C5D4D0092486F /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		04D39AB9261C5F3C0092486F /* NewTargetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTargetController.swift; sourceTree = "<group>"; };
 		04D39ABC261C5F6E0092486F /* MyTargetsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTargetsController.swift; sourceTree = "<group>"; };
@@ -62,6 +63,7 @@
 		420822AF262FB059006870C4 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		420822B326309E49006870C4 /* UnderTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderTaskCell.swift; sourceTree = "<group>"; };
 		420822B626309F12006870C4 /* NewUnderTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUnderTaskCell.swift; sourceTree = "<group>"; };
+		420822C02633504A006870C4 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		4227B660261E050600F9097F /* SignUpModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpModel.swift; sourceTree = "<group>"; };
 		4227B67926246CEC00F9097F /* UserDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataModel.swift; sourceTree = "<group>"; };
 		4227B67F26247A2300F9097F /* DatabaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseModel.swift; sourceTree = "<group>"; };
@@ -111,8 +113,8 @@
 		0481A75326283A810027AD5D /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				0481A74D262838680027AD5D /* CustomCell.swift */,
-				0481A750262838E00027AD5D /* UniqueCell.swift */,
+				0481A74D262838680027AD5D /* TaskCell.swift */,
+				0481A750262838E00027AD5D /* NewTaskCell.swift */,
 				420822B326309E49006870C4 /* UnderTaskCell.swift */,
 				420822B626309F12006870C4 /* NewUnderTaskCell.swift */,
 			);
@@ -132,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				42D0FF94261765AE007A5C2A /* inTarget */,
+				420822C02633504A006870C4 /* UIImage+Extensions.swift */,
 				420822AF262FB059006870C4 /* String+Extensions.swift */,
 				427E42E4262B8BD700EC1F37 /* InjectionHelper.swift */,
 				427E42E5262B8BD700EC1F37 /* UIViewController+Extensions.swift */,
@@ -358,8 +361,9 @@
 			files = (
 				4227B67A26246CEC00F9097F /* UserDataModel.swift in Sources */,
 				046E220E261CB6B10070D5D1 /* TargetsController.swift in Sources */,
+				420822C12633504A006870C4 /* UIImage+Extensions.swift in Sources */,
 				427E42E6262B8BD800EC1F37 /* InjectionHelper.swift in Sources */,
-				0481A74E262838680027AD5D /* CustomCell.swift in Sources */,
+				0481A74E262838680027AD5D /* TaskCell.swift in Sources */,
 				420822B726309F12006870C4 /* NewUnderTaskCell.swift in Sources */,
 				04D39ABA261C5F3C0092486F /* NewTargetController.swift in Sources */,
 				42D0FF9A261765AE007A5C2A /* AuthViewController.swift in Sources */,
@@ -378,7 +382,7 @@
 				4227B661261E050600F9097F /* SignUpModel.swift in Sources */,
 				42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */,
 				4227B68026247A2300F9097F /* DatabaseModel.swift in Sources */,
-				0481A751262838E00027AD5D /* UniqueCell.swift in Sources */,
+				0481A751262838E00027AD5D /* NewTaskCell.swift in Sources */,
 				42E63A8F261D22B500185433 /* AuthModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -521,13 +525,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CF76M9X65W;
+				DEVELOPMENT_TEAM = C2357J7XQW;
 				INFOPLIST_FILE = "inTarget/Supporting files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget356;
+				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -543,14 +547,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = CF76M9X65W;
+				DEVELOPMENT_TEAM = C2357J7XQW;
 				INFOPLIST_FILE = "inTarget/Supporting files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget356;
+				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 class UnderTaskCell: UICollectionViewCell {
+    private var isComleted : Bool = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,11 +20,19 @@ class UnderTaskCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private lazy var checkmarkButton: UIButton = {
+        let button = UIButton()
+        button.setImage(.checkMarkFalse, for: .normal)
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.tintColor = .accent
+        return button
+    }()
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "GothamPro", size: 16)
         label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -31,17 +40,27 @@ class UnderTaskCell: UICollectionViewCell {
         let date = UILabel()
         date.font = UIFont(name: "GothamPro", size: 14)
         date.textColor = .separator
-        date.translatesAutoresizingMaskIntoConstraints = false
         return date
     }()
     
+    private lazy var textContainer: UIView = {
+        let container = UIView()
+        return container
+    }()
+    
     private func setup() {
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(yearLabel)
+        [titleLabel, yearLabel].forEach {
+            textContainer.addSubview($0)
+        }
+        [checkmarkButton, textContainer].forEach {
+            contentView.addSubview($0)
+        }
         
         backgroundColor = .lightAccent
         layer.cornerRadius = 18
         layer.masksToBounds = false
+        
+        checkmarkButton.addTarget(self, action: #selector(didTapCheckmarkButton), for: .touchUpInside)
         
         setupConstraints()
     }
@@ -60,20 +79,57 @@ class UnderTaskCell: UICollectionViewCell {
         let newDate = newDAteFormatter.string(from: oldDate)
         
         yearLabel.text = newDate
-
+    
+        if underTask.isCompleted == true {
+            isComleted = true
+            checkmarkButton.setImage(.checkMarkTrue, for: .normal)
+        } else {
+            isComleted = false
+            checkmarkButton.setImage(.checkMarkFalse, for: .normal)
+        }
+        
     }
     
     private func setupConstraints() {
+        
+        checkmarkButton.pin
+            .left(10)
+            .height(30)
+            .width(30)
+            .vCenter()
+        
+        textContainer.pin
+            .right(of: checkmarkButton)
+            .marginLeft(10)
+        
         titleLabel.pin
-            .top(12)
+            .top()
             .height(16)
-            .horizontally(16)
+            .width(200)
         
         yearLabel.pin
             .below(of: titleLabel)
-            .marginTop(8)
-            .height(14)
-            .horizontally(16)
+            .marginTop(6)
+            .height(15)
+            .width(200)
+        
+        textContainer.pin
+            .wrapContent()
+            .vCenter()
 
     }
+    
+    @objc
+    private func didTapCheckmarkButton() {
+        if isComleted == false {
+            isComleted = true
+            checkmarkButton.setImage(.checkMarkTrue, for: .normal)
+            return
+        } else {
+            isComleted = false
+            checkmarkButton.setImage(.checkMarkFalse, for: .normal)
+            return
+        }
+    }
+    
 }

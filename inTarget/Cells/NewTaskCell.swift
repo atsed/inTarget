@@ -1,18 +1,18 @@
 //
-//  UniqueCell.swift
+//  NewTaskCell.swift
 //  inTarget
 //
 //  Created by Георгий on 15.04.2021.
 //
 import UIKit
 
-protocol UniqueCellDelegate: AnyObject {
+protocol NewTaskCellDelegate: AnyObject {
     func didTapActionButton()
 }
 
-public class UniqueCell: UICollectionViewCell {
+public class NewTaskCell: UICollectionViewCell {
     
-    weak var delegate: UniqueCellDelegate?
+    weak var delegate: NewTaskCellDelegate?
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,6 +27,7 @@ public class UniqueCell: UICollectionViewCell {
     lazy var button: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "plus.circle")
+        //let image = UIImage(named: "add")?.withTintColor(.accent)
         button.setImage(image, for: .normal)
         button.contentVerticalAlignment = .fill
         button.contentHorizontalAlignment = .fill

@@ -31,7 +31,7 @@ class MyTargetController: UIViewController {
     
     private var kbFrameSize : CGRect = .zero
     private var task : Task = Task(randomName: "", title: "", date: "", image: "")
-    var taskName = ""
+    public var taskName = ""
     
     
     override func viewDidLoad() {
@@ -63,6 +63,8 @@ class MyTargetController: UIViewController {
         collectionView.layer.masksToBounds = false
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        scrollView.keyboardDismissMode = .onDrag
         
         [imageView, gradientView, titleLabel, dateLabel].forEach { imageViewContainer.addSubview($0) }
         [imageViewContainer, underTaskLabel, collectionView].forEach { scrollView.addSubview($0) }
@@ -117,8 +119,7 @@ class MyTargetController: UIViewController {
             .below(of: underTaskLabel)
             .marginTop(20)
             .horizontally(16)
-            .height(300)
-            
+            .bottom((tabBarController?.tabBar.bounds.height ?? 0) + 20)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -135,34 +136,32 @@ class MyTargetController: UIViewController {
         navigationController?.navigationBar.backItem?.backButtonTitle = ""
     }
     
-    private func loadTask() {
-        database.getTask(taskName: taskName) { [weak self] result in
+    public func loadTask() {
+        print("CHECK0")
+        guard !taskName.isEmpty else {
+            return
+        }
+        print("CHECK")
+        database.getTask(taskName: taskName) { result in
+            print("CHECK2")
             switch result {
             case .success(let task):
-                self?.task = task
+                self.task = task
                 
-                self?.titleLabel.text = task.title
+                self.titleLabel.text = task.title
                 
-                let newDate = self?.swapDate(date: task.date)
-                self?.dateLabel.text = newDate
+                let newDate = self.swapDate(date: task.date)
+                self.dateLabel.text = newDate
                 
-                self?.loadImage()
-                //УБРАТЬ
-                let testUnderTask = UnderTask(title: "Сделать презентацию",
-                                              date: "21 04 1990", isCompleted: false)
+                self.loadImage()
                 
-                self?.task.underTasks.append(testUnderTask)
-                self?.task.underTasks.append(testUnderTask)
-                self?.task.underTasks.append(testUnderTask)
-                self?.task.underTasks.append(testUnderTask)
-                self?.task.underTasks.append(testUnderTask)
-                //
-                self?.collectionView.reloadData()
-                print("TAAAAAAASK: \(String(describing: self?.task))")
+                self.collectionView.reloadData()
+                print("TAAAAAAASK: \(String(describing: self.task))")
             case .failure:
                 return
             }
         }
+        print("CHECK3")
     }
     
     private func loadImage() {
@@ -189,8 +188,17 @@ class MyTargetController: UIViewController {
     }
     
     @objc
-    private func didTapAddButton(){
-        
+    private func didTapAddButton(title: String, date: String) {
+        database.createUnderTask(taskName, title, date) { result in
+            switch result {
+            case .success(let okMassege):
+                print("ВЫЗЫВАЕМ ЛОАДТАСК")
+                self.loadTask()
+                print("OKMASS: \(okMassege)")
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     deinit {
@@ -261,7 +269,7 @@ extension MyTargetController : UICollectionViewDelegateFlowLayout, UICollectionV
 }
 
 extension MyTargetController: NewUnderTaskCellDelegate {
-    func didTapActionButton() {
-        didTapAddButton()
+    func didTapActionButton(title: String, date : String) {
+        didTapAddButton(title: title, date: date)
     }
 }

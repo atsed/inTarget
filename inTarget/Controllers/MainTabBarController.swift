@@ -19,13 +19,18 @@ final class MainTabBarController: UITabBarController {
         tabBar.backgroundColor = .white
         
         setupTabBar()
+        
+        //tabBarItem.imageInsets = UIEdgeInsets.init(top: 5,left: 0,bottom: -5,right: 0)
     }
     
     func setupTabBar() {
-        vc1.tabBarItem.image = UIImage(named: "icon1")
-        vc2.tabBarItem.image = UIImage(named: "Glyph")
-        vc3.tabBarItem.image = UIImage(named: "support")
-        vc4.tabBarItem.image = UIImage(named: "Vector")
+        vc1.tabBarItem.image = UIImage(named: "vc1")
+        vc2.tabBarItem.image = UIImage(named: "vc2")
+        vc3.tabBarItem.image = UIImage(named: "vc3")
+        vc4.tabBarItem.image = UIImage(named: "vc4")
+        [vc1, vc2, vc3, vc4].forEach {
+            ($0).tabBarItem.imageInsets = UIEdgeInsets.init(top: 5,left: 0,bottom: -5,right: 0)
+        }
         
         setViewControllers([vc1, vc2, vc3, vc4], animated: false)
     }

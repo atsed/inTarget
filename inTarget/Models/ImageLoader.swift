@@ -50,6 +50,7 @@ class ImageLoader {
                 completion(.failure(error))
             } else if let data = data, let image = UIImage(data: data) {
                 self.imageCache[imageName] = image
+                print("GLHF")
                 completion(.success(image))
             } else {
                 completion(.failure(ImageLoader.ImageLoaderError.unexpected))

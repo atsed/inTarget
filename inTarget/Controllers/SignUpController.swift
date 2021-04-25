@@ -228,6 +228,4 @@ inTarget
         scrollView.contentOffset = CGPoint.zero
         scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
     }
-    
-    
 }

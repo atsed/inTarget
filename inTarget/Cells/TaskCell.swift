@@ -1,16 +1,22 @@
 //
-//  CustomCell.swift
+//  TaskCell.swift
 //  inTarget
 //
 //  Created by Георгий on 15.04.2021.
 //
 
-import Foundation
 import UIKit
 
-class CustomCell: UICollectionViewCell {
+protocol TaskCellDelegate: AnyObject {
+    func didTapOpenTaskButton(taskID : String)
+}
+
+class TaskCell: UICollectionViewCell {
+    private var taskID : String = ""
     
-    override init(frame: CGRect) {
+    weak var delegate: TaskCellDelegate?
+    
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
@@ -63,14 +69,22 @@ class CustomCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    lazy var openButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 30
+        button.layer.masksToBounds = true
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.tintColor = .accent
+        return button
+    }()
 
     
     private func setup() {
-        contentView.addSubview(imageView)
-        contentView.addSubview(label)
-        contentView.addSubview(yearLabel)
-        contentView.addSubview(underTasksCount)
-        contentView.addSubview(progressBar)
+        [imageView, label, yearLabel, underTasksCount, progressBar, openButton].forEach {
+            contentView.addSubview($0)
+        }
         
         backgroundColor = .white
         layer.cornerRadius = 30
@@ -80,10 +94,15 @@ class CustomCell: UICollectionViewCell {
         layer.shadowOpacity = 1.0
         layer.masksToBounds = false
         
+        openButton.addTarget(self, action: #selector(didTapOpenButton), for: .touchUpInside)
+        setupConstraints()
+        
         setupConstraints()
     }
     
     func configure(with task: Task) {
+        taskID = task.randomName
+        
         let labelUnderTasks : String = " подзадач"
         label.text = task.title
         underTasksCount.text = String(task.underTasks.count) + labelUnderTasks
@@ -138,5 +157,18 @@ class CustomCell: UICollectionViewCell {
             label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+        
+        openButton.pin
+            .horizontally()
+            .vertically()
+    }
+    
+    @objc
+    func didTapOpenButton() {
+        guard !taskID.isEmpty else {
+            return
+        }
+        print("REP: \(taskID)")
+        delegate?.didTapOpenTaskButton(taskID: taskID)
     }
 }

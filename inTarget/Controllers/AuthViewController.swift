@@ -212,22 +212,20 @@ class AuthViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+
+    
     @objc
     func kbDidShow(_ notification : Notification) {
         let userInfo = notification.userInfo
         kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        
-        scrollView.contentSize = CGSize(width: view.bounds.size.width,
-                                        height: view.bounds.size.height - view.safeAreaInsets.bottom + kbFrameSize.height)
-        
-        scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height)
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  + kbFrameSize.height)
+        scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height - view.pin.safeArea.bottom)
     }
     
     @objc
     func kbDidHide() {
         scrollView.contentOffset = CGPoint.zero
-        scrollView.contentSize = CGSize(width: view.bounds.size.width,
-                                        height: view.bounds.size.height  - kbFrameSize.height)
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
     }
     
     @objc

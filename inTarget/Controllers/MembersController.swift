@@ -12,7 +12,7 @@ class MembersController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.blue.withAlphaComponent(0.8)
+        view.backgroundColor = UIColor.systemTeal.withAlphaComponent(0.5)
     }
 }
 

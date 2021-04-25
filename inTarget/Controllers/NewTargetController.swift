@@ -105,8 +105,8 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         
         datePicker.pin
             .below(of: titleField)
-            .horizontally(20)
             .marginTop(16)
+            .horizontally(20)
         
         addImageButton.pin
             .sizeToFit()
@@ -179,7 +179,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             switch result {
             case .success(let imageRandomName):
                 imageName = imageRandomName
-                database.createTask(title, date, imageName) { [weak self] (result) in
+                database.createTask(title, date, imageName) { [weak self] result in
                     switch result {
                     case .success(let taskName):
                         (self?.tabBarController as? MainTabBarController)?.reloadVC1()

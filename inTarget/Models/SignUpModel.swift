@@ -25,7 +25,6 @@ class SignUpModel {
         }
         Auth.auth().createUser(withEmail: loginText, password: passwordText) { (user, error) in
             if error != nil || user == nil {
-                print("BAD DAB DAB")
                 completion(false, error!.localizedDescription)
                 return
             }
@@ -35,11 +34,9 @@ class SignUpModel {
                 database.createDatabase(name: nameText, surname: surnameText) { (result) in
                     switch result {
                     case .success:
-                        print("GOOD DAB DAB222")
                         completion(true, "True")
                         return
                     case .failure(let error):
-                        print("BAD DAB DAB222")
                         completion(false, "Error: \(error)")
                         return
                     }

@@ -8,11 +8,13 @@
 import Foundation
 
 struct UnderTask {
+    let randomName : String
     let title: String
     let date: String
     let isCompleted: Bool
     
-    init(title: String, date: String, isCompleted: Bool = false) {
+    init(randomName : String, title: String, date: String, isCompleted: Bool = false) {
+        self.randomName = randomName
         self.title = title
         self.date = date
         self.isCompleted = isCompleted

@@ -18,10 +18,10 @@ final class MyTargetsController: UIViewController {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.showsVerticalScrollIndicator = false
-        cv.register(CustomCell.self, forCellWithReuseIdentifier: "myTargetsControllerCell")
+        cv.register(TaskCell.self, forCellWithReuseIdentifier: "myTargetsControllerCell")
         return cv
     }()
-    let image = UIImage(systemName: "person.fill.xmark")
+    let image = UIImage(named: "exit")?.withTintColor(.accent)
     var data: [Task] = []
     private let dataBase = DatabaseModel()
     
@@ -40,15 +40,15 @@ final class MyTargetsController: UIViewController {
             .sizeToFit()
         
         logoutButton.pin
-            .top(view.pin.safeArea.top + 30)
+            .top(view.pin.safeArea.top + 25)
             .right(view.pin.safeArea.left + 30)
-            .size(CGSize(width: 40, height: 30))
+            .size(CGSize(width: 25, height: 25))
         
         collectionView.pin
-                   .below(of: logoutButton)
-                   .marginTop(30)
-                   .horizontally()
-                   .height(177)
+            .below(of: headLabel)
+            .marginTop(30)
+            .horizontally()
+            .bottom(view.pin.safeArea.bottom + 10)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -104,27 +104,31 @@ final class MyTargetsController: UIViewController {
 
     @objc
     func didTapLogoutButton() {
-        UserDefaults.standard.setValue(false, forKey: "isAuth")
-        
         let dialogMessage = UIAlertController(title: "Предупреждение", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
         
-        
-        let ok = UIAlertAction(title: "Выйти", style: .default, handler: { (action) -> Void in
+        let okAction = UIAlertAction(title: "Выйти", style: .default, handler: { (action) -> Void in
+            
             UserDefaults.standard.setValue(false, forKey: "isAuth")
             let authViewController = AuthViewController()
             authViewController.modalPresentationStyle = .fullScreen
             self.present(authViewController, animated: false, completion: nil)
         })
         
-        let cancel = UIAlertAction(title: "Назад", style: .cancel) { (action) -> Void in
-            
-        }
+        okAction.setValue(UIColor.red, forKey: "titleTextColor")
         
-        dialogMessage.addAction(ok)
-        dialogMessage.addAction(cancel)
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        dialogMessage.addAction(cancelAction)
+        dialogMessage.addAction(okAction)
         
         self.present(dialogMessage, animated: true, completion: nil)
     
+    }
+    
+    @objc
+    func didTapOpenButton(taskID : String) {
+        (self.tabBarController as? MainTabBarController)?.openGoal(with: taskID)
     }
 }
 
@@ -146,14 +150,21 @@ extension MyTargetsController : UICollectionViewDelegateFlowLayout, UICollection
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "myTargetsControllerCell", for: indexPath) as? CustomCell else {
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "myTargetsControllerCell", for: indexPath) as? TaskCell else {
             return UICollectionViewCell()
         }
         let task = data[indexPath.row]
         cell.configure(with: task)
+        cell.delegate = self
+        
         return cell
     }
 
 }
 
+extension MyTargetsController: TaskCellDelegate {
+    func didTapOpenTaskButton(taskID : String) {
+        didTapOpenButton(taskID: taskID)
+    }
+}
 

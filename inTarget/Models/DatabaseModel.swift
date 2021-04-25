@@ -21,9 +21,7 @@ class DatabaseModel {
                     "surname" : userData.surName,
                     "email" : userData.email,
                     "avatar" : userData.avatar,
-                    "friends" : userData.friends,
-                    "groups" : userData.groups,
-                    "tasks" : userData.tasks] as [String : Any]
+                    "groups" : userData.groups] as [String : Any]
         
         database.document(currentUser.uid).setData(data) { error in
             let result = Result {
@@ -42,28 +40,25 @@ class DatabaseModel {
                     _ date: String,
                     _ image: String,
                     completion: @escaping (Result<String, Error>) -> Void) {
-        
         guard let currentUser = Auth.auth().currentUser else {
             return
         }
-        
         let randomName = UUID().uuidString
         let task = Task(randomName: randomName, title: title, date: date, image: image)
-        let data = ["\(randomName)" : ["title" : task.title,
+        let data = ["title" : task.title,
                     "date" : task.date,
                     "image" : task.image,
-                    "under tasks" : task.underTasks] as [String : Any]]
+                    "under tasks" : task.underTasks] as [String : Any]
         
-        database.document(currentUser.uid).setData(["tasks" : data], merge: true) { error in
+        database.document(currentUser.uid).collection("tasks").document("\(randomName)").setData(data) {
+            error in
             let result = Result {
             }
             
             switch result {
             case .success():
-                print("crateTask: GOOD JOB")
                 completion(.success(randomName))
             case .failure(let error):
-                print("crateTask: BAD RESULT \(error)")
                 completion(.failure(error))
             }
         }
@@ -73,29 +68,23 @@ class DatabaseModel {
         guard let user = Auth.auth().currentUser else {
             return
         }
-        
-        database.document(user.uid).getDocument { (document, error) in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let userData = document?.data(),
-                  let tasks = userData["tasks"] as? [String: [String: Any]] else {
-                completion(.failure(ImageLoader.ImageLoaderError.unexpected))
-                return
-            }
+        database.document(user.uid).collection("tasks").getDocuments() { (querySnapshot, error) in
             
             var completionTasks: [Task] = []
             
-            tasks.forEach { randomName, task in
-                guard let date = task["date"] as? String,
-                      let image = task["image"] as? String,
-                      let title = task["title"] as? String else {
-                    return
+            if let error = error {
+                completion(.failure(error))
+                return
+            } else {
+                for document in querySnapshot!.documents {
+                    guard let date = document["date"] as? String,
+                          let image = document["image"] as? String,
+                          let title = document["title"] as? String else {
+                        return
+                    }
+                    
+                    completionTasks.append(Task(randomName: "\(document.documentID)", title: title, date: date, image: image))
                 }
-                
-                completionTasks.append(Task(randomName: randomName, title: title, date: date, image: image))
             }
             
             let formatter = DateFormatter()
@@ -117,52 +106,57 @@ class DatabaseModel {
             return
         }
         
-        database.document(user.uid).getDocument { (document, error) in
+        database.document(user.uid).collection("tasks").getDocuments() { (querySnapshot, error) in
+            
+            var resultTask: Task = Task(randomName: "", title: "", date: "", image: "")
+            
             if let error = error {
                 completion(.failure(error))
                 return
+            } else {
+                for document in querySnapshot!.documents {
+                    if document.documentID == taskName {
+                        guard let date = document["date"] as? String,
+                              let image = document["image"] as? String,
+                              let title = document["title"] as? String,
+                              let underTask = document["under tasks"] as? [UnderTask] else {
+                            return
+                        }
+                        resultTask = Task(randomName: taskName, title: title, date: date, image: image)
+                        print("~~~~~~~~~~~: \(underTask)")
+                        resultTask.underTasks.append(contentsOf: underTask)
+                        print("```````````````````: \(resultTask)")
+                        completion(.success(resultTask))
+                    }
+                }
             }
-            
-            guard let userData = document?.data(),
-                  let tasks = userData["tasks"] as? [String: [String: Any]] else {
-                completion(.failure(ImageLoader.ImageLoaderError.unexpected))
-                return
-            }
-            
-            var resultTask: Task = Task(randomName: "", title: "", date: "", image: "")
-            let selectTask = tasks[taskName]
-            guard let date = selectTask?["date"] as? String,
-                  let image = selectTask?["image"] as? String,
-                  let title = selectTask?["title"] as? String else {
-                return
-            }
-            
-            resultTask = Task(randomName: taskName, title: title, date: date, image: image)
-            
-            completion(.success(resultTask))
         }
-        
     }
     
-    func getTasksCount(completion: @escaping (Result<Int, Error>) -> Void) {
+    func createUnderTask(_ randomTaskName : String,
+                         _ title: String,
+                         _ date: String,
+                         completion: @escaping (Result<String, Error>) -> Void) {
         guard let currentUser = Auth.auth().currentUser else {
             return
         }
+        let randomName = UUID().uuidString
+        let underTask = UnderTask(randomName: randomName, title: title, date: date)
+        let data = ["\(randomName)" : ["title" : underTask.title,
+                                       "date" : underTask.date,
+                                       "isCompleted" : underTask.isCompleted] as [String : Any]]
         
-        database.document(currentUser.uid).getDocument { document, error in
+        database.document(currentUser.uid).collection("tasks").document("\(randomTaskName)").setData(["under tasks" : data], merge: true) { error in
             let result = Result {
-                document?.get("tasks")
             }
+            
             switch result {
-                case .success(let tasks):
-                    print("getTasksCount: \(String(describing: (tasks as AnyObject).count))")
-                        completion(.success((tasks as AnyObject).count))
-                case .failure(let error):
-                    print("Error decoding task: \(error)")
-                    completion(.failure(error))
-                }
+            case .success():
+                completion(.success(randomName))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
-        
         
     }
     
