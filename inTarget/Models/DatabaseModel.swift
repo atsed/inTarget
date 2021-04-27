@@ -68,7 +68,7 @@ class DatabaseModel {
         guard let user = Auth.auth().currentUser else {
             return
         }
-        database.document(user.uid).collection("tasks").getDocuments() { (querySnapshot, error) in
+        database.document(user.uid).collection("tasks").getDocuments() { [weak self] (querySnapshot, error) in
             
             var completionTasks: [Task] = []
             
@@ -83,7 +83,13 @@ class DatabaseModel {
                         return
                     }
                     
-                    completionTasks.append(Task(randomName: "\(document.documentID)", title: title, date: date, image: image))
+                    let rawUnderTask = document["under tasks"] as? [String: [String: Any]]
+                    let underTasks = self?.makeUnderTasks(with: rawUnderTask) ?? []
+                    
+                    var task = Task(randomName: "\(document.documentID)", title: title, date: date, image: image)
+                    task.underTasks = underTasks
+                    
+                    completionTasks.append(task)
                 }
             }
             
@@ -106,7 +112,7 @@ class DatabaseModel {
             return
         }
         
-        database.document(user.uid).collection("tasks").getDocuments() { (querySnapshot, error) in
+        database.document(user.uid).collection("tasks").getDocuments() { [weak self] (querySnapshot, error) in
             
             var resultTask: Task = Task(randomName: "", title: "", date: "", image: "")
             
@@ -118,19 +124,33 @@ class DatabaseModel {
                     if document.documentID == taskName {
                         guard let date = document["date"] as? String,
                               let image = document["image"] as? String,
-                              let title = document["title"] as? String,
-                              let underTask = document["under tasks"] as? [UnderTask] else {
+                              let title = document["title"] as? String else {
+                            completion(.failure(ImageLoader.ImageLoaderError.unexpected))
                             return
                         }
+                        let rawUnderTask = document["under tasks"] as? [String: [String: Any]]
+                        let underTask = self?.makeUnderTasks(with: rawUnderTask) ?? []
                         resultTask = Task(randomName: taskName, title: title, date: date, image: image)
-                        print("~~~~~~~~~~~: \(underTask)")
                         resultTask.underTasks.append(contentsOf: underTask)
-                        print("```````````````````: \(resultTask)")
                         completion(.success(resultTask))
                     }
                 }
             }
         }
+    }
+    
+    private func makeUnderTasks(with document: [String: [String: Any]]?) -> [UnderTask] {
+        guard let document = document else {
+            return []
+        }
+        
+        return document.map({ id, params in
+            let title: String = params["title"] as? String ?? ""
+            let date: String = params["date"] as? String ?? ""
+            let isCompleted: Bool = params["isCompleted"] as? Bool ?? false
+            
+            return UnderTask(randomName: id, title: title, date: date, isCompleted: isCompleted)
+        })
     }
     
     func createUnderTask(_ randomTaskName : String,
@@ -158,6 +178,79 @@ class DatabaseModel {
             }
         }
         
+    }
+    
+    func selctCheckmark(taskID : String,
+                        underTaskID : String,
+                        isCompleted : Bool,
+                        completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        let data = ["\(underTaskID)" : ["isCompleted" : isCompleted] as [String : Any]]
+        
+        database.document(currentUser.uid).collection("tasks").document("\(taskID)").setData(["under tasks" : data], merge: true) { error in
+            let result = Result {
+            }
+            
+            switch result {
+            case .success():
+                completion(.success("ok"))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+            
+        }
+    }
+    
+    func getGroups(completion: @escaping (Result<[String], Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        var groups : [String] = []
+        database.document(currentUser.uid).getDocument { (document, error) in
+            if let document = document, document.exists {
+                groups = document.get("groups") as? [String] ?? []
+                print("GROUPS: \(groups)")
+                completion(.success(groups))
+            } else {
+                print("Document does not exist")
+                completion(.failure(error ?? ImageLoader.ImageLoaderError.invalidInput))
+            }
+        }
+        
+        //database.document(<#T##documentPath: String##String#>)
+        //database.document(currentUser.uid).
+    }
+    
+    func addGroup(groupID : String,
+                  completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        getGroups() { result in
+            switch result {
+            case .success(let arrayOfGroups):
+                var groups = arrayOfGroups
+                groups.append(groupID)
+                self.database.document(currentUser.uid).setData(["groups" : groups], merge: true) { error in
+                    let result = Result {
+                    }
+                    
+                    switch result {
+                    case .success():
+                        completion(.success("ok"))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+                print(arrayOfGroups)
+            case .failure(_):
+                print("error")
+            }
+            
+        }
     }
     
 }

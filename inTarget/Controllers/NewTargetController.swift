@@ -11,14 +11,26 @@ import PinLayout
 
 class NewTargetController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     private let headLabel = UILabel()
-    private let titleField = UITextField()
-    private let titleSeparator = UIView()
-    private let datePicker = UIDatePicker()
-    private let addImageButton = UIButton()
-    private let addImageView = UIImageView()
-    private let deleteImageButton = UIButton()
-    private let addImageContainer = UIView()
-    private let createButton = UIButton(type: .system)
+    let segmentedControl = UISegmentedControl(items: ["Личная цель", "Групповая цель"])
+    private let scrollViewSegmCon = UIScrollView()
+    private let taskTitleField = UITextField()
+    private let taskTitleSeparator = UIView()
+    private let taskDatePicker = UIDatePicker()
+    private let taskAddImageButton = UIButton()
+    private let taskAddImageView = UIImageView()
+    private let taskDeleteImageButton = UIButton()
+    private let taskAddImageContainer = UIView()
+    private let createTaskButton = UIButton(type: .system)
+    
+    private let groupTitleField = UITextField()
+    private let groupTitleSeparator = UIView()
+    private let groupDatePicker = UIDatePicker()
+    private let groupAddImageButton = UIButton()
+    private let groupAddImageView = UIImageView()
+    private let groupDeleteImageButton = UIButton()
+    private let groupAddImageContainer = UIView()
+    private let createGroupButton = UIButton(type: .system)
+    
     private let scrollView = UIScrollView()
     
     private var image = UIImage()
@@ -32,109 +44,221 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         headLabel.text = "Новая цель"
         headLabel.textColor = .black
         headLabel.font = UIFont(name: "GothamPro", size: 34)
+        headLabel.sizeToFit()
+
+        fixBackgroundSegmentControl(segmentedControl)
+        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .selected)
+        segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .normal)
+        segmentedControl.backgroundColor = .lightAccent
+        segmentedControl.selectedSegmentTintColor = .accent
+        segmentedControl.selectedSegmentIndex = 0
+        swipeSegmentedControl(segmentedControl)
+        segmentedControl.addTarget(self, action: #selector(swipeSegmentedControl(_:)), for: .valueChanged)
         
-        titleField.placeholder = "Наименование цели"
-        titleField.borderStyle = .none
+        taskTitleField.placeholder = "Наименование цели"
+        taskTitleField.borderStyle = .none
         
-        titleSeparator.backgroundColor = .separator
+        taskTitleSeparator.backgroundColor = .separator
         
-        datePicker.datePickerMode = .date
+        taskDatePicker.datePickerMode = .date
         if #available(iOS 14, *) {
-            datePicker.preferredDatePickerStyle = .inline
-            datePicker.sizeToFit()
+            taskDatePicker.preferredDatePickerStyle = .inline
+            taskDatePicker.sizeToFit()
 
         } else {
-            datePicker.sizeToFit()
+            taskDatePicker.sizeToFit()
         }
-        datePicker.tintColor = .accent
-        datePicker.subviews[0].subviews[0].subviews[0].tintColor = .accent
+        taskDatePicker.tintColor = .accent
+        taskDatePicker.subviews[0].subviews[0].subviews[0].tintColor = .accent
         
-        addImageButton.setTitle("+ Фото цели", for: .normal)
-        addImageButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
-        addImageButton.setTitleColor(.accent, for: .normal)
-        addImageButton.backgroundColor = .background
-        addImageButton.addTarget(self, action: #selector(didTapAddImageButton), for: .touchUpInside)
+        taskAddImageButton.setTitle("+ Фото цели", for: .normal)
+        taskAddImageButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
+        taskAddImageButton.setTitleColor(.accent, for: .normal)
+        taskAddImageButton.backgroundColor = .background
+        taskAddImageButton.addTarget(self, action: #selector(didTapGroupAddImageButton), for: .touchUpInside)
         
-        addImageContainer.layer.cornerRadius = 20
-        addImageContainer.contentMode = .scaleAspectFill
-        addImageContainer.clipsToBounds = true
+        taskAddImageContainer.layer.cornerRadius = 20
+        taskAddImageContainer.contentMode = .scaleAspectFill
+        taskAddImageContainer.clipsToBounds = true
         
-        deleteImageButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
-        deleteImageButton.imageView?.layer.transform = CATransform3DMakeScale(1.5, 1.5, 1.5)
-        deleteImageButton.tintColor = .accent
-        deleteImageButton.alpha = 0
-        deleteImageButton.addTarget(self, action: #selector(didTapDeleteImageButton), for: .touchUpInside)
+        taskDeleteImageButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
+        taskDeleteImageButton.imageView?.layer.transform = CATransform3DMakeScale(1.5, 1.5, 1.5)
+        taskDeleteImageButton.tintColor = .accent
+        taskDeleteImageButton.alpha = 0
+        taskDeleteImageButton.addTarget(self, action: #selector(didTapTaskDeleteImageButton), for: .touchUpInside)
         
-        createButton.setTitle("Создать цель", for: .normal)
-        createButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
-        createButton.setTitleColor(.background, for: .normal)
-        createButton.backgroundColor = .accent
-        createButton.layer.cornerRadius = 14
-        createButton.layer.masksToBounds = true
-        createButton.addTarget(self, action: #selector(didTapCreateButton), for: .touchUpInside)
+        createTaskButton.setTitle("Создать цель", for: .normal)
+        createTaskButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
+        createTaskButton.setTitleColor(.background, for: .normal)
+        createTaskButton.backgroundColor = .accent
+        createTaskButton.layer.cornerRadius = 14
+        createTaskButton.layer.masksToBounds = true
+        createTaskButton.addTarget(self, action: #selector(didTapCreateTaskButton), for: .touchUpInside)
+        
+        groupTitleField.placeholder = "Наименование группы"
+        groupTitleField.borderStyle = .none
+        
+        groupTitleSeparator.backgroundColor = .separator
+        
+        groupDatePicker.datePickerMode = .date
+        if #available(iOS 14, *) {
+            groupDatePicker.preferredDatePickerStyle = .inline
+            groupDatePicker.sizeToFit()
+
+        } else {
+            groupDatePicker.sizeToFit()
+        }
+        groupDatePicker.tintColor = .accent
+        groupDatePicker.subviews[0].subviews[0].subviews[0].tintColor = .accent
+        
+        groupAddImageButton.setTitle("+ Фото группы", for: .normal)
+        groupAddImageButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
+        groupAddImageButton.setTitleColor(.accent, for: .normal)
+        groupAddImageButton.backgroundColor = .background
+        groupAddImageButton.addTarget(self, action: #selector(didTapTaskAddImageButton), for: .touchUpInside)
+        
+        groupAddImageContainer.layer.cornerRadius = 20
+        groupAddImageContainer.contentMode = .scaleAspectFill
+        groupAddImageContainer.clipsToBounds = true
+        
+        groupDeleteImageButton.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
+        groupDeleteImageButton.imageView?.layer.transform = CATransform3DMakeScale(1.5, 1.5, 1.5)
+        groupDeleteImageButton.tintColor = .accent
+        groupDeleteImageButton.alpha = 0
+        groupDeleteImageButton.addTarget(self, action: #selector(didTapGroupDeleteImageButton), for: .touchUpInside)
+        
+        createGroupButton.setTitle("Создать группу", for: .normal)
+        createGroupButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
+        createGroupButton.setTitleColor(.background, for: .normal)
+        createGroupButton.backgroundColor = .accent
+        createGroupButton.layer.cornerRadius = 14
+        createGroupButton.layer.masksToBounds = true
+        createGroupButton.addTarget(self, action: #selector(didTapCreateGroupButton), for: .touchUpInside)
+        
         scrollView.keyboardDismissMode = .onDrag
         
-        [addImageView, deleteImageButton].forEach { addImageContainer.addSubview($0)}
-        [headLabel, titleField, titleSeparator, datePicker, addImageButton, addImageContainer, createButton].forEach { scrollView.addSubview($0) }
-        view.addSubview(scrollView)
+        [taskAddImageView, taskDeleteImageButton].forEach { taskAddImageContainer.addSubview($0)}
+        [groupAddImageView, groupDeleteImageButton].forEach { groupAddImageContainer.addSubview($0)}
+        [taskTitleField, taskTitleSeparator, taskDatePicker, taskAddImageButton, taskAddImageContainer, createTaskButton, groupTitleField, groupTitleSeparator, groupDatePicker, groupAddImageButton, groupAddImageContainer, createGroupButton].forEach { scrollView.addSubview($0) }
+        [headLabel, segmentedControl, scrollView].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        headLabel.pin
+            .top(view.pin.safeArea.top + 30)
+            .left(view.pin.safeArea.left + 30)
+            .width(250)
+        
+        segmentedControl.pin
+            .below(of: headLabel)
+            .marginTop(25)
+            .height(36)
+            .horizontally(16)
+        
         scrollView.pin
-            .top(view.pin.safeArea.top)
+            .below(of: segmentedControl)
             .bottom()
             .horizontally()
         
-        headLabel.pin
-            .top(30)
-            .left(view.pin.safeArea.left + 30)
-            .sizeToFit()
-        
-        titleField.pin
+        taskTitleField.pin
+            .below(of: segmentedControl)
+            .marginTop(5)
             .horizontally(16)
             .height(60)
-            .below(of: headLabel)
-            .marginTop(20)
         
-        titleSeparator.pin
-            .below(of: titleField)
+        groupTitleField.pin
+            .below(of: segmentedControl)
+            .right(of: taskTitleField)
+            .marginTop(5)
+            .marginLeft(32)
+            .width(of: taskTitleField)
+            .height(60)
+        
+        taskTitleSeparator.pin
+            .below(of: taskTitleField)
             .horizontally(16)
             .height(0.1)
         
-        datePicker.pin
-            .below(of: titleField)
+        groupTitleSeparator.pin
+            .below(of: groupTitleField)
+            .right(of: taskTitleSeparator)
+            .marginLeft(32)
+            .width(of: taskTitleSeparator)
+            .height(0.1)
+        
+        taskDatePicker.pin
+            .below(of: taskTitleField)
             .marginTop(16)
             .horizontally(20)
         
-        addImageButton.pin
+        groupDatePicker.pin
+            .below(of: groupTitleField)
+            .right(of: taskDatePicker)
+            .marginTop(16)
+            .marginLeft(40)
+            .width(of: taskDatePicker)
+        
+        taskAddImageButton.pin
             .sizeToFit()
-            .below(of: datePicker)
+            .below(of: taskDatePicker)
             .left(16)
         
-        addImageContainer.pin
-            .below(of: addImageButton)
+        groupAddImageButton.pin
+            .sizeToFit()
+            .below(of: groupDatePicker)
+            .right(of: taskTitleField)
+            .marginLeft(32)
+        
+        taskAddImageContainer.pin
+            .below(of: taskAddImageButton)
             .left(16)
         
-        addImageView.pin
+        groupAddImageContainer.pin
+            .below(of: groupAddImageButton)
+            .right(of: taskTitleField)
+            .marginLeft(36)
+        
+        taskAddImageView.pin
             .height(100)
             .width(100)
         
-        deleteImageButton.pin
+        groupAddImageView.pin
+            .height(100)
+            .width(100)
+        
+        taskDeleteImageButton.pin
             .left(60)
             .height(40)
             .width(40)
         
-        addImageContainer.pin
+        groupDeleteImageButton.pin
+            .left(60)
+            .height(40)
+            .width(40)
+        
+        taskAddImageContainer.pin
             .height(100)
             .width(100)
         
-        createButton.pin
+        groupAddImageContainer.pin
+            .height(100)
+            .width(100)
+        
+        createTaskButton.pin
+            .below(of: taskAddImageContainer)
+            .marginTop(8)
             .horizontally(16)
             .height(56)
-            .below(of: addImageContainer)
+        
+        createGroupButton.pin
+            .below(of: groupAddImageContainer)
+            .right(of: createTaskButton)
             .marginTop(8)
+            .marginLeft(32)
+            .width(of: createTaskButton)
+            .height(56)
         
         didPerformLayout()
     }
@@ -142,15 +266,32 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     private func didPerformLayout() {
         let tabbarHeight = tabBarController?.tabBar.bounds.height ?? 0
 
-        guard view.bounds.height - tabbarHeight < createButton.frame.maxY else {
+        guard view.bounds.height - tabbarHeight < createTaskButton.frame.maxY else {
             return
         }
-        
-        scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: createButton.frame.maxY + 16)
+
+        scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: createTaskButton.frame.maxY + 16)
     }
     
     @objc
-    private func didTapAddImageButton() {
+    private func swipeSegmentedControl(_ sender: UISegmentedControl) {
+        print("segmentedControl.selectedSegmentIndex: \(segmentedControl.selectedSegmentIndex)")
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            print("CASE 0")
+            headLabel.text = "Новая цель"
+            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        case 1:
+            print("CASE 1")
+            headLabel.text = "Новая группа"
+            scrollView.setContentOffset(CGPoint(x: view.bounds.width, y: 0), animated: true)
+        default:
+            print("ERROR swipeSegmentedControl")
+        }
+    }
+    
+    @objc
+    private func didTapTaskAddImageButton() {
         let imagePicker = UIImagePickerController()
         imagePicker.allowsEditing = true
         imagePicker.delegate = self
@@ -158,11 +299,19 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     }
     
     @objc
-    private func didTapCreateButton() {
-        guard let title = self.titleField.text,
+    private func didTapGroupAddImageButton() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = true
+        imagePicker.delegate = self
+        present(imagePicker, animated: true)
+    }
+    
+    @objc
+    private func didTapCreateTaskButton() {
+        guard let title = self.taskTitleField.text,
               !title.isEmpty else {
             
-            self.animatePlaceholderColor(self.titleField, self.titleSeparator)
+            self.animatePlaceholderColor(self.taskTitleField, self.taskTitleSeparator)
             return
         }
         
@@ -185,24 +334,73 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
                         (self?.tabBarController as? MainTabBarController)?.reloadVC1()
                         (self?.tabBarController as? MainTabBarController)?.reloadVC4()
                         (self?.tabBarController as? MainTabBarController)?.openGoal(with: taskName)
-                        self?.titleField.text = ""
-                        self?.didTapDeleteImageButton()
+                        self?.taskTitleField.text = ""
+                        self?.didTapTaskDeleteImageButton()
                     case .failure(let error):
                         print("\(error)")
                         
                     }
                 }
             case .failure(_):
-                self.animateButtonTitleColor(self.addImageButton)
+                self.animateButtonTitleColor(self.taskAddImageButton)
                 return
             }
         }
     }
     
     @objc
-    private func didTapDeleteImageButton() {
-        addImageView.image = .none
-        deleteImageButton.alpha = 0
+    private func didTapCreateGroupButton() {
+        guard let title = self.groupTitleField.text,
+              !title.isEmpty else {
+            
+            self.animatePlaceholderColor(self.groupTitleField, self.groupTitleSeparator)
+            return
+        }
+        
+        let groupDatabase = GroupDatabaseModel()
+        let date = getDateFromPicker()
+        let imageLoader = InjectionHelper.imageLoader
+        var imageName = ""
+        
+        imageLoader.uploadGroupImage(image) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case .success(let imageRandomName):
+                imageName = imageRandomName
+                groupDatabase.createGroup(title, date, imageName) { [weak self] result in
+                    switch result {
+                    case .success(let taskName):
+                        (self?.tabBarController as? MainTabBarController)?.reloadVC1()
+                        (self?.tabBarController as? MainTabBarController)?.reloadVC4()
+                        //Допилить строку ниже
+                        //(self?.tabBarController as? MainTabBarController)?.openGoal(with: taskName)
+                        self?.groupTitleField.text = ""
+                        self?.didTapGroupDeleteImageButton()
+                    case .failure(let error):
+                        print("\(error)")
+                        
+                    }
+                }
+            case .failure(_):
+                self.animateButtonTitleColor(self.groupAddImageButton)
+                return
+            }
+        }
+    }
+    
+    @objc
+    private func didTapTaskDeleteImageButton() {
+        taskAddImageView.image = .none
+        taskDeleteImageButton.alpha = 0
+    }
+    
+    @objc
+    private func didTapGroupDeleteImageButton() {
+        groupAddImageView.image = .none
+        groupDeleteImageButton.alpha = 0
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -212,16 +410,37 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             return
         }
         image = addImage
-        addImageView.image = image
-        addImageView.alpha = 0.5
-        deleteImageButton.alpha = 1
+        if segmentedControl.selectedSegmentIndex == 0 {
+            taskAddImageView.image = image
+            taskAddImageView.alpha = 0.5
+            taskDeleteImageButton.alpha = 1
+        } else if segmentedControl.selectedSegmentIndex == 1 {
+            groupAddImageView.image = image
+            groupAddImageView.alpha = 0.5
+            groupDeleteImageButton.alpha = 1
+        }
     }
     
     func getDateFromPicker() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MM yyyy"
-        let dateString = formatter.string(from: datePicker.date)
+        let dateString = formatter.string(from: taskDatePicker.date)
         return (dateString)
     }
 
+}
+
+extension UIViewController {
+    func fixBackgroundSegmentControl( _ segmentControl: UISegmentedControl){
+        if #available(iOS 13.0, *) {
+            //just to be sure it is full loaded
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                for i in 0...(segmentControl.numberOfSegments-1)  {
+                    let backgroundSegmentView = segmentControl.subviews[i]
+                    //it is not enogh changing the background color. It has some kind of shadow layer
+                    backgroundSegmentView.isHidden = true
+                }
+            }
+        }
+    }
 }

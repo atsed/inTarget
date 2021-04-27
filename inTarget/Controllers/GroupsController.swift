@@ -1,5 +1,5 @@
 //
-//  TargetsController.swift
+//  GroupsController.swift
 //  inTarget
 //
 //  Created by Георгий on 06.04.2021.
@@ -8,43 +8,40 @@
 import UIKit
 import PinLayout
 
-final class TargetsController: UIViewController {
+class GroupsController: UIViewController {
     private let headLabel = UILabel()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = .vertical
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.showsHorizontalScrollIndicator = false
-        cv.register(TaskCell.self, forCellWithReuseIdentifier: "TaskCell")
-        cv.register(NewTaskCell.self, forCellWithReuseIdentifier: "NewTaskCell")
+        cv.register(GroupCell.self, forCellWithReuseIdentifier: "GroupCell")
+        cv.register(NewGroupCell.self, forCellWithReuseIdentifier: "NewGroupCell")
         return cv
     }()
     
-    private let database = DatabaseModel()
+    private let groupDatabase = GroupDatabaseModel()
     
-    var data: [Task] = []
+    var data: [Group] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        reloadGroups()
         
-        setup()
-        reloadTasks()
-    }
-    
-    private func setup() {
-        view.backgroundColor = .white
-        view.addSubview(collectionView)
-        view.addSubview(headLabel)
+        view.backgroundColor = .background
         
-        headLabel.text = "Цели"
+        headLabel.text = "Группы"
         headLabel.textColor = .black
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
-        collectionView.backgroundColor = .background
+        collectionView.backgroundColor = .white
+        collectionView.layer.masksToBounds = true
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        [headLabel, collectionView].forEach { view.addSubview($0)}
     }
     
     override func viewDidLayoutSubviews() {
@@ -58,39 +55,30 @@ final class TargetsController: UIViewController {
         collectionView.pin
             .below(of: headLabel)
             .marginTop(30)
-            .horizontally()
-            .height(220)
+            .horizontally(16)
+            .bottom((tabBarController?.tabBar.bounds.height ?? 0) + 20)
     }
     
-    @objc
-    func didTapAddButton() {
-        tabBarController?.selectedIndex = 1
-    }
-    
-    @objc
-    func didTapOpenButton(taskID : String) {
-        (self.tabBarController as? MainTabBarController)?.openGoal(with: taskID)
-    }
-    
-    public func reloadTasks() {
-        database.getTasks { result in
-            switch result {
-            case .success(let tasks):
-                self.data = tasks
-                self.collectionView.reloadData()
-            case .failure:
-                return
-            }
-        }
+    public func reloadGroups() {
+//        groupDatabase.getGroups() { result in
+//            switch result {
+//            case .success(let groups):
+//                self.data = groups
+//                self.collectionView.reloadData()
+//            case .failure:
+//                return
+//            }
+//        }
     }
 }
 
-extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+
+extension GroupsController : UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/1.1, height: 177)
+        return CGSize(width: collectionView.frame.width, height: 64)
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -102,20 +90,19 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.row == data.count {
-            guard let newTaskCell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewTaskCell", for: indexPath) as? NewTaskCell else {
+            guard let newTaskCell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewGroupCell", for: indexPath) as? NewGroupCell else {
                 return UICollectionViewCell()
             }
-            
             newTaskCell.delegate = self
             return newTaskCell
         }
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GroupCell", for: indexPath) as? GroupCell else {
             return UICollectionViewCell()
         }
     
-        let task = data[indexPath.row]
-        cell.configure(with: task)
+        let group = data[indexPath.row]
+        cell.configure(with: group)
         cell.delegate = self
         
         return cell
@@ -123,12 +110,13 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
 
 }
 
-extension TargetsController: TaskCellDelegate, NewTaskCellDelegate {
-    func didTapOpenTaskButton(taskID : String) {
-        didTapOpenButton(taskID: taskID)
+extension GroupsController: GroupCellDelegate, NewGroupCellDelegate {
+    func didTapActionButton() {
+        
     }
     
-    func didTapActionButton() {
-        didTapAddButton()
+    func didTapOpenButton(groupID : String) {
+        
     }
+
 }

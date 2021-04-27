@@ -5,11 +5,17 @@
 //  Created by Desta on 21.04.2021.
 //
 
-import Foundation
 import UIKit
 
+protocol UnderTaskCellDelegate: AnyObject {
+    func didTapSelectButton(underTaskID: String, isCompleted: Bool)
+}
+
 class UnderTaskCell: UICollectionViewCell {
-    private var isComleted : Bool = false
+    private var isCompleted : Bool = false
+    private var underTaskID : String = ""
+    
+    weak var delegate: UnderTaskCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -73,6 +79,8 @@ class UnderTaskCell: UICollectionViewCell {
         guard let oldDate = oldDAteFormatter.date(from: underTask.date) else {
             return
         }
+    
+        underTaskID = underTask.randomName
         
         let newDAteFormatter = DateFormatter()
         newDAteFormatter.dateFormat = "dd MMMM yyyy"
@@ -81,10 +89,10 @@ class UnderTaskCell: UICollectionViewCell {
         yearLabel.text = newDate
     
         if underTask.isCompleted == true {
-            isComleted = true
+            isCompleted = true
             checkmarkButton.setImage(.checkMarkTrue, for: .normal)
         } else {
-            isComleted = false
+            isCompleted = false
             checkmarkButton.setImage(.checkMarkFalse, for: .normal)
         }
         
@@ -121,12 +129,14 @@ class UnderTaskCell: UICollectionViewCell {
     
     @objc
     private func didTapCheckmarkButton() {
-        if isComleted == false {
-            isComleted = true
+        if isCompleted == false {
+            isCompleted = true
+            delegate?.didTapSelectButton(underTaskID: underTaskID, isCompleted: isCompleted)
             checkmarkButton.setImage(.checkMarkTrue, for: .normal)
             return
         } else {
-            isComleted = false
+            isCompleted = false
+            delegate?.didTapSelectButton(underTaskID: underTaskID, isCompleted: isCompleted)
             checkmarkButton.setImage(.checkMarkFalse, for: .normal)
             return
         }

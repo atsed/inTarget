@@ -1,18 +1,20 @@
 //
-//  NewTaskCell.swift
+//  NewGroupCell.swift
 //  inTarget
 //
-//  Created by Георгий on 15.04.2021.
+//  Created by Desta on 27.04.2021.
 //
+
 import UIKit
 
-protocol NewTaskCellDelegate: AnyObject {
+protocol NewGroupCellDelegate: AnyObject {
     func didTapActionButton()
 }
 
-public class NewTaskCell: UICollectionViewCell {
+
+public class NewGroupCell: UICollectionViewCell {
     
-    weak var delegate: NewTaskCellDelegate?
+    weak var delegate: NewGroupCellDelegate?
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,14 +28,14 @@ public class NewTaskCell: UICollectionViewCell {
     
     lazy var button: UIButton = {
         let button = UIButton()
-        //let image = UIImage(systemName: "plus.circle")
-        let image = UIImage(named: "add")?.withTintColor(.accent)
-        button.setImage(image, for: .normal)
-
-        //button.contentVerticalAlignment = .fill
-        //button.contentHorizontalAlignment = .fill
-        //button.imageEdgeInsets = UIEdgeInsets(top: 25, left: 25, bottom: 25, right: 25)
-        button.tintColor = .accent
+        
+        button.setTitle("Создать группу", for: .normal)
+        button.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
+        button.setTitleColor(.accent, for: .normal)
+        //button.backgroundColor = .accent
+        button.setTitleColor(.lightGray, for: .selected)
+        button.layer.masksToBounds = true
+        
         return button
     }()
     
@@ -41,12 +43,8 @@ public class NewTaskCell: UICollectionViewCell {
     private func setup() {
         contentView.addSubview(button)
 
-        backgroundColor = .white
-        layer.cornerRadius = 30
-        layer.shadowColor = UIColor.gray.cgColor
-        layer.shadowOffset = CGSize(width: 6.0, height: 10.0)
-        layer.shadowRadius = 6.0
-        layer.shadowOpacity = 1.0
+        backgroundColor = .lightAccent
+        layer.cornerRadius = 18
         layer.masksToBounds = false
         
         button.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
@@ -63,6 +61,5 @@ public class NewTaskCell: UICollectionViewCell {
         button.pin
             .vertically()
             .horizontally()
-            
     }
 }

@@ -17,6 +17,7 @@ class MyTargetController: UIViewController {
     private let underTaskLabel = UILabel()
     private let scrollView = UIScrollView()
     private let database = DatabaseModel()
+    private let activityIndicator = UIActivityIndicatorView()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -36,6 +37,7 @@ class MyTargetController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.hidesWhenStopped = true
         checkKeyboardNotifications()
         hideKeyboardWhenTappedAround()
         loadTask()
@@ -59,8 +61,7 @@ class MyTargetController: UIViewController {
         }
         
         collectionView.backgroundColor = .white
-        collectionView.layer.cornerRadius = 30
-        collectionView.layer.masksToBounds = false
+        collectionView.layer.masksToBounds = true
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -69,6 +70,7 @@ class MyTargetController: UIViewController {
         [imageView, gradientView, titleLabel, dateLabel].forEach { imageViewContainer.addSubview($0) }
         [imageViewContainer, underTaskLabel, collectionView].forEach { scrollView.addSubview($0) }
         view.addSubview(scrollView)
+        view.addSubview(activityIndicator)
     }
     
     override func viewDidLayoutSubviews() {
@@ -77,6 +79,8 @@ class MyTargetController: UIViewController {
         scrollView.pin
             .horizontally()
             .vertically()
+        
+        activityIndicator.pin.center()
         
         imageViewContainer.pin
             .top(-view.pin.safeArea.top - (navigationController?.navigationBar.bounds.height ?? 0) )
@@ -136,14 +140,17 @@ class MyTargetController: UIViewController {
         navigationController?.navigationBar.backItem?.backButtonTitle = ""
     }
     
-    public func loadTask() {
-        print("CHECK0")
+    func loadTask() {
         guard !taskName.isEmpty else {
             return
         }
-        print("CHECK")
-        database.getTask(taskName: taskName) { result in
-            print("CHECK2")
+        
+        activityIndicator.startAnimating()
+        database.getTask(taskName: taskName) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            self.activityIndicator.stopAnimating()
             switch result {
             case .success(let task):
                 self.task = task
@@ -156,12 +163,21 @@ class MyTargetController: UIViewController {
                 self.loadImage()
                 
                 self.collectionView.reloadData()
-                print("TAAAAAAASK: \(String(describing: self.task))")
             case .failure:
+                self.showError()
                 return
             }
         }
-        print("CHECK3")
+    }
+    
+    private func showError() {
+        let alertVC = UIAlertController(title: "OSHIBKA SLU4iLAS",
+                                        message: "Proizohla oshibka",
+                                        preferredStyle: .alert)
+        
+        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        
+        present(alertVC, animated: true, completion: nil)
     }
     
     private func loadImage() {
@@ -189,16 +205,29 @@ class MyTargetController: UIViewController {
     
     @objc
     private func didTapAddButton(title: String, date: String) {
-        database.createUnderTask(taskName, title, date) { result in
+        database.createUnderTask(taskName, title, date) { [weak self] result in
             switch result {
-            case .success(let okMassege):
-                print("ВЫЗЫВАЕМ ЛОАДТАСК")
-                self.loadTask()
-                print("OKMASS: \(okMassege)")
+            case .success(_):
+                self?.loadTask()
+                (self?.tabBarController as? MainTabBarController)?.reloadTasks()
             case .failure(let error):
                 print(error)
             }
         }
+    }
+    
+    @objc
+    private func didTapCompletedButton(underTaskID: String, isCompleted: Bool) {
+        database.selctCheckmark(taskID: taskName, underTaskID: underTaskID, isCompleted: isCompleted) { [weak self] result in
+            switch result {
+            case .success(_):
+                self?.loadTask()
+                (self?.tabBarController as? MainTabBarController)?.reloadTasks()
+            case .failure(let error):
+                print(error)
+            }
+        }
+
     }
     
     deinit {
@@ -240,7 +269,6 @@ extension MyTargetController : UICollectionViewDelegateFlowLayout, UICollectionV
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        print("task.underTasks.count + 1: \(task.underTasks.count + 1)")
         return task.underTasks.count + 1
     }
     
@@ -262,6 +290,7 @@ extension MyTargetController : UICollectionViewDelegateFlowLayout, UICollectionV
 
         let underTask = task.underTasks[indexPath.row]
         cell.configure(with: underTask)
+        cell.delegate = self
         
         return cell
     }
@@ -271,5 +300,11 @@ extension MyTargetController : UICollectionViewDelegateFlowLayout, UICollectionV
 extension MyTargetController: NewUnderTaskCellDelegate {
     func didTapActionButton(title: String, date : String) {
         didTapAddButton(title: title, date: date)
+    }
+}
+
+extension MyTargetController: UnderTaskCellDelegate {
+    func didTapSelectButton(underTaskID: String, isCompleted: Bool) {
+        didTapCompletedButton(underTaskID: underTaskID, isCompleted: isCompleted)
     }
 }

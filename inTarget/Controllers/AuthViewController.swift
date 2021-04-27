@@ -91,7 +91,7 @@ class AuthViewController: UIViewController {
         
         signInButton.setTitle("Войти", for: .normal)
         signInButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
-        signInButton.setTitleColor(.background, for: .normal)
+        signInButton.setTitleColor(.white, for: .normal)
         signInButton.backgroundColor = .accent
         signInButton.setTitleColor(.lightGray, for: .selected)
         

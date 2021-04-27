@@ -11,6 +11,7 @@ import PinLayout
 final class MyTargetsController: UIViewController {
     private let logoutButton = UIButton()
     private let headLabel = UILabel()
+    
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -21,6 +22,7 @@ final class MyTargetsController: UIViewController {
         cv.register(TaskCell.self, forCellWithReuseIdentifier: "myTargetsControllerCell")
         return cv
     }()
+    
     let image = UIImage(named: "exit")?.withTintColor(.accent)
     var data: [Task] = []
     private let dataBase = DatabaseModel()
@@ -79,11 +81,11 @@ final class MyTargetsController: UIViewController {
         
         collectionView.backgroundColor = .white
         collectionView.layer.cornerRadius = 30
-        collectionView.layer.masksToBounds = false
+        collectionView.layer.masksToBounds = true
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        headLabel.text = "Цели"
+        headLabel.text = "Мои цели"
         headLabel.textColor = .black
         headLabel.font = UIFont(name: "GothamPro", size: 34)
     }
@@ -93,7 +95,6 @@ final class MyTargetsController: UIViewController {
             switch result {
             case .success(let tasks):
                 self.data = tasks
-                print("DATA: \(String(describing: self.data))")
                 self.collectionView.reloadData()
             case .failure:
                 return
