@@ -219,9 +219,6 @@ class DatabaseModel {
                 completion(.failure(error ?? ImageLoader.ImageLoaderError.invalidInput))
             }
         }
-        
-        //database.document(<#T##documentPath: String##String#>)
-        //database.document(currentUser.uid).
     }
     
     func addGroup(groupID : String,

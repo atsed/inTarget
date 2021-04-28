@@ -56,19 +56,42 @@ class GroupsController: UIViewController {
             .below(of: headLabel)
             .marginTop(30)
             .horizontally(16)
-            .bottom((tabBarController?.tabBar.bounds.height ?? 0) + 20)
+            .bottom()
+            //.bottom((tabBarController?.tabBar.bounds.height ?? 0) + 20)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
+    public func pushGroupController(groupName : String) {
+        let groupController = GroupController()
+        groupController.groupName = groupName
+        self.navigationController?.pushViewController(groupController, animated: true)
+    }
+    
+    @objc
+    func didTapAddButton() {
+        (self.tabBarController as? MainTabBarController)?.reloadVC2(valueSegmCon: 1)
+        tabBarController?.selectedIndex = 1
+    }
+    
+    @objc
+    func didTapGroupOpenButton(groupID : String) {
+        (self.tabBarController as? MainTabBarController)?.openGoalVC3(with: groupID)
     }
     
     public func reloadGroups() {
-//        groupDatabase.getGroups() { result in
-//            switch result {
-//            case .success(let groups):
-//                self.data = groups
-//                self.collectionView.reloadData()
-//            case .failure:
-//                return
-//            }
-//        }
+        groupDatabase.getGroups() { result in
+            switch result {
+            case .success(let groups):
+                self.data = groups
+                print("DATAAAAAA: \(self.data)")
+                self.collectionView.reloadData()
+            case .failure:
+                return
+            }
+        }
     }
 }
 
@@ -112,11 +135,11 @@ extension GroupsController : UICollectionViewDelegateFlowLayout, UICollectionVie
 
 extension GroupsController: GroupCellDelegate, NewGroupCellDelegate {
     func didTapActionButton() {
-        
+        didTapAddButton()
     }
     
     func didTapOpenButton(groupID : String) {
-        
+        didTapGroupOpenButton(groupID: groupID)
     }
-
+    
 }

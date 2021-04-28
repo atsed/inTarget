@@ -10,8 +10,9 @@ import PinLayout
 
 final class TargetsController: UIViewController {
     private let headLabel = UILabel()
+    private let groupsLabel = UILabel()
     
-    private let collectionView: UICollectionView = {
+    private let tasksCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -19,6 +20,17 @@ final class TargetsController: UIViewController {
         cv.showsHorizontalScrollIndicator = false
         cv.register(TaskCell.self, forCellWithReuseIdentifier: "TaskCell")
         cv.register(NewTaskCell.self, forCellWithReuseIdentifier: "NewTaskCell")
+        return cv
+    }()
+    
+    private let groupsCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.translatesAutoresizingMaskIntoConstraints = false
+        cv.showsHorizontalScrollIndicator = false
+        cv.register(GroupCell.self, forCellWithReuseIdentifier: "GroupCell")
+        cv.register(NewGroupCell.self, forCellWithReuseIdentifier: "NewGroupCell")
         return cv
     }()
     
@@ -35,16 +47,20 @@ final class TargetsController: UIViewController {
     
     private func setup() {
         view.backgroundColor = .white
-        view.addSubview(collectionView)
-        view.addSubview(headLabel)
         
         headLabel.text = "Цели"
         headLabel.textColor = .black
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
-        collectionView.backgroundColor = .background
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        groupsLabel.text = "Групповые цели"
+        groupsLabel.textColor = .black
+        groupsLabel.font = UIFont(name: "GothamPro", size: 24)
+        
+        tasksCollectionView.backgroundColor = .background
+        tasksCollectionView.delegate = self
+        tasksCollectionView.dataSource = self
+        
+        [tasksCollectionView, headLabel, groupsLabel].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
@@ -55,21 +71,34 @@ final class TargetsController: UIViewController {
             .left(view.pin.safeArea.left + 30)
             .sizeToFit()
         
-        collectionView.pin
+        tasksCollectionView.pin
             .below(of: headLabel)
             .marginTop(30)
             .horizontally()
             .height(220)
+        
+        groupsLabel.pin
+            .below(of: tasksCollectionView)
+            .marginTop(30)
+            .left(view.pin.safeArea.left + 30)
+            .sizeToFit()
+        
+        groupsCollectionView.pin
+            .below(of: groupsLabel)
+            .marginTop(30)
+            .horizontally(16)
+            .bottom()
     }
     
     @objc
     func didTapAddButton() {
+        (self.tabBarController as? MainTabBarController)?.reloadVC2(valueSegmCon: 0)
         tabBarController?.selectedIndex = 1
     }
     
     @objc
-    func didTapOpenButton(taskID : String) {
-        (self.tabBarController as? MainTabBarController)?.openGoal(with: taskID)
+    func didTapTaskOpenButton(taskID : String) {
+        (self.tabBarController as? MainTabBarController)?.openGoalVC4(with: taskID)
     }
     
     public func reloadTasks() {
@@ -77,7 +106,7 @@ final class TargetsController: UIViewController {
             switch result {
             case .success(let tasks):
                 self.data = tasks
-                self.collectionView.reloadData()
+                self.tasksCollectionView.reloadData()
             case .failure:
                 return
             }
@@ -90,7 +119,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/1.1, height: 177)
+        return CGSize(width: tasksCollectionView.frame.width/1.1, height: 177)
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -102,7 +131,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.row == data.count {
-            guard let newTaskCell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewTaskCell", for: indexPath) as? NewTaskCell else {
+            guard let newTaskCell = tasksCollectionView.dequeueReusableCell(withReuseIdentifier: "NewTaskCell", for: indexPath) as? NewTaskCell else {
                 return UICollectionViewCell()
             }
             
@@ -110,7 +139,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
             return newTaskCell
         }
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
+        guard let cell = tasksCollectionView.dequeueReusableCell(withReuseIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
             return UICollectionViewCell()
         }
     
@@ -125,7 +154,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
 
 extension TargetsController: TaskCellDelegate, NewTaskCellDelegate {
     func didTapOpenTaskButton(taskID : String) {
-        didTapOpenButton(taskID: taskID)
+        didTapTaskOpenButton(taskID: taskID)
     }
     
     func didTapActionButton() {

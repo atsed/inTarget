@@ -11,7 +11,7 @@ import PinLayout
 final class MainTabBarController: UITabBarController {
     private let vc1 = TargetsController()
     private let vc2 = NewTargetController()
-    private let vc3 = GroupsController()
+    private let vc3 = UINavigationController(rootViewController: GroupsController())
     private let vc4 = UINavigationController(rootViewController: MyTargetsController())
     
     override func viewDidLoad() {
@@ -38,6 +38,10 @@ final class MainTabBarController: UITabBarController {
         vc1.reloadTasks()
     }
     
+    func reloadVC2(valueSegmCon: Int) {
+        vc2.valueSegmCon = valueSegmCon
+    }
+    
     func reloadVC4() {
         guard let viewController = vc4.viewControllers.first as? MyTargetsController else {
             return
@@ -45,7 +49,19 @@ final class MainTabBarController: UITabBarController {
         viewController.reloadTasks()
     }
     
-    func openGoal(with taskName: String) {
+    func reloadVC3() {
+        guard let viewController = vc3.viewControllers.first as? GroupsController else {
+            return
+        }
+        viewController.reloadGroups()
+    }
+    
+    func openGoalVC3(with groupName: String) {
+        self.selectedIndex = 2
+        (vc3.topViewController as? GroupsController)?.pushGroupController(groupName: groupName)
+    }
+    
+    func openGoalVC4(with taskName: String) {
         self.selectedIndex = 3
         (vc4.topViewController as? MyTargetsController)?.pushMyTargetController(taskName: taskName)
     }

@@ -95,7 +95,6 @@ class TaskCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         openButton.addTarget(self, action: #selector(didTapOpenButton), for: .touchUpInside)
-        setupConstraints()
         
         setupConstraints()
     }

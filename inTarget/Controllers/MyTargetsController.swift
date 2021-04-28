@@ -129,7 +129,7 @@ final class MyTargetsController: UIViewController {
     
     @objc
     func didTapOpenButton(taskID : String) {
-        (self.tabBarController as? MainTabBarController)?.openGoal(with: taskID)
+        (self.tabBarController as? MainTabBarController)?.openGoalVC4(with: taskID)
     }
 }
 

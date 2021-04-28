@@ -26,13 +26,8 @@ public class NewTaskCell: UICollectionViewCell {
     
     lazy var button: UIButton = {
         let button = UIButton()
-        //let image = UIImage(systemName: "plus.circle")
         let image = UIImage(named: "add")?.withTintColor(.accent)
         button.setImage(image, for: .normal)
-
-        //button.contentVerticalAlignment = .fill
-        //button.contentHorizontalAlignment = .fill
-        //button.imageEdgeInsets = UIEdgeInsets(top: 25, left: 25, bottom: 25, right: 25)
         button.tintColor = .accent
         return button
     }()

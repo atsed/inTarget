@@ -11,8 +11,9 @@ import PinLayout
 
 class NewTargetController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     private let headLabel = UILabel()
-    let segmentedControl = UISegmentedControl(items: ["Личная цель", "Групповая цель"])
+    private let segmentedControl = UISegmentedControl(items: ["Личная цель", "Групповая цель"])
     private let scrollViewSegmCon = UIScrollView()
+    
     private let taskTitleField = UITextField()
     private let taskTitleSeparator = UIView()
     private let taskDatePicker = UIDatePicker()
@@ -21,6 +22,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     private let taskDeleteImageButton = UIButton()
     private let taskAddImageContainer = UIView()
     private let createTaskButton = UIButton(type: .system)
+    private let taskScrollView = UIScrollView()
     
     private let groupTitleField = UITextField()
     private let groupTitleSeparator = UIView()
@@ -30,10 +32,11 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     private let groupDeleteImageButton = UIButton()
     private let groupAddImageContainer = UIView()
     private let createGroupButton = UIButton(type: .system)
-    
-    private let scrollView = UIScrollView()
+    private let groupScrollView = UIScrollView()
     
     private var image = UIImage()
+    
+    var valueSegmCon = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,9 +54,9 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .normal)
         segmentedControl.backgroundColor = .lightAccent
         segmentedControl.selectedSegmentTintColor = .accent
-        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.selectedSegmentIndex = valueSegmCon
         swipeSegmentedControl(segmentedControl)
-        segmentedControl.addTarget(self, action: #selector(swipeSegmentedControl(_:)), for: .valueChanged)
+        segmentedControl.addTarget(self, action: #selector(swipeSegmentedControl(_:)), for: .allEvents)
         
         taskTitleField.placeholder = "Наименование цели"
         taskTitleField.borderStyle = .none
@@ -135,16 +138,24 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         createGroupButton.layer.masksToBounds = true
         createGroupButton.addTarget(self, action: #selector(didTapCreateGroupButton), for: .touchUpInside)
         
-        scrollView.keyboardDismissMode = .onDrag
+        taskScrollView.keyboardDismissMode = .onDrag
+        groupScrollView.keyboardDismissMode = .onDrag
         
         [taskAddImageView, taskDeleteImageButton].forEach { taskAddImageContainer.addSubview($0)}
         [groupAddImageView, groupDeleteImageButton].forEach { groupAddImageContainer.addSubview($0)}
-        [taskTitleField, taskTitleSeparator, taskDatePicker, taskAddImageButton, taskAddImageContainer, createTaskButton, groupTitleField, groupTitleSeparator, groupDatePicker, groupAddImageButton, groupAddImageContainer, createGroupButton].forEach { scrollView.addSubview($0) }
-        [headLabel, segmentedControl, scrollView].forEach { view.addSubview($0) }
+        
+        [taskTitleField, taskTitleSeparator, taskDatePicker, taskAddImageButton, taskAddImageContainer, createTaskButton].forEach { taskScrollView.addSubview($0) }
+        [groupTitleField, groupTitleSeparator, groupDatePicker, groupAddImageButton, groupAddImageContainer, createGroupButton].forEach { groupScrollView.addSubview($0) }
+        
+        [taskScrollView, groupScrollView].forEach { scrollViewSegmCon.addSubview($0) }
+        
+        [headLabel, segmentedControl, scrollViewSegmCon].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        segmentedControl.selectedSegmentIndex = valueSegmCon
+        swipeSegmentedControl(segmentedControl)
         
         headLabel.pin
             .top(view.pin.safeArea.top + 30)
@@ -157,23 +168,20 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .height(36)
             .horizontally(16)
         
-        scrollView.pin
+        scrollViewSegmCon.pin
             .below(of: segmentedControl)
             .bottom()
             .horizontally()
         
+        taskScrollView.pin
+            .top()
+            .bottom()
+            .horizontally()
+        
         taskTitleField.pin
-            .below(of: segmentedControl)
+            .top()
             .marginTop(5)
             .horizontally(16)
-            .height(60)
-        
-        groupTitleField.pin
-            .below(of: segmentedControl)
-            .right(of: taskTitleField)
-            .marginTop(5)
-            .marginLeft(32)
-            .width(of: taskTitleField)
             .height(60)
         
         taskTitleSeparator.pin
@@ -181,50 +189,21 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .horizontally(16)
             .height(0.1)
         
-        groupTitleSeparator.pin
-            .below(of: groupTitleField)
-            .right(of: taskTitleSeparator)
-            .marginLeft(32)
-            .width(of: taskTitleSeparator)
-            .height(0.1)
-        
         taskDatePicker.pin
             .below(of: taskTitleField)
             .marginTop(16)
             .horizontally(20)
-        
-        groupDatePicker.pin
-            .below(of: groupTitleField)
-            .right(of: taskDatePicker)
-            .marginTop(16)
-            .marginLeft(40)
-            .width(of: taskDatePicker)
         
         taskAddImageButton.pin
             .sizeToFit()
             .below(of: taskDatePicker)
             .left(16)
         
-        groupAddImageButton.pin
-            .sizeToFit()
-            .below(of: groupDatePicker)
-            .right(of: taskTitleField)
-            .marginLeft(32)
-        
         taskAddImageContainer.pin
             .below(of: taskAddImageButton)
             .left(16)
         
-        groupAddImageContainer.pin
-            .below(of: groupAddImageButton)
-            .right(of: taskTitleField)
-            .marginLeft(36)
-        
         taskAddImageView.pin
-            .height(100)
-            .width(100)
-        
-        groupAddImageView.pin
             .height(100)
             .width(100)
         
@@ -233,16 +212,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .height(40)
             .width(40)
         
-        groupDeleteImageButton.pin
-            .left(60)
-            .height(40)
-            .width(40)
-        
         taskAddImageContainer.pin
-            .height(100)
-            .width(100)
-        
-        groupAddImageContainer.pin
             .height(100)
             .width(100)
         
@@ -252,25 +222,60 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .horizontally(16)
             .height(56)
         
+        
+        
+        groupScrollView.pin
+            .below(of: segmentedControl)
+            .right(of: taskScrollView)
+            .height(of: taskScrollView)
+            .width(of: taskScrollView)
+        
+        groupTitleField.pin
+            .top()
+            .marginTop(5)
+            .horizontally(16)
+            .height(60)
+        
+        groupTitleSeparator.pin
+            .below(of: groupTitleField)
+            .horizontally(16)
+            .height(0.1)
+        
+        groupDatePicker.pin
+            .below(of: groupTitleField)
+            .marginTop(16)
+            .horizontally(20)
+        
+        groupAddImageButton.pin
+            .sizeToFit()
+            .below(of: groupDatePicker)
+            .left(16)
+        
+        groupAddImageContainer.pin
+            .below(of: groupAddImageButton)
+            .left(16)
+        
+        groupAddImageView.pin
+            .height(100)
+            .width(100)
+        
+        groupDeleteImageButton.pin
+            .left(60)
+            .height(40)
+            .width(40)
+        
+        groupAddImageContainer.pin
+            .height(100)
+            .width(100)
+        
         createGroupButton.pin
             .below(of: groupAddImageContainer)
-            .right(of: createTaskButton)
             .marginTop(8)
-            .marginLeft(32)
-            .width(of: createTaskButton)
+            .horizontally(16)
             .height(56)
         
-        didPerformLayout()
-    }
-    
-    private func didPerformLayout() {
-        let tabbarHeight = tabBarController?.tabBar.bounds.height ?? 0
-
-        guard view.bounds.height - tabbarHeight < createTaskButton.frame.maxY else {
-            return
-        }
-
-        scrollView.contentSize = CGSize(width: scrollView.bounds.width, height: createTaskButton.frame.maxY + 16)
+        taskScrollView.contentSize = CGSize(width: taskScrollView.bounds.width, height: createTaskButton.frame.maxY + 16)
+        groupScrollView.contentSize = CGSize(width: groupScrollView.bounds.width, height: createGroupButton.frame.maxY + 16)
     }
     
     @objc
@@ -279,12 +284,14 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         switch segmentedControl.selectedSegmentIndex {
         case 0:
             print("CASE 0")
+            valueSegmCon = 0
             headLabel.text = "Новая цель"
-            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+            scrollViewSegmCon.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         case 1:
             print("CASE 1")
+            valueSegmCon = 1
             headLabel.text = "Новая группа"
-            scrollView.setContentOffset(CGPoint(x: view.bounds.width, y: 0), animated: true)
+            scrollViewSegmCon.setContentOffset(CGPoint(x: view.bounds.width, y: 0), animated: true)
         default:
             print("ERROR swipeSegmentedControl")
         }
@@ -333,7 +340,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
                     case .success(let taskName):
                         (self?.tabBarController as? MainTabBarController)?.reloadVC1()
                         (self?.tabBarController as? MainTabBarController)?.reloadVC4()
-                        (self?.tabBarController as? MainTabBarController)?.openGoal(with: taskName)
+                        (self?.tabBarController as? MainTabBarController)?.openGoalVC4(with: taskName)
                         self?.taskTitleField.text = ""
                         self?.didTapTaskDeleteImageButton()
                     case .failure(let error):
@@ -372,11 +379,11 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
                 imageName = imageRandomName
                 groupDatabase.createGroup(title, date, imageName) { [weak self] result in
                     switch result {
-                    case .success(let taskName):
+                    case .success(let groupName):
+                        print("GROUPNAME: \(groupName)")
                         (self?.tabBarController as? MainTabBarController)?.reloadVC1()
-                        (self?.tabBarController as? MainTabBarController)?.reloadVC4()
-                        //Допилить строку ниже
-                        //(self?.tabBarController as? MainTabBarController)?.openGoal(with: taskName)
+                        (self?.tabBarController as? MainTabBarController)?.reloadVC3()
+                        (self?.tabBarController as? MainTabBarController)?.openGoalVC3(with: groupName)
                         self?.groupTitleField.text = ""
                         self?.didTapGroupDeleteImageButton()
                     case .failure(let error):

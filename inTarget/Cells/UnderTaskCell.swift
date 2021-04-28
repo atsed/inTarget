@@ -73,15 +73,13 @@ class UnderTaskCell: UICollectionViewCell {
     
     func configure(with underTask: UnderTask) {
         titleLabel.text = underTask.title
+        underTaskID = underTask.randomName
         
         let oldDAteFormatter = DateFormatter()
         oldDAteFormatter.dateFormat = "dd MM yyyy"
         guard let oldDate = oldDAteFormatter.date(from: underTask.date) else {
             return
         }
-    
-        underTaskID = underTask.randomName
-        
         let newDAteFormatter = DateFormatter()
         newDAteFormatter.dateFormat = "dd MMMM yyyy"
         let newDate = newDAteFormatter.string(from: oldDate)
