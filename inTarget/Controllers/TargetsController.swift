@@ -35,14 +35,18 @@ final class TargetsController: UIViewController {
     }()
     
     private let database = DatabaseModel()
+    private let groupDatabase = GroupDatabaseModel()
     
-    var data: [Task] = []
+    var tasks: [Task] = []
+    
+    var groups: [Group] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setup()
         reloadTasks()
+        reloadGroups()
     }
     
     private func setup() {
@@ -60,7 +64,11 @@ final class TargetsController: UIViewController {
         tasksCollectionView.delegate = self
         tasksCollectionView.dataSource = self
         
-        [tasksCollectionView, headLabel, groupsLabel].forEach { view.addSubview($0) }
+        groupsCollectionView.backgroundColor = .background
+        groupsCollectionView.delegate = self
+        groupsCollectionView.dataSource = self
+        
+        [headLabel, tasksCollectionView, groupsLabel, groupsCollectionView].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
@@ -87,7 +95,7 @@ final class TargetsController: UIViewController {
             .below(of: groupsLabel)
             .marginTop(30)
             .horizontally(16)
-            .bottom()
+            .bottom(6)
     }
     
     @objc
@@ -101,12 +109,29 @@ final class TargetsController: UIViewController {
         (self.tabBarController as? MainTabBarController)?.openGoalVC4(with: taskID)
     }
     
-    public func reloadTasks() {
+    @objc
+    func didTapGroupOpenButton(groupID : String) {
+        (self.tabBarController as? MainTabBarController)?.openGoalVC3(with: groupID)
+    }
+    
+    func reloadTasks() {
         database.getTasks { result in
             switch result {
             case .success(let tasks):
-                self.data = tasks
+                self.tasks = tasks
                 self.tasksCollectionView.reloadData()
+            case .failure:
+                return
+            }
+        }
+    }
+    
+    func reloadGroups() {
+        groupDatabase.getGroups() { result in
+            switch result {
+            case .success(let groups):
+                self.groups = groups
+                self.groupsCollectionView.reloadData()
             case .failure:
                 return
             }
@@ -119,40 +144,80 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: tasksCollectionView.frame.width/1.1, height: 177)
+        if collectionView == self.tasksCollectionView {
+            return CGSize(width: tasksCollectionView.frame.width/1.1, height: 177)
+        }
+
+        else {
+            return CGSize(width: groupsCollectionView.frame.width, height: 64)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return data.count + 1
+        if collectionView == self.tasksCollectionView {
+            
+            return tasks.count + 1
+            
+        }
+        else {
+            return groups.count + 1
+            
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        if indexPath.row == data.count {
-            guard let newTaskCell = tasksCollectionView.dequeueReusableCell(withReuseIdentifier: "NewTaskCell", for: indexPath) as? NewTaskCell else {
-                return UICollectionViewCell()
+        if collectionView == self.tasksCollectionView {
+            if indexPath.row == tasks.count {
+                guard let newTaskCell = tasksCollectionView.dequeueReusableCell(withReuseIdentifier: "NewTaskCell", for: indexPath) as? NewTaskCell else {
+                    return UICollectionViewCell()
+                }
+                
+                newTaskCell.delegate = self
+                return newTaskCell
             }
             
-            newTaskCell.delegate = self
-            return newTaskCell
-        }
+            guard let cell = tasksCollectionView.dequeueReusableCell(withReuseIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
+                return UICollectionViewCell()
+            }
         
-        guard let cell = tasksCollectionView.dequeueReusableCell(withReuseIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
-            return UICollectionViewCell()
+            let task = tasks[indexPath.row]
+            cell.configure(with: task)
+            cell.delegate = self
+            
+            return cell
+            
         }
-    
-        let task = data[indexPath.row]
-        cell.configure(with: task)
-        cell.delegate = self
+        else {
+            if indexPath.row == groups.count {
+                guard let newGroupCell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewGroupCell", for: indexPath) as? NewGroupCell else {
+                    return UICollectionViewCell()
+                }
+                newGroupCell.delegate = self
+                return newGroupCell
+            }
+            
+            guard let groupCell = collectionView.dequeueReusableCell(withReuseIdentifier: "GroupCell", for: indexPath) as? GroupCell else {
+                return UICollectionViewCell()
+            }
         
-        return cell
+            let group = groups[indexPath.row]
+            groupCell.configure(with: group)
+            groupCell.delegate = self
+            
+            return groupCell
+        }
     }
 
 }
 
-extension TargetsController: TaskCellDelegate, NewTaskCellDelegate {
+extension TargetsController: TaskCellDelegate, NewTaskCellDelegate, GroupCellDelegate, NewGroupCellDelegate {
+    
+    func didTapOpenGroupButton(groupID: String) {
+        didTapGroupOpenButton(groupID: groupID)
+    }
+    
     func didTapOpenTaskButton(taskID : String) {
         didTapTaskOpenButton(taskID: taskID)
     }

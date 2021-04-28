@@ -56,8 +56,7 @@ class GroupsController: UIViewController {
             .below(of: headLabel)
             .marginTop(30)
             .horizontally(16)
-            .bottom()
-            //.bottom((tabBarController?.tabBar.bounds.height ?? 0) + 20)
+            .bottom(6)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,11 +76,11 @@ class GroupsController: UIViewController {
     }
     
     @objc
-    func didTapGroupOpenButton(groupID : String) {
+    func didTapOpenButton(groupID : String) {
         (self.tabBarController as? MainTabBarController)?.openGoalVC3(with: groupID)
     }
     
-    public func reloadGroups() {
+    func reloadGroups() {
         groupDatabase.getGroups() { result in
             switch result {
             case .success(let groups):
@@ -113,22 +112,22 @@ extension GroupsController : UICollectionViewDelegateFlowLayout, UICollectionVie
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.row == data.count {
-            guard let newTaskCell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewGroupCell", for: indexPath) as? NewGroupCell else {
+            guard let newGroupCell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewGroupCell", for: indexPath) as? NewGroupCell else {
                 return UICollectionViewCell()
             }
-            newTaskCell.delegate = self
-            return newTaskCell
+            newGroupCell.delegate = self
+            return newGroupCell
         }
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GroupCell", for: indexPath) as? GroupCell else {
+        guard let groupCell = collectionView.dequeueReusableCell(withReuseIdentifier: "GroupCell", for: indexPath) as? GroupCell else {
             return UICollectionViewCell()
         }
     
         let group = data[indexPath.row]
-        cell.configure(with: group)
-        cell.delegate = self
+        groupCell.configure(with: group)
+        groupCell.delegate = self
         
-        return cell
+        return groupCell
     }
 
 }
@@ -138,8 +137,8 @@ extension GroupsController: GroupCellDelegate, NewGroupCellDelegate {
         didTapAddButton()
     }
     
-    func didTapOpenButton(groupID : String) {
-        didTapGroupOpenButton(groupID: groupID)
+    func didTapOpenGroupButton(groupID : String) {
+        didTapOpenButton(groupID: groupID)
     }
     
 }

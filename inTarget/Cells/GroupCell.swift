@@ -8,7 +8,7 @@
 import UIKit
 
 protocol GroupCellDelegate: AnyObject {
-    func didTapOpenButton(groupID : String)
+    func didTapOpenGroupButton(groupID : String)
 }
 
 class GroupCell: UICollectionViewCell {
@@ -184,7 +184,7 @@ class GroupCell: UICollectionViewCell {
         guard !groupID.isEmpty else {
             return
         }
-        delegate?.didTapOpenButton(groupID: groupID)
+        delegate?.didTapOpenGroupButton(groupID: groupID)
     }
 }
 
