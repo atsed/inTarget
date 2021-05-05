@@ -29,7 +29,6 @@ class TaskCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.frame = CGRect(x: 0, y: 0, width: 150, height: 150)
         imageView.layer.cornerRadius = 30
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView

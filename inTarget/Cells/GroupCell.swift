@@ -27,7 +27,6 @@ class GroupCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         return imageView
@@ -139,6 +138,8 @@ class GroupCell: UICollectionViewCell {
             .height(45)
             .width(45)
             .vCenter()
+        
+        imageView.layer.cornerRadius = imageView.frame.size.width / 2
         
         textContainer.pin
             .right(of: imageView)
