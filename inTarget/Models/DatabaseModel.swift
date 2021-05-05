@@ -250,4 +250,41 @@ class DatabaseModel {
         }
     }
     
+    func getAvatar(completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        var avatarID : String = ""
+        database.document(currentUser.uid).getDocument { (document, error) in
+            if let document = document, document.exists {
+                avatarID = document.get("avatar") as? String ?? ""
+                print("avatarID: \(avatarID)")
+                completion(.success(avatarID))
+            } else {
+                print("Document does not exist")
+                completion(.failure(error ?? ImageLoader.ImageLoaderError.invalidInput))
+            }
+        }
+    }
+    
+    func setAvatar(avatarID : String,
+                   completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        database.document(currentUser.uid).setData(["avatar" : avatarID], merge: true) {
+            error in
+            let result = Result {
+            }
+            switch result {
+            case .success():
+                completion(.success("ok"))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
 }

@@ -40,10 +40,8 @@ class GroupDatabaseModel {
                 database.addGroup(groupID: randomName) { result in
                     switch result {
                     case .success(_):
-                        print("okko")
                         completion(.success(randomName))
                     case .failure(let error):
-                        print("notton")
                         completion(.failure(error))
                     }
                 }
@@ -61,7 +59,6 @@ class GroupDatabaseModel {
         database.getGroups() { [weak self] result in
             switch result {
             case .success(let arrGroups):
-                print("okko: \(arrGroups)")
                 self?.groupDatabase.getDocuments() { [weak self] (querySnapshot, error) in
                     
                     if let error = error {
@@ -71,8 +68,6 @@ class GroupDatabaseModel {
                         for document in querySnapshot!.documents {
                             arrGroups.forEach {
                                 if $0 == document.documentID {
-                                    print("document.documentID: \(document.documentID)")
-                                    
                                     guard let date = document["date"] as? String,
                                           let image = document["image"] as? String,
                                           let title = document["title"] as? String,
@@ -101,12 +96,10 @@ class GroupDatabaseModel {
                         }
                         return first < second
                     }
-                    print("completionGroups: \(completionGroups)")
                     completion(.success(completionGroups))
                 }
                 completion(.success(completionGroups))
             case .failure(let error):
-                print("notton")
                 completion(.failure(error))
             }
         }

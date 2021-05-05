@@ -40,10 +40,7 @@ public class NewUnderTaskCell: UICollectionViewCell {
         datePicker.datePickerMode = .date
         if #available(iOS 14, *) {
             datePicker.preferredDatePickerStyle = .compact
-//            datePicker.subviews.forEach({ $0.subviews.forEach({ $0.removeFromSuperview() }) })
-            //datePicker.subviews.forEach { if let label : UILabel = $0 {} }
-//            datePicker.subviews.forEach({ $0.subviews.forEach({ $0.removeFromSuperview() }) })
-            
+
             let image = UIImage(systemName: "calendar.circle")
             let imageView = UIImageView(image: image)
             imageView.frame = CGRect(x: 0, y: 0, width: 45, height: 45)
@@ -89,11 +86,11 @@ public class NewUnderTaskCell: UICollectionViewCell {
         
         addButton.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
         datePickerButton.addTarget(self, action: #selector(didTapDatePickerButton), for: .touchUpInside)
-        
-        setupConstraints()
     }
  
-    private func setupConstraints() {
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
         addButton.pin
             .left(10)
             .height(45)

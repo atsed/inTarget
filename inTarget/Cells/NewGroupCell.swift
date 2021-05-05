@@ -39,6 +39,13 @@ public class NewGroupCell: UICollectionViewCell {
         return button
     }()
     
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        button.pin
+            .vertically()
+            .horizontally()
+    }
 
     private func setup() {
         contentView.addSubview(button)
@@ -48,18 +55,11 @@ public class NewGroupCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         button.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
-        setupConstraints()
+        //setupConstraints()
     }
     
     @objc
     func didTapAddButton() {
         delegate?.didTapActionButton()
-    }
-    
-    private func setupConstraints() {
-        
-        button.pin
-            .vertically()
-            .horizontally()
     }
 }

@@ -45,19 +45,19 @@ public class NewTaskCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         button.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
-        setupConstraints()
     }
     
-    @objc
-    func didTapAddButton() {
-        delegate?.didTapActionButton()
-    }
-    
-    private func setupConstraints() {
+    public override func layoutSubviews(){
+        super.layoutSubviews()
         
         button.pin
             .vertically()
             .horizontally()
             
+    }
+    
+    @objc
+    func didTapAddButton() {
+        delegate?.didTapActionButton()
     }
 }

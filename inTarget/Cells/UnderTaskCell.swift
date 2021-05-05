@@ -67,9 +67,7 @@ class UnderTaskCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         checkmarkButton.addTarget(self, action: #selector(didTapCheckmarkButton), for: .touchUpInside)
-        
-        setupConstraints()
-    }
+}
     
     func configure(with underTask: UnderTask) {
         titleLabel.text = underTask.title
@@ -96,7 +94,8 @@ class UnderTaskCell: UICollectionViewCell {
         
     }
     
-    private func setupConstraints() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
         
         checkmarkButton.pin
             .left(10)

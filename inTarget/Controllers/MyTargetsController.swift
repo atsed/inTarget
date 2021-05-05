@@ -31,6 +31,7 @@ final class MyTargetsController: UIViewController {
         super.viewDidLoad()
         setup()
         reloadTasks()
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -124,7 +125,6 @@ final class MyTargetsController: UIViewController {
         dialogMessage.addAction(okAction)
         
         self.present(dialogMessage, animated: true, completion: nil)
-    
     }
     
     @objc

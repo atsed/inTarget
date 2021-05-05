@@ -90,9 +90,6 @@ class GroupCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         openButton.addTarget(self, action: #selector(didTapOpenButton), for: .touchUpInside)
-        
-        setupConstraints()
-        
     }
     
     func configure(with group: Group) {
@@ -134,7 +131,9 @@ class GroupCell: UICollectionViewCell {
         imageView.image = nil
     }
     
-    private func setupConstraints() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
         imageView.pin
             .left(10)
             .height(45)

@@ -78,7 +78,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         taskAddImageButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
         taskAddImageButton.setTitleColor(.accent, for: .normal)
         taskAddImageButton.backgroundColor = .background
-        taskAddImageButton.addTarget(self, action: #selector(didTapGroupAddImageButton), for: .touchUpInside)
+        taskAddImageButton.addTarget(self, action: #selector(didTapAddImageButton), for: .touchUpInside)
         
         taskAddImageContainer.layer.cornerRadius = 20
         taskAddImageContainer.contentMode = .scaleAspectFill
@@ -118,7 +118,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         groupAddImageButton.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
         groupAddImageButton.setTitleColor(.accent, for: .normal)
         groupAddImageButton.backgroundColor = .background
-        groupAddImageButton.addTarget(self, action: #selector(didTapTaskAddImageButton), for: .touchUpInside)
+        groupAddImageButton.addTarget(self, action: #selector(didTapAddImageButton), for: .touchUpInside)
         
         groupAddImageContainer.layer.cornerRadius = 20
         groupAddImageContainer.contentMode = .scaleAspectFill
@@ -298,15 +298,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     }
     
     @objc
-    private func didTapTaskAddImageButton() {
-        let imagePicker = UIImagePickerController()
-        imagePicker.allowsEditing = true
-        imagePicker.delegate = self
-        present(imagePicker, animated: true)
-    }
-    
-    @objc
-    private func didTapGroupAddImageButton() {
+    private func didTapAddImageButton() {
         let imagePicker = UIImagePickerController()
         imagePicker.allowsEditing = true
         imagePicker.delegate = self

@@ -25,18 +25,9 @@ class TaskCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var progressBar: UIProgressView = {
-        let progressBar = UIProgressView(progressViewStyle: .bar)
-        progressBar.trackTintColor = .white
-        progressBar.progressTintColor = .accent
-        progressBar.frame = CGRect(x: 20, y: 150, width: 100, height: 100)
-        progressBar.setProgress(0.5, animated: true)
-        return progressBar
-    }()
-    
-    
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.frame = CGRect(x: 0, y: 0, width: 150, height: 150)
         imageView.layer.cornerRadius = 30
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -44,30 +35,46 @@ class TaskCell: UICollectionViewCell {
         return imageView
     }()
     
-    private lazy var underTasksCount: UILabel = {
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "GothamPro", size: 24)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var yearLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "GothamPro", size: 11)
+        label.textColor = .separator
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var underTasksLabel: UILabel = {
         let underTasksCount = UILabel()
         underTasksCount.font = UIFont(name: "GothamPro", size: 15)
         underTasksCount.textColor = .black
         underTasksCount.translatesAutoresizingMaskIntoConstraints = false
         return underTasksCount
     }()
-
     
-    private lazy var yearLabel: UILabel = {
-        let date = UILabel()
-        date.font = UIFont(name: "GothamPro", size: 11)
-        date.textColor = .separator
-        date.translatesAutoresizingMaskIntoConstraints = false
-        return date
+    private lazy var progressLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "GothamPro", size: 11)
+        label.textColor = .separator
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
+        return label
     }()
     
     
-    private lazy var label: UILabel = {
-        let label = UILabel()
-        label.font = UIFont(name: "GothamPro", size: 24)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private lazy var progressBar: UIProgressView = {
+        let progressBar = UIProgressView(progressViewStyle: .bar)
+        progressBar.trackTintColor = .lightAccent
+        progressBar.progressTintColor = .accent
+        progressBar.frame = CGRect(x: 20, y: 150, width: 100, height: 100)
+        return progressBar
     }()
     
     lazy var openButton: UIButton = {
@@ -82,7 +89,7 @@ class TaskCell: UICollectionViewCell {
 
     
     private func setup() {
-        [imageView, label, yearLabel, underTasksCount, progressBar, openButton].forEach {
+        [imageView, titleLabel, yearLabel, underTasksLabel, titleLabel, progressLabel, progressBar, openButton].forEach {
             contentView.addSubview($0)
         }
         
@@ -95,16 +102,14 @@ class TaskCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         openButton.addTarget(self, action: #selector(didTapOpenButton), for: .touchUpInside)
-        
-        setupConstraints()
     }
     
     func configure(with task: Task) {
         taskID = task.randomName
         
         let labelUnderTasks : String = underTasksString(value: task.underTasks.count)
-        label.text = task.title
-        underTasksCount.text = String(task.underTasks.count) + " " + labelUnderTasks
+        titleLabel.text = task.title
+        underTasksLabel.text = String(task.underTasks.count) + " " + labelUnderTasks
         
         let oldDAteFormatter = DateFormatter()
         oldDAteFormatter.dateFormat = "dd MM yyyy"
@@ -126,6 +131,25 @@ class TaskCell: UICollectionViewCell {
                 return
             }
         }
+                
+        var completedTasks = 0
+        let underTasks = task.underTasks
+        for underTask in underTasks {
+            if underTask.isCompleted == true {
+                completedTasks += 1
+            }
+        }
+        
+        
+        if underTasks.count == 0 {
+            progressLabel.text = "0" + "%"
+            progressBar.setProgress(.zero, animated: true)
+        } else {
+            let progress : Float = Float(completedTasks)/Float(underTasks.count)
+            progressLabel.text = String(Int(progress * 100)) + "%"
+            progressBar.setProgress(progress, animated: true)
+        }
+    
     }
     
     override func prepareForReuse() {
@@ -134,28 +158,49 @@ class TaskCell: UICollectionViewCell {
         imageView.image = nil
     }
     
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
-            imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 200),
-            imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
-            yearLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -80),
-            yearLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            yearLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            yearLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
-            underTasksCount.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -50),
-            underTasksCount.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            underTasksCount.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            underTasksCount.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -120),
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        imageView.pin
+            .bottom()
+            .right()
+            .height(150)
+            .width(150)
+        
+        titleLabel.pin
+            .left(of: imageView)
+            .top(20)
+            .left(20)
+            .height(24)
+            .width(200)
+        
+        yearLabel.pin
+            .below(of: titleLabel)
+            .left(of: imageView)
+            .marginTop(5)
+            .left(20)
+            .height(11)
+            .width(200)
+        
+        underTasksLabel.pin
+            .below(of: yearLabel)
+            .left(of: imageView)
+            .marginTop(2)
+            .left(20)
+            .height(15)
+            .width(200)
+        
+        progressBar.pin
+            .bottom(20)
+            .left(20)
+            .height(20)
+            .width(120)
+        
+        progressLabel.pin
+            .above(of: progressBar)
+            .height(11)
+            .left(20)
+            .width(of: progressBar)
         
         openButton.pin
             .horizontally()

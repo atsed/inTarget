@@ -10,6 +10,8 @@ import PinLayout
 
 final class TargetsController: UIViewController {
     private let headLabel = UILabel()
+    private let avatarImage = UIImageView()
+    private let avatarButton = UIButton()
     private let groupsLabel = UILabel()
     
     private let tasksCollectionView: UICollectionView = {
@@ -56,6 +58,12 @@ final class TargetsController: UIViewController {
         headLabel.textColor = .black
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
+        avatarImage.image = UIImage(named: "avatar")
+        avatarImage.backgroundColor = .accent
+        avatarImage.translatesAutoresizingMaskIntoConstraints = false
+        avatarImage.contentMode = .scaleAspectFill
+        avatarImage.clipsToBounds = true
+        
         groupsLabel.text = "Групповые цели"
         groupsLabel.textColor = .black
         groupsLabel.font = UIFont(name: "GothamPro", size: 24)
@@ -68,7 +76,7 @@ final class TargetsController: UIViewController {
         groupsCollectionView.delegate = self
         groupsCollectionView.dataSource = self
         
-        [headLabel, tasksCollectionView, groupsLabel, groupsCollectionView].forEach { view.addSubview($0) }
+        [headLabel, avatarImage, tasksCollectionView, groupsLabel, groupsCollectionView].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
@@ -79,9 +87,17 @@ final class TargetsController: UIViewController {
             .left(view.pin.safeArea.left + 30)
             .sizeToFit()
         
+        avatarImage.pin
+            .top(view.pin.safeArea.top + 15)
+            .right(view.pin.safeArea.left + 20)
+            .height(60)
+            .width(60)
+        
+        avatarImage.layer.cornerRadius = avatarImage.frame.size.width / 2
+        
         tasksCollectionView.pin
-            .below(of: headLabel)
-            .marginTop(30)
+            .below(of: avatarImage)
+            .marginTop(10)
             .horizontally()
             .height(220)
         

@@ -8,8 +8,11 @@
 import UIKit
 import PinLayout
 
-class GroupsController: UIViewController {
+class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINavigationControllerDelegate {
     private let headLabel = UILabel()
+    private let avatarButton = UIButton()
+    private let activityIndicator = UIActivityIndicatorView()
+    private let avatarActivityIndicator = UIActivityIndicatorView()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -22,12 +25,17 @@ class GroupsController: UIViewController {
         return cv
     }()
     
+    private let database = DatabaseModel()
     private let groupDatabase = GroupDatabaseModel()
+    private let imageLoader = InjectionHelper.imageLoader
     
     var data: [Group] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.hidesWhenStopped = true
+        avatarActivityIndicator.hidesWhenStopped = true
+        reloadAvatar()
         reloadGroups()
         
         view.backgroundColor = .background
@@ -36,22 +44,46 @@ class GroupsController: UIViewController {
         headLabel.textColor = .black
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         
+        avatarButton.setImage(UIImage(named: "avatar"), for: .normal)
+        avatarButton.backgroundColor = .accent
+        avatarButton.contentVerticalAlignment = .fill
+        avatarButton.contentHorizontalAlignment = .fill
+        avatarButton.tintColor = .accent
+        avatarButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        avatarButton.layer.cornerRadius = 30
+        avatarButton.layer.masksToBounds = true
+        avatarButton.addTarget(self, action: #selector(didTapAvatarButton), for: .touchUpInside)
+        
         collectionView.backgroundColor = .white
         collectionView.layer.masksToBounds = true
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        [headLabel, collectionView].forEach { view.addSubview($0)}
+        [headLabel, avatarButton, avatarActivityIndicator, collectionView, activityIndicator].forEach { view.addSubview($0)}
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        activityIndicator.pin.center()
         
         headLabel.pin
             .top(view.pin.safeArea.top + 30)
             .left(view.pin.safeArea.left + 30)
             .sizeToFit()
         
+        avatarButton.pin
+            .top(view.pin.safeArea.top + 15)
+            .right(view.pin.safeArea.left + 20)
+            .height(60)
+            .width(60)
+        
+        avatarActivityIndicator.pin
+            .top(view.pin.safeArea.top + 15)
+            .right(view.pin.safeArea.left + 20)
+            .height(60)
+            .width(60)
+                
         collectionView.pin
             .below(of: headLabel)
             .marginTop(30)
@@ -70,6 +102,44 @@ class GroupsController: UIViewController {
     }
     
     @objc
+    func didTapAvatarButton() {
+        let dialogMessage = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let chooseAction = UIAlertAction(title: "Выбрать аватар", style: .default, handler: {
+            (action) -> Void in
+            self.avatarActivityIndicator.startAnimating()
+            let imagePicker = UIImagePickerController()
+            imagePicker.allowsEditing = true
+            imagePicker.delegate = self
+            self.present(imagePicker, animated: true)
+        })
+        
+        let deleteAction = UIAlertAction(title: "Удалить аватар", style: .default, handler: { (action) -> Void in
+            self.avatarActivityIndicator.startAnimating()
+            self.database.setAvatar(avatarID: "") { [weak self] result in
+                switch result {
+                case .success(_):
+                    self?.reloadAvatar()
+                    self?.avatarActivityIndicator.stopAnimating()
+                case .failure(_):
+                    return
+                }
+            }
+        })
+        
+        deleteAction.setValue(UIColor.red, forKey: "titleTextColor")
+        
+        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
+        
+        
+        [cancelAction, chooseAction, deleteAction].forEach {
+            dialogMessage.addAction($0)
+        }
+        
+        self.present(dialogMessage, animated: true, completion: nil)
+    }
+    
+    @objc
     func didTapAddButton() {
         (self.tabBarController as? MainTabBarController)?.reloadVC2(valueSegmCon: 1)
         tabBarController?.selectedIndex = 1
@@ -80,13 +150,66 @@ class GroupsController: UIViewController {
         (self.tabBarController as? MainTabBarController)?.openGoalVC3(with: groupID)
     }
     
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true)
+        guard let image = info[.editedImage] as? UIImage else {
+            return
+        }
+        
+        imageLoader.uploadImage(image) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            
+            switch result {
+            case .success(let avatarID):
+                self.database.setAvatar(avatarID: avatarID) { [weak self] result in
+                    switch result {
+                    case .success(_):
+                        self?.reloadAvatar()
+                        return
+                    case .failure(_):
+                        return
+                    }
+                }
+            case .failure(_):
+                return
+            }
+        }
+    }
+    
     func reloadGroups() {
-        groupDatabase.getGroups() { result in
+        activityIndicator.startAnimating()
+        groupDatabase.getGroups() { [weak self] result in
             switch result {
             case .success(let groups):
-                self.data = groups
-                print("DATAAAAAA: \(self.data)")
-                self.collectionView.reloadData()
+                self?.data = groups
+                self?.collectionView.reloadData()
+                self?.activityIndicator.stopAnimating()
+            case .failure:
+                return
+            }
+        }
+    }
+    
+    func reloadAvatar() {
+        avatarActivityIndicator.startAnimating()
+        database.getAvatar() { [weak self] result in
+            switch result {
+            case .success(let avatar):
+                if !avatar.isEmpty {
+                    self?.imageLoader.downloadImage(avatar) { result in
+                        switch result {
+                        case .success(let image):
+                            self?.avatarButton.setImage(image, for: .normal)
+                            self?.avatarActivityIndicator.stopAnimating()
+                        case .failure(_):
+                            return
+                        }
+                    }
+                } else {
+                    self?.avatarButton.setImage(UIImage(named: "avatar"), for: .normal)
+                }
             case .failure:
                 return
             }
