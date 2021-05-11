@@ -15,7 +15,7 @@ class DatabaseModel {
         guard let currentUser = Auth.auth().currentUser else {
             return
         }
-        let userData = UserDataModel(user: currentUser, name: name, surName: surname)
+        let userData = User(uid: currentUser.uid, email: currentUser.email ?? "not email", name: name, surName: surname)
         let data = ["name" : userData.name,
                     "uid" : userData.uid,
                     "surname" : userData.surName,
@@ -33,6 +33,108 @@ class DatabaseModel {
                 completion(.failure(error))
             }
             
+        }
+    }
+    
+    func getUserUID(email : String,
+                    completion: @escaping (Result<String, Error>) -> Void) {
+        
+        database.getDocuments() { (querySnapshot, error) in
+            
+            var userUID: String = ""
+            var checkFinish = querySnapshot!.documents.count
+            
+            if let error = error {
+                completion(.failure(error))
+                return
+            } else {
+                for document in querySnapshot!.documents {
+                    
+                    self.database.document(document.documentID).getDocument { (document, error) in
+                        if let document = document, document.exists {
+                            let gottenEmail = document.get("email") as? String ?? ""
+                            if email == gottenEmail {
+                                userUID = document.documentID
+                            }
+                            checkFinish -= 1
+                            if checkFinish == 0 {
+                                if !userUID.isEmpty {
+                                    completion(.success(userUID))
+                                } else {
+                                    completion(.failure(ImageLoader.ImageLoaderError.unexpected))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func getUser(userID : String,
+                 completion: @escaping (Result<User, Error>) -> Void) {
+        
+        database.getDocuments() { (querySnapshot, error) in
+            
+            var resultUser: User = User(uid: "", email: "", name: "", surName: "")
+            
+            if let error = error {
+                completion(.failure(error))
+                return
+            } else {
+                for document in querySnapshot!.documents {
+                    if document.documentID == userID {
+                        guard let avatar = document["avatar"] as? String,
+                              let email = document["email"] as? String,
+                              let name = document["name"] as? String,
+                              let surname = document["surname"] as? String,
+                              let uid = document["uid"] as? String,
+                              let groups = document["groups"] as? [String] else {
+                            completion(.failure(ImageLoader.ImageLoaderError.unexpected))
+                            return
+                        }
+                        resultUser = User(uid: uid, email: email, name: name, surName: surname)
+                        resultUser.avatar = avatar
+                        resultUser.groups = groups
+                        completion(.success(resultUser))
+                    }
+                }
+            }
+        }
+    }
+    
+    func getAvatar(completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        var avatarID : String = ""
+        database.document(currentUser.uid).getDocument { (document, error) in
+            if let document = document, document.exists {
+                avatarID = document.get("avatar") as? String ?? ""
+                completion(.success(avatarID))
+            } else {
+                completion(.failure(error ?? ImageLoader.ImageLoaderError.invalidInput))
+            }
+        }
+    }
+    
+    func setAvatar(avatarID : String,
+                   completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        database.document(currentUser.uid).setData(["avatar" : avatarID], merge: true) {
+            error in
+            let result = Result {
+            }
+            switch result {
+            case .success():
+                completion(.success("ok"))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
     
@@ -132,6 +234,16 @@ class DatabaseModel {
                         let underTask = self?.makeUnderTasks(with: rawUnderTask) ?? []
                         resultTask = Task(randomName: taskName, title: title, date: date, image: image)
                         resultTask.underTasks.append(contentsOf: underTask)
+                        
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "dd MM yyyy"
+                        resultTask.underTasks.sort { (first, second) -> Bool in
+                            guard let first = formatter.date(from: first.date),
+                                  let second = formatter.date(from: second.date) else {
+                                return true
+                            }
+                            return first < second
+                        }
                         completion(.success(resultTask))
                     }
                 }
@@ -212,29 +324,45 @@ class DatabaseModel {
         database.document(currentUser.uid).getDocument { (document, error) in
             if let document = document, document.exists {
                 groups = document.get("groups") as? [String] ?? []
-                print("GROUPS: \(groups)")
                 completion(.success(groups))
             } else {
-                print("Document does not exist")
                 completion(.failure(error ?? ImageLoader.ImageLoaderError.invalidInput))
             }
         }
     }
     
-    func addGroup(groupID : String,
-                  completion: @escaping (Result<String, Error>) -> Void) {
-        guard let currentUser = Auth.auth().currentUser else {
+    func getGroups(userUID : String, completion: @escaping (Result<[String], Error>) -> Void) {
+        guard !userUID.isEmpty else {
             return
         }
-        getGroups() { result in
+        var groups : [String] = []
+        database.document(userUID).getDocument { (document, error) in
+            if let document = document, document.exists {
+                groups = document.get("groups") as? [String] ?? []
+                completion(.success(groups))
+            } else {
+                completion(.failure(error ?? ImageLoader.ImageLoaderError.invalidInput))
+            }
+        }
+    }
+    
+    func addGroup(groupID : String, userUID : String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard !groupID.isEmpty else {
+            completion(.failure(ImageLoader.ImageLoaderError.invalidInput))
+            return
+        }
+        
+        var groups : [String] = []
+        
+        getGroups(userUID: userUID) { result in
             switch result {
-            case .success(let arrayOfGroups):
-                var groups = arrayOfGroups
+            case .success(let gottenGroups):
+                groups = gottenGroups
                 groups.append(groupID)
-                self.database.document(currentUser.uid).setData(["groups" : groups], merge: true) { error in
+                let setGroups = Array(Set(groups))
+                self.database.document(userUID).setData(["groups" : setGroups], merge: true) { error in
                     let result = Result {
                     }
-                    
                     switch result {
                     case .success():
                         completion(.success("ok"))
@@ -242,49 +370,11 @@ class DatabaseModel {
                         completion(.failure(error))
                     }
                 }
-                print(arrayOfGroups)
             case .failure(_):
-                print("error")
+                return
             }
             
         }
     }
-    
-    func getAvatar(completion: @escaping (Result<String, Error>) -> Void) {
-        guard let currentUser = Auth.auth().currentUser else {
-            return
-        }
-        
-        var avatarID : String = ""
-        database.document(currentUser.uid).getDocument { (document, error) in
-            if let document = document, document.exists {
-                avatarID = document.get("avatar") as? String ?? ""
-                print("avatarID: \(avatarID)")
-                completion(.success(avatarID))
-            } else {
-                print("Document does not exist")
-                completion(.failure(error ?? ImageLoader.ImageLoaderError.invalidInput))
-            }
-        }
-    }
-    
-    func setAvatar(avatarID : String,
-                   completion: @escaping (Result<String, Error>) -> Void) {
-        guard let currentUser = Auth.auth().currentUser else {
-            return
-        }
-        
-        database.document(currentUser.uid).setData(["avatar" : avatarID], merge: true) {
-            error in
-            let result = Result {
-            }
-            switch result {
-            case .success():
-                completion(.success("ok"))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
 }
+

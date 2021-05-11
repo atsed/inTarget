@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 
-struct UserDataModel {
+struct User {
     var uid : String
     var email : String
     var avatar: String = ""
@@ -16,9 +16,9 @@ struct UserDataModel {
     var name : String
     var surName : String
     
-    init(user: User, name : String, surName : String) {
-        self.uid = user.uid
-        self.email = user.email ?? "NOT email"
+    init(uid : String, email : String, name : String, surName : String) {
+        self.uid = uid
+        self.email = email
         self.name = name
         self.surName = surName
     }

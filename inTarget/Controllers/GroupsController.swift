@@ -95,9 +95,9 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
         self.navigationController?.isNavigationBarHidden = true
     }
     
-    public func pushGroupController(groupName : String) {
+    public func pushGroupController(groupID : String) {
         let groupController = GroupController()
-        groupController.groupName = groupName
+        groupController.groupID = groupID
         self.navigationController?.pushViewController(groupController, animated: true)
     }
     
@@ -209,6 +209,7 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
                     }
                 } else {
                     self?.avatarButton.setImage(UIImage(named: "avatar"), for: .normal)
+                    self?.avatarActivityIndicator.stopAnimating()
                 }
             case .failure:
                 return
@@ -256,7 +257,7 @@ extension GroupsController : UICollectionViewDelegateFlowLayout, UICollectionVie
 }
 
 extension GroupsController: GroupCellDelegate, NewGroupCellDelegate {
-    func didTapActionButton() {
+    func didTapAddGroupButton() {
         didTapAddButton()
     }
     

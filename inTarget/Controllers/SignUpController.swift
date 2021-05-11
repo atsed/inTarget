@@ -24,11 +24,14 @@ class SignUpController : UIViewController {
     private let signUpButton = UIButton(type: .system)
     private let signUpLabel = UILabel()
     private let scrollView = UIScrollView()
+    private let activityIndicator = UIActivityIndicatorView()
     
     private var kbFrameSize : CGRect = .zero
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.hidesWhenStopped = true
+        
         checkKeyboardNotifications()
         hideKeyboardWhenTappedAround()
         
@@ -93,12 +96,14 @@ inTarget
         scrollView.keyboardDismissMode = .onDrag
         
         [headLabel, errorLabel,containerTextView, nameSeparator, surnameSeparator, loginSeparator, passwordSeparator, signUpButton, signUpLabel].forEach { scrollView.addSubview($0) }
-        view.addSubview(scrollView)
-        view.addSubview(navigationBar)
+        [scrollView, navigationBar, activityIndicator].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        activityIndicator.pin
+            .center()
         
         scrollView.pin
             .horizontally()
@@ -184,16 +189,23 @@ inTarget
     
     @objc
     private func didTapSignUpButton(){
+        activityIndicator.startAnimating()
         let signUp = SignUpModel()
         
-        signUp.singUp(nameField, surnameField, loginField, passwordField) { isSignUp, errorMessage in
+        signUp.singUp(nameField, surnameField, loginField, passwordField) { [weak self] isSignUp, errorMessage in
+            guard let self = self else {
+                return
+            }
+            
             if isSignUp == true {
+                self.activityIndicator.stopAnimating()
                 let mainTabBarViewController = MainTabBarController()
                 mainTabBarViewController.modalPresentationStyle = .fullScreen
                 self.present(mainTabBarViewController, animated: true, completion: nil)
                 
                 UserDefaults.standard.setValue(true, forKey: "isAuth")
             } else if isSignUp == false {
+                self.activityIndicator.stopAnimating()
                 self.errorLabel.text = errorMessage
                 self.errorLabel.alpha = 1
                 self.animateErrorLable(self.errorLabel)

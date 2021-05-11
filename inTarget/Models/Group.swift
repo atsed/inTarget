@@ -13,9 +13,9 @@ struct Group {
     let date: String
     let image : String
     var members: [String]
-    var underTasks: [GroupUnderTask]
+    var underTasks: [UnderTask]
     
-    init(randomName : String, title: String, date: String, image: String, members: [String] = [], underTasks: [GroupUnderTask] = []) {
+    init(randomName : String, title: String, date: String, image: String, members: [String] = [], underTasks: [UnderTask] = []) {
         self.randomName = randomName
         self.title = title
         self.date = date

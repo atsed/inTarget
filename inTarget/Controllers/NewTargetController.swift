@@ -23,6 +23,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     private let taskAddImageContainer = UIView()
     private let createTaskButton = UIButton(type: .system)
     private let taskScrollView = UIScrollView()
+    private let taskActivityIndicator = UIActivityIndicatorView()
     
     private let groupTitleField = UITextField()
     private let groupTitleSeparator = UIView()
@@ -33,6 +34,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     private let groupAddImageContainer = UIView()
     private let createGroupButton = UIButton(type: .system)
     private let groupScrollView = UIScrollView()
+    private let groupActivityIndicator = UIActivityIndicatorView()
     
     private var image = UIImage()
     
@@ -41,6 +43,8 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
+        taskActivityIndicator.hidesWhenStopped = true
+        groupActivityIndicator.hidesWhenStopped = true
         
         view.backgroundColor = .background
         
@@ -144,8 +148,8 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         [taskAddImageView, taskDeleteImageButton].forEach { taskAddImageContainer.addSubview($0)}
         [groupAddImageView, groupDeleteImageButton].forEach { groupAddImageContainer.addSubview($0)}
         
-        [taskTitleField, taskTitleSeparator, taskDatePicker, taskAddImageButton, taskAddImageContainer, createTaskButton].forEach { taskScrollView.addSubview($0) }
-        [groupTitleField, groupTitleSeparator, groupDatePicker, groupAddImageButton, groupAddImageContainer, createGroupButton].forEach { groupScrollView.addSubview($0) }
+        [taskTitleField, taskTitleSeparator, taskDatePicker, taskAddImageButton, taskAddImageContainer, createTaskButton, taskActivityIndicator].forEach { taskScrollView.addSubview($0) }
+        [groupTitleField, groupTitleSeparator, groupDatePicker, groupAddImageButton, groupAddImageContainer, createGroupButton, groupActivityIndicator].forEach { groupScrollView.addSubview($0) }
         
         [taskScrollView, groupScrollView].forEach { scrollViewSegmCon.addSubview($0) }
         
@@ -222,7 +226,8 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .horizontally(16)
             .height(56)
         
-        
+        taskActivityIndicator.pin
+            .center()
         
         groupScrollView.pin
             .below(of: segmentedControl)
@@ -274,6 +279,9 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
             .horizontally(16)
             .height(56)
         
+        groupActivityIndicator.pin
+            .center()
+        
         taskScrollView.contentSize = CGSize(width: taskScrollView.bounds.width, height: createTaskButton.frame.maxY + 16)
         groupScrollView.contentSize = CGSize(width: groupScrollView.bounds.width, height: createGroupButton.frame.maxY + 16)
     }
@@ -307,9 +315,10 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func didTapCreateTaskButton() {
+        taskActivityIndicator.startAnimating()
         guard let title = self.taskTitleField.text,
               !title.isEmpty else {
-            
+            taskActivityIndicator.stopAnimating()
             self.animatePlaceholderColor(self.taskTitleField, self.taskTitleSeparator)
             return
         }
@@ -335,13 +344,16 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
                         (self?.tabBarController as? MainTabBarController)?.openGoalVC4(with: taskName)
                         self?.taskTitleField.text = ""
                         self?.didTapTaskDeleteImageButton()
-                    case .failure(let error):
-                        print("\(error)")
+                        self?.taskActivityIndicator.stopAnimating()
+                    case .failure(_):
+                        self?.taskActivityIndicator.stopAnimating()
+                        return
                         
                     }
                 }
             case .failure(_):
                 self.animateButtonTitleColor(self.taskAddImageButton)
+                self.taskActivityIndicator.stopAnimating()
                 return
             }
         }
@@ -349,9 +361,10 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func didTapCreateGroupButton() {
+        groupActivityIndicator.startAnimating()
         guard let title = self.groupTitleField.text,
               !title.isEmpty else {
-            
+            groupActivityIndicator.stopAnimating()
             self.animatePlaceholderColor(self.groupTitleField, self.groupTitleSeparator)
             return
         }
@@ -378,12 +391,14 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
                         (self?.tabBarController as? MainTabBarController)?.openGoalVC3(with: groupName)
                         self?.groupTitleField.text = ""
                         self?.didTapGroupDeleteImageButton()
-                    case .failure(let error):
-                        print("\(error)")
-                        
+                        self?.groupActivityIndicator.stopAnimating()
+                    case .failure(_):
+                        self?.groupActivityIndicator.stopAnimating()
+                        return
                     }
                 }
             case .failure(_):
+                self.groupActivityIndicator.stopAnimating()
                 self.animateButtonTitleColor(self.groupAddImageButton)
                 return
             }

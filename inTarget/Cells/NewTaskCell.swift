@@ -7,7 +7,7 @@
 import UIKit
 
 protocol NewTaskCellDelegate: AnyObject {
-    func didTapActionButton()
+    func didTapAddTaskButton()
 }
 
 public class NewTaskCell: UICollectionViewCell {
@@ -24,7 +24,7 @@ public class NewTaskCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var button: UIButton = {
+    private lazy var button: UIButton = {
         let button = UIButton()
         let image = UIImage(named: "add")?.withTintColor(.accent)
         button.setImage(image, for: .normal)
@@ -58,6 +58,6 @@ public class NewTaskCell: UICollectionViewCell {
     
     @objc
     func didTapAddButton() {
-        delegate?.didTapActionButton()
+        delegate?.didTapAddTaskButton()
     }
 }

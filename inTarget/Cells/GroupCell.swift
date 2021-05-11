@@ -36,6 +36,7 @@ class GroupCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: "GothamPro", size: 16)
         label.textColor = .black
+        label.textAlignment = .left
         return label
     }()
     
@@ -43,6 +44,7 @@ class GroupCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: "GothamPro", size: 14)
         label.textColor = .separator
+        label.textAlignment = .left
         return label
     }()
     
@@ -50,6 +52,7 @@ class GroupCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: "GothamPro", size: 16)
         label.textColor = .black
+        label.textAlignment = .right
         return label
     }()
     
@@ -57,6 +60,7 @@ class GroupCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: "GothamPro", size: 14)
         label.textColor = .separator
+        label.textAlignment = .right
         return label
     }()
     
@@ -74,7 +78,7 @@ class GroupCell: UICollectionViewCell {
         button.tintColor = .accent
         return button
     }()
-
+    
     
     private func setup() {
         [titleLabel, yearLabel, underTasksLabel, lightUnderTasksLabel].forEach {
@@ -98,8 +102,15 @@ class GroupCell: UICollectionViewCell {
         let labelUnderTasks : String = underTasksString(value: group.underTasks.count)
         underTasksLabel.text = String(group.underTasks.count) + " " + labelUnderTasks
         
-        //заменить строку ниже
-        lightUnderTasksLabel.text = underTasksLabel.text
+        var completedTasks = 0
+        let underTasks = group.underTasks
+        for underTask in underTasks {
+            if underTask.isCompleted == true {
+                completedTasks += 1
+            }
+            
+            lightUnderTasksLabel.text = "Осталось " + String(group.underTasks.count - completedTasks)
+        }
         
         let oldDAteFormatter = DateFormatter()
         oldDAteFormatter.dateFormat = "dd MM yyyy"
@@ -142,33 +153,35 @@ class GroupCell: UICollectionViewCell {
         imageView.layer.cornerRadius = imageView.frame.size.width / 2
         
         textContainer.pin
-            .right(of: imageView)
             .right(10)
+            .right(of: imageView)
             .marginLeft(10)
         
         underTasksLabel.pin
             .right()
             .height(16)
-            .width(200)
+            .sizeToFit()
         
         lightUnderTasksLabel.pin
             .below(of: underTasksLabel)
             .right()
             .marginTop(6)
             .height(15)
-            .width(200)
+            .sizeToFit()
         
         titleLabel.pin
             .left(of: underTasksLabel)
+            .left()
             .height(16)
-            .width(200)
+            .sizeToFit()
         
         yearLabel.pin
             .below(of: titleLabel)
             .left(of: lightUnderTasksLabel)
+            .left()
             .marginTop(6)
             .height(15)
-            .width(200)
+            .sizeToFit()
         
         textContainer.pin
             .wrapContent()
@@ -190,29 +203,29 @@ class GroupCell: UICollectionViewCell {
 
 extension GroupCell {
     func underTasksString(value: Int) -> String {
-
+        
         var underTasksLabel: String = ""
         
         if value == 1 {
             underTasksLabel = "цель"
         }
         if value % 10 == 2 ||
-                    value % 10 == 3 ||
-                    value % 10 == 4 {
+            value % 10 == 3 ||
+            value % 10 == 4 {
             underTasksLabel = "цели"
         }
         if value % 10 == 5 ||
-                    value % 10 == 6 ||
-                    value % 10 == 7 ||
-                    value % 10 == 8 ||
-                    value % 10 == 9 ||
-                    value % 10 == 0 {
+            value % 10 == 6 ||
+            value % 10 == 7 ||
+            value % 10 == 8 ||
+            value % 10 == 9 ||
+            value % 10 == 0 {
             underTasksLabel = "целей"
         }
         if value % 100 == 11 ||
-                    value % 100 == 12 ||
-                    value % 100 == 13 ||
-                    value % 100 == 14 {
+            value % 100 == 12 ||
+            value % 100 == 13 ||
+            value % 100 == 14 {
             underTasksLabel = "целей"
         }
         

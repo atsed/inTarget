@@ -23,6 +23,7 @@ class AuthViewController: UIViewController {
     private let signUpButton = UIButton(type: .system)
     private let signUpLabel = UILabel()
     private let scrollView = UIScrollView()
+    private let activityIndicator = UIActivityIndicatorView()
     
     private var kbFrameSize : CGRect = .zero
     
@@ -47,6 +48,7 @@ class AuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        activityIndicator.hidesWhenStopped = true
         
         checkKeyboardNotifications()
         hideKeyboardWhenTappedAround()
@@ -116,11 +118,15 @@ class AuthViewController: UIViewController {
         [signUpLabel, signUpButton].forEach { containerSignUp.addSubview($0) }
         [headLabel, quoteLabel, authorLabel, errorLabel, containerTextView, loginSeparator, passwordSeparator, signInButton, containerSignUp].forEach {scrollView.addSubview($0) }
         view.addSubview(scrollView)
+        view.addSubview(activityIndicator)
         
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        activityIndicator.pin
+            .center()
         
         scrollView.pin
             .vertically()
@@ -195,7 +201,6 @@ class AuthViewController: UIViewController {
             .height(56)
             .above(of: signUpButton)
             .marginBottom(20)
-        
     }
     
     deinit {
@@ -237,10 +242,16 @@ class AuthViewController: UIViewController {
     }
     @objc
     private func didTapSignInButton(){
+        activityIndicator.startAnimating()
         let auth = AuthModel()
         
-        auth.signIn(loginField, passwordField) { isSignin, errorMessage  in
+        auth.signIn(loginField, passwordField) { [weak self] isSignin, errorMessage  in
+            guard let self = self else {
+                return
+            }
+            
             if isSignin == true {
+                self.activityIndicator.stopAnimating()
                 self.errorLabel.text = ""
                 let mainTabBarViewController = MainTabBarController()
                 mainTabBarViewController.modalPresentationStyle = .fullScreen
@@ -248,6 +259,7 @@ class AuthViewController: UIViewController {
                 
                 UserDefaults.standard.setValue(true, forKey: "isAuth")
             } else if isSignin == false {
+                self.activityIndicator.stopAnimating()
                 self.errorLabel.text = errorMessage
                 self.errorLabel.alpha = 1
                 self.animateErrorLable(self.errorLabel)

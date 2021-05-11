@@ -36,6 +36,7 @@ final class MainTabBarController: UITabBarController {
     
     func reloadVC1() {
         vc1.reloadTasks()
+        vc1.reloadGroups()
     }
     
     func reloadVC2(valueSegmCon: Int) {
@@ -56,9 +57,9 @@ final class MainTabBarController: UITabBarController {
         viewController.reloadGroups()
     }
     
-    func openGoalVC3(with groupName: String) {
+    func openGoalVC3(with groupID: String) {
         self.selectedIndex = 2
-        (vc3.topViewController as? GroupsController)?.pushGroupController(groupName: groupName)
+        (vc3.topViewController as? GroupsController)?.pushGroupController(groupID: groupID)
     }
     
     func openGoalVC4(with taskName: String) {
@@ -68,6 +69,7 @@ final class MainTabBarController: UITabBarController {
     
     func reloadTasks() {
         reloadVC1()
+        reloadVC3()
         reloadVC4()
     }
 }

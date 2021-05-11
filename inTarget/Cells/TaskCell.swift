@@ -38,7 +38,6 @@ class TaskCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: "GothamPro", size: 24)
         label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -46,7 +45,6 @@ class TaskCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: "GothamPro", size: 11)
         label.textColor = .separator
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -54,7 +52,6 @@ class TaskCell: UICollectionViewCell {
         let underTasksCount = UILabel()
         underTasksCount.font = UIFont(name: "GothamPro", size: 15)
         underTasksCount.textColor = .black
-        underTasksCount.translatesAutoresizingMaskIntoConstraints = false
         return underTasksCount
     }()
     
@@ -62,7 +59,6 @@ class TaskCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: "GothamPro", size: 11)
         label.textColor = .separator
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
         return label
     }()

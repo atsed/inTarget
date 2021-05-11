@@ -8,7 +8,7 @@
 import UIKit
 
 protocol NewUnderTaskCellDelegate: AnyObject {
-    func didTapActionButton(title : String, date : String)
+    func didTapAddUnderTaskButton(title : String, date : String)
 }
 
 public class NewUnderTaskCell: UICollectionViewCell {
@@ -25,7 +25,7 @@ public class NewUnderTaskCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var addButton: UIButton = {
+    private lazy var addButton: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "plus.circle.fill")
         button.setImage(image, for: .normal)
@@ -35,7 +35,7 @@ public class NewUnderTaskCell: UICollectionViewCell {
         return button
     }()
     
-    lazy var datePicker: UIDatePicker = {
+    private lazy var datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         if #available(iOS 14, *) {
@@ -57,7 +57,7 @@ public class NewUnderTaskCell: UICollectionViewCell {
         return datePicker
     }()
     
-    lazy var datePickerButton : UIButton = {
+    private lazy var datePickerButton : UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "calendar.circle")
         button.setImage(image, for: .normal)
@@ -67,7 +67,7 @@ public class NewUnderTaskCell: UICollectionViewCell {
         return button
     }()
     
-    lazy var titleUnderTaskField : UITextField =  {
+    private lazy var titleUnderTaskField : UITextField =  {
         let textField = UITextField()
         textField.placeholder = "Наименование подзадачи"
         textField.borderStyle = .none
@@ -122,7 +122,7 @@ public class NewUnderTaskCell: UICollectionViewCell {
         
         let date = getDateFromPicker()
 
-        delegate?.didTapActionButton(title: title, date: date)
+        delegate?.didTapAddUnderTaskButton(title: title, date: date)
         titleUnderTaskField.text = ""
     }
     

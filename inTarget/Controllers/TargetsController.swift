@@ -115,8 +115,14 @@ final class TargetsController: UIViewController {
     }
     
     @objc
-    func didTapAddButton() {
+    func didTapActionTaskButton() {
         (self.tabBarController as? MainTabBarController)?.reloadVC2(valueSegmCon: 0)
+        tabBarController?.selectedIndex = 1
+    }
+    
+    @objc
+    func didTapActionGroupButton() {
+        (self.tabBarController as? MainTabBarController)?.reloadVC2(valueSegmCon: 1)
         tabBarController?.selectedIndex = 1
     }
     
@@ -238,7 +244,11 @@ extension TargetsController: TaskCellDelegate, NewTaskCellDelegate, GroupCellDel
         didTapTaskOpenButton(taskID: taskID)
     }
     
-    func didTapActionButton() {
-        didTapAddButton()
+    func didTapAddTaskButton() {
+        didTapActionTaskButton()
+    }
+    
+    func didTapAddGroupButton() {
+        didTapActionGroupButton()
     }
 }

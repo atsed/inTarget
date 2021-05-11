@@ -16,8 +16,8 @@ class MyTargetController: UIViewController {
     private let imageViewContainer = UIView()
     private let underTaskLabel = UILabel()
     private let scrollView = UIScrollView()
-    private let database = DatabaseModel()
     private let activityIndicator = UIActivityIndicatorView()
+    private let database = DatabaseModel()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -130,7 +130,7 @@ class MyTargetController: UIViewController {
         navigationController?.isNavigationBarHidden = false
         navigationController?.navigationBar.tintColor = .background
         
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for:UIBarMetrics.default)
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.shadowImage = UIImage()
 
@@ -210,8 +210,8 @@ class MyTargetController: UIViewController {
             case .success(_):
                 self?.loadTask()
                 (self?.tabBarController as? MainTabBarController)?.reloadTasks()
-            case .failure(let error):
-                print(error)
+            case .failure(_):
+                return
             }
         }
     }
@@ -223,8 +223,8 @@ class MyTargetController: UIViewController {
             case .success(_):
                 self?.loadTask()
                 (self?.tabBarController as? MainTabBarController)?.reloadTasks()
-            case .failure(let error):
-                print(error)
+            case .failure(_):
+                return
             }
         }
 
@@ -297,13 +297,11 @@ extension MyTargetController : UICollectionViewDelegateFlowLayout, UICollectionV
 
 }
 
-extension MyTargetController: NewUnderTaskCellDelegate {
-    func didTapActionButton(title: String, date : String) {
+extension MyTargetController: NewUnderTaskCellDelegate, UnderTaskCellDelegate {
+    func didTapAddUnderTaskButton(title: String, date: String) {
         didTapAddButton(title: title, date: date)
     }
-}
-
-extension MyTargetController: UnderTaskCellDelegate {
+    
     func didTapSelectButton(underTaskID: String, isCompleted: Bool) {
         didTapCompletedButton(underTaskID: underTaskID, isCompleted: isCompleted)
     }

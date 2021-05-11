@@ -8,9 +8,8 @@
 import UIKit
 
 protocol NewGroupCellDelegate: AnyObject {
-    func didTapActionButton()
+    func didTapAddGroupButton()
 }
-
 
 public class NewGroupCell: UICollectionViewCell {
     
@@ -18,7 +17,6 @@ public class NewGroupCell: UICollectionViewCell {
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        
         setup()
     }
     
@@ -60,6 +58,6 @@ public class NewGroupCell: UICollectionViewCell {
     
     @objc
     func didTapAddButton() {
-        delegate?.didTapActionButton()
+        delegate?.didTapAddGroupButton()
     }
 }

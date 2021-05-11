@@ -57,6 +57,23 @@ class ImageLoader {
         }
     }
     
+    func downloadImageByID(_ userID : String, _ imageName : String, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        if let image = imageCache[imageName] {
+            completion(.success(image))
+            return
+        }
+        storage.reference(withPath: "\(userID)").child(imageName).getData(maxSize: 15 * 1024 * 1024) { (data, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else if let data = data, let image = UIImage(data: data) {
+                self.imageCache[imageName] = image
+                completion(.success(image))
+            } else {
+                completion(.failure(ImageLoader.ImageLoaderError.unexpected))
+            }
+        }
+    }
+    
     func uploadGroupImage(_ image : UIImage, completion: @escaping (Result<String, Error>) -> Void) {
         guard let data = image.jpegData(compressionQuality: 1) else {
             completion(.failure(ImageLoaderError.invalidInput))
