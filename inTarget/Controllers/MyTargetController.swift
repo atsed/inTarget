@@ -138,6 +138,13 @@ class MyTargetController: UIViewController {
         navigationController?.navigationBar.backIndicatorImage = backButtonImage
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = backButtonImage
         navigationController?.navigationBar.backItem?.backButtonTitle = ""
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "trash"),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(didTapTaskDeleteButton))
+        
+        navigationItem.rightBarButtonItem?.tintColor = .accent
     }
     
     func loadTask() {
@@ -223,11 +230,68 @@ class MyTargetController: UIViewController {
             case .success(_):
                 self?.loadTask()
                 (self?.tabBarController as? MainTabBarController)?.reloadTasks()
+                return
             case .failure(_):
                 return
             }
         }
+    }
+    
+    @objc
+    private func didTapUnderTaskDeleteButton(underTaskID: String) {
+        let dialogMessage = UIAlertController(title: "Предупреждение", message: "Вы действительно хотите удалить подзадачу?", preferredStyle: .actionSheet)
+        
+        let okAction = UIAlertAction(title: "Удалить", style: .default, handler: { (action) -> Void in
+            self.activityIndicator.startAnimating()
+            self.database.deleteUnderTask(taskID: self.taskName, underTaskID: underTaskID) { [weak self] result in
+                switch result {
+                case .success(_):
+                    self?.loadTask()
+                    (self?.tabBarController as? MainTabBarController)?.reloadTasks()
+                    return
+                case .failure(_):
+                    self?.activityIndicator.stopAnimating()
+                    return
+                }
+            }
+        })
+        
+        okAction.setValue(UIColor.red, forKey: "titleTextColor")
 
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        dialogMessage.addAction(cancelAction)
+        dialogMessage.addAction(okAction)
+        
+        self.present(dialogMessage, animated: true, completion: nil)
+    }
+    
+    @objc
+    private func didTapTaskDeleteButton() {
+        let dialogMessage = UIAlertController(title: "Предупреждение", message: "Вы действительно хотите удалить задачу?", preferredStyle: .actionSheet)
+        
+        let okAction = UIAlertAction(title: "Удалить", style: .default, handler: { (action) -> Void in
+            self.activityIndicator.startAnimating()
+            self.database.deleteTask(taskID: self.taskName) { [weak self] result in
+                switch result {
+                case .success(_):
+                    self?.navigationController?.popToRootViewController(animated: true)
+                    (self?.tabBarController as? MainTabBarController)?.reloadTasks()
+                    return
+                case .failure(_):
+                    return
+                }
+            }
+        })
+        
+        okAction.setValue(UIColor.red, forKey: "titleTextColor")
+
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        dialogMessage.addAction(cancelAction)
+        dialogMessage.addAction(okAction)
+        
+        self.present(dialogMessage, animated: true, completion: nil)
     }
     
     deinit {
@@ -298,11 +362,16 @@ extension MyTargetController : UICollectionViewDelegateFlowLayout, UICollectionV
 }
 
 extension MyTargetController: NewUnderTaskCellDelegate, UnderTaskCellDelegate {
+    
     func didTapAddUnderTaskButton(title: String, date: String) {
         didTapAddButton(title: title, date: date)
     }
     
     func didTapSelectButton(underTaskID: String, isCompleted: Bool) {
         didTapCompletedButton(underTaskID: underTaskID, isCompleted: isCompleted)
+    }
+    
+    func didTapDeleteButton(underTaskID: String) {
+        didTapUnderTaskDeleteButton(underTaskID: underTaskID)
     }
 }

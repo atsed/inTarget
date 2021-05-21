@@ -48,6 +48,7 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
         avatarButton.backgroundColor = .accent
         avatarButton.contentVerticalAlignment = .fill
         avatarButton.contentHorizontalAlignment = .fill
+        avatarButton.contentMode = .scaleAspectFit
         avatarButton.tintColor = .accent
         avatarButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         avatarButton.layer.cornerRadius = 30
@@ -129,7 +130,9 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
         
         deleteAction.setValue(UIColor.red, forKey: "titleTextColor")
         
-        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
+        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel) { _ in
+            self.avatarActivityIndicator.stopAnimating()
+        }
         
         
         [cancelAction, chooseAction, deleteAction].forEach {
@@ -166,6 +169,7 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
                 self.database.setAvatar(avatarID: avatarID) { [weak self] result in
                     switch result {
                     case .success(_):
+                        (self?.tabBarController as? MainTabBarController)?.reloadAvatars()
                         self?.reloadAvatar()
                         return
                     case .failure(_):

@@ -9,6 +9,7 @@ import UIKit
 
 protocol UnderTaskCellDelegate: AnyObject {
     func didTapSelectButton(underTaskID: String, isCompleted: Bool)
+    func didTapDeleteButton(underTaskID: String)
 }
 
 class UnderTaskCell: UICollectionViewCell {
@@ -54,11 +55,22 @@ class UnderTaskCell: UICollectionViewCell {
         return container
     }()
     
+    private lazy var deleteButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(named: "delete")?.withTintColor(.accent)
+        
+        button.setImage(image, for: .normal)
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+
+        return button
+    }()
+    
     private func setup() {
         [titleLabel, yearLabel].forEach {
             textContainer.addSubview($0)
         }
-        [checkmarkButton, textContainer].forEach {
+        [checkmarkButton, textContainer, deleteButton].forEach {
             contentView.addSubview($0)
         }
         
@@ -67,6 +79,8 @@ class UnderTaskCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         checkmarkButton.addTarget(self, action: #selector(didTapCheckmarkButton), for: .touchUpInside)
+        
+        deleteButton.addTarget(self, action: #selector(didTapDeleteButton), for: .touchUpInside)
 }
     
     func configure(with underTask: UnderTask) {
@@ -103,9 +117,17 @@ class UnderTaskCell: UICollectionViewCell {
             .width(30)
             .vCenter()
         
+        deleteButton.pin
+            .right(10)
+            .height(20)
+            .width(20)
+            .vCenter()
+        
         textContainer.pin
             .right(of: checkmarkButton)
             .marginLeft(10)
+            .left(of: deleteButton)
+            .marginRight(10)
         
         titleLabel.pin
             .top()
@@ -137,6 +159,11 @@ class UnderTaskCell: UICollectionViewCell {
             checkmarkButton.setImage(.checkMarkFalse, for: .normal)
             return
         }
+    }
+    
+    @objc
+    private func didTapDeleteButton() {
+        delegate?.didTapDeleteButton(underTaskID: underTaskID)
     }
     
 }

@@ -102,10 +102,10 @@ class TaskCell: UICollectionViewCell {
     func configure(with task: Task) {
         taskID = task.randomName
         
-        let labelUnderTasks : String = underTasksString(value: task.underTasks.count)
+        var labelUnderTasks: String = "подзадач"
+        labelUnderTasks = labelUnderTasks.changeLabel(count: task.underTasks.count, label:  labelUnderTasks)
         titleLabel.text = task.title
         underTasksLabel.text = String(task.underTasks.count) + " " + labelUnderTasks
-        
         let oldDAteFormatter = DateFormatter()
         oldDAteFormatter.dateFormat = "dd MM yyyy"
         guard let oldDate = oldDAteFormatter.date(from: task.date) else {
@@ -208,37 +208,5 @@ class TaskCell: UICollectionViewCell {
             return
         }
         delegate?.didTapOpenTaskButton(taskID: taskID)
-    }
-}
-
-extension TaskCell {
-    func underTasksString(value: Int) -> String {
-
-        var underTasksLabel: String = ""
-        
-        if value == 1 {
-            underTasksLabel = "подзадача"
-        }
-        if value % 10 == 2 ||
-                    value % 10 == 3 ||
-                    value % 10 == 4 {
-            underTasksLabel = "подзадачи"
-        }
-        if value % 10 == 5 ||
-                    value % 10 == 6 ||
-                    value % 10 == 7 ||
-                    value % 10 == 8 ||
-                    value % 10 == 9 ||
-                    value % 10 == 0 {
-            underTasksLabel = "подзадач"
-        }
-        if value % 100 == 11 ||
-                    value % 100 == 12 ||
-                    value % 100 == 13 ||
-                    value % 100 == 14 {
-            underTasksLabel = "подзадач"
-        }
-        
-        return underTasksLabel
     }
 }

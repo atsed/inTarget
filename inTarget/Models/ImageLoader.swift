@@ -39,6 +39,28 @@ class ImageLoader {
         }
     }
     
+    func uploadImage(_ imageData : Data, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser,
+              let image = UIImage(data: imageData, scale: 1),
+              let data = image.jpegData(compressionQuality: 1) else {
+            
+            completion(.failure(ImageLoaderError.invalidInput))
+            return
+        }
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+        let randomName = UUID().uuidString
+        
+        storage.reference(withPath: "\(currentUser.uid)").child(randomName).putData(data, metadata: metadata) { (_, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(randomName))
+            }
+        }
+    }
+    
     func downloadImage(_ imageName : String, completion: @escaping (Result<UIImage, Error>) -> Void) {
         if let image = imageCache[imageName] {
             completion(.success(image))

@@ -9,29 +9,49 @@ import UIKit
 import PinLayout
 
 final class MyTargetsController: UIViewController {
-    private let logoutButton = UIButton()
     private let headLabel = UILabel()
+    private let avatarImage = UIImageView()
+    private let avatarActivityIndicator = UIActivityIndicatorView()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.translatesAutoresizingMaskIntoConstraints = false
         cv.showsVerticalScrollIndicator = false
-        cv.register(TaskCell.self, forCellWithReuseIdentifier: "myTargetsControllerCell")
+        cv.register(TaskCell.self, forCellWithReuseIdentifier: "TaskCell")
+        cv.register(NewTaskCell.self, forCellWithReuseIdentifier: "NewTaskCell")
         return cv
     }()
     
-    let image = UIImage(named: "exit")?.withTintColor(.accent)
     var data: [Task] = []
-    private let dataBase = DatabaseModel()
+    private let database = DatabaseModel()
+    private let imageLoader = InjectionHelper.imageLoader
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+        avatarActivityIndicator.hidesWhenStopped = true
+        reloadAvatar()
         reloadTasks()
         
+        view.backgroundColor = .white
+        
+        headLabel.text = "Мои цели"
+        headLabel.textColor = .black
+        headLabel.font = UIFont(name: "GothamPro", size: 34)
+        
+        avatarImage.image = UIImage(named: "avatar")
+        avatarImage.backgroundColor = .accent
+        avatarImage.translatesAutoresizingMaskIntoConstraints = false
+        avatarImage.contentMode = .scaleAspectFill
+        avatarImage.clipsToBounds = true
+        
+        collectionView.backgroundColor = .white
+        collectionView.layer.masksToBounds = true
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        [headLabel, avatarImage, avatarActivityIndicator, collectionView].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
@@ -42,16 +62,25 @@ final class MyTargetsController: UIViewController {
             .left(view.pin.safeArea.left + 30)
             .sizeToFit()
         
-        logoutButton.pin
-            .top(view.pin.safeArea.top + 25)
-            .right(view.pin.safeArea.left + 30)
-            .size(CGSize(width: 25, height: 25))
+        avatarImage.pin
+            .top(view.pin.safeArea.top + 15)
+            .right(view.pin.safeArea.left + 20)
+            .height(60)
+            .width(60)
+        
+        avatarImage.layer.cornerRadius = avatarImage.frame.size.width / 2
+        
+        avatarActivityIndicator.pin
+            .top(view.pin.safeArea.top + 15)
+            .right(view.pin.safeArea.left + 20)
+            .height(60)
+            .width(60)
         
         collectionView.pin
             .below(of: headLabel)
             .marginTop(30)
             .horizontally()
-            .bottom(view.pin.safeArea.bottom + 10)
+            .bottom(6)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,35 +93,8 @@ final class MyTargetsController: UIViewController {
         self.navigationController?.pushViewController(myTargetController, animated: true)
     }
     
-    public func setup() {
-        
-        view.backgroundColor = .white
-        view.addSubview(logoutButton)
-        view.addSubview(collectionView)
-        view.addSubview(headLabel)
-        
-      
-        logoutButton.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
-        logoutButton.setImage(image, for: .normal)
-        logoutButton.contentVerticalAlignment = .fill
-        logoutButton.contentHorizontalAlignment = .fill
-        logoutButton.tintColor = .accent
-        logoutButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        logoutButton.imageView?.layer.cornerRadius = logoutButton.bounds.height/2.0
-        
-        collectionView.backgroundColor = .white
-        collectionView.layer.cornerRadius = 30
-        collectionView.layer.masksToBounds = true
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        headLabel.text = "Мои цели"
-        headLabel.textColor = .black
-        headLabel.font = UIFont(name: "GothamPro", size: 34)
-    }
-    
     func reloadTasks() {
-        dataBase.getTasks { result in
+        database.getTasks { result in
             switch result {
             case .success(let tasks):
                 self.data = tasks
@@ -103,33 +105,40 @@ final class MyTargetsController: UIViewController {
         }
     }
     
-
-    @objc
-    func didTapLogoutButton() {
-        let dialogMessage = UIAlertController(title: "Предупреждение", message: "Вы уверены, что хотите выйти?", preferredStyle: .alert)
-        
-        let okAction = UIAlertAction(title: "Выйти", style: .default, handler: { (action) -> Void in
-            
-            UserDefaults.standard.setValue(false, forKey: "isAuth")
-            let authViewController = AuthViewController()
-            authViewController.modalPresentationStyle = .fullScreen
-            self.present(authViewController, animated: false, completion: nil)
-        })
-        
-        okAction.setValue(UIColor.red, forKey: "titleTextColor")
-        
-        
-        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-        
-        dialogMessage.addAction(cancelAction)
-        dialogMessage.addAction(okAction)
-        
-        self.present(dialogMessage, animated: true, completion: nil)
+    func reloadAvatar() {
+        avatarActivityIndicator.startAnimating()
+        database.getAvatar() { [weak self] result in
+            switch result {
+            case .success(let avatar):
+                if !avatar.isEmpty {
+                    self?.imageLoader.downloadImage(avatar) { result in
+                        switch result {
+                        case .success(let image):
+                            self?.avatarImage.image = image
+                            self?.avatarActivityIndicator.stopAnimating()
+                        case .failure(_):
+                            return
+                        }
+                    }
+                } else {
+                    self?.avatarImage.image = UIImage(named: "avatar")
+                    self?.avatarActivityIndicator.stopAnimating()
+                }
+            case .failure:
+                return
+            }
+        }
     }
     
     @objc
     func didTapOpenButton(taskID : String) {
         (self.tabBarController as? MainTabBarController)?.openGoalVC4(with: taskID)
+    }
+    
+    @objc
+    func didTapActionTaskButton() {
+        (self.tabBarController as? MainTabBarController)?.reloadVC2(valueSegmCon: 0)
+        tabBarController?.selectedIndex = 1
     }
 }
 
@@ -140,32 +149,48 @@ extension MyTargetsController : UICollectionViewDelegateFlowLayout, UICollection
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width/1.1, height: 177)
+        if indexPath.last == data.count {
+            return CGSize(width: collectionView.frame.width/1.1, height: 100)
+        } else {
+            return CGSize(width: collectionView.frame.width/1.1, height: 177)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return data.count
+        return data.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if indexPath.row == data.count {
+            guard let newTaskCell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewTaskCell", for: indexPath) as? NewTaskCell else {
+                return UICollectionViewCell()
+            }
+            
+            newTaskCell.delegate = self
+            return newTaskCell
+        }
         
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "myTargetsControllerCell", for: indexPath) as? TaskCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
             return UICollectionViewCell()
         }
+    
         let task = data[indexPath.row]
         cell.configure(with: task)
         cell.delegate = self
         
         return cell
     }
-
 }
 
-extension MyTargetsController: TaskCellDelegate {
+extension MyTargetsController: TaskCellDelegate, NewTaskCellDelegate {
     func didTapOpenTaskButton(taskID : String) {
         didTapOpenButton(taskID: taskID)
+    }
+    
+    func didTapAddTaskButton() {
+        didTapActionTaskButton()
     }
 }
 

@@ -11,8 +11,8 @@ import PinLayout
 final class TargetsController: UIViewController {
     private let headLabel = UILabel()
     private let avatarImage = UIImageView()
-    private let avatarButton = UIButton()
     private let groupsLabel = UILabel()
+    private let avatarActivityIndicator = UIActivityIndicatorView()
     
     private let tasksCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -38,6 +38,7 @@ final class TargetsController: UIViewController {
     
     private let database = DatabaseModel()
     private let groupDatabase = GroupDatabaseModel()
+    private let imageLoader = InjectionHelper.imageLoader
     
     var tasks: [Task] = []
     
@@ -45,8 +46,10 @@ final class TargetsController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        avatarActivityIndicator.hidesWhenStopped = true
         
         setup()
+        reloadAvatar()
         reloadTasks()
         reloadGroups()
     }
@@ -76,7 +79,7 @@ final class TargetsController: UIViewController {
         groupsCollectionView.delegate = self
         groupsCollectionView.dataSource = self
         
-        [headLabel, avatarImage, tasksCollectionView, groupsLabel, groupsCollectionView].forEach { view.addSubview($0) }
+        [headLabel, avatarImage, avatarActivityIndicator, tasksCollectionView, groupsLabel, groupsCollectionView].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
@@ -94,6 +97,12 @@ final class TargetsController: UIViewController {
             .width(60)
         
         avatarImage.layer.cornerRadius = avatarImage.frame.size.width / 2
+        
+        avatarActivityIndicator.pin
+            .top(view.pin.safeArea.top + 15)
+            .right(view.pin.safeArea.left + 20)
+            .height(60)
+            .width(60)
         
         tasksCollectionView.pin
             .below(of: avatarImage)
@@ -159,6 +168,31 @@ final class TargetsController: UIViewController {
             }
         }
     }
+    
+    func reloadAvatar() {
+        avatarActivityIndicator.startAnimating()
+        database.getAvatar() { [weak self] result in
+            switch result {
+            case .success(let avatar):
+                if !avatar.isEmpty {
+                    self?.imageLoader.downloadImage(avatar) { result in
+                        switch result {
+                        case .success(let image):
+                            self?.avatarImage.image = image
+                            self?.avatarActivityIndicator.stopAnimating()
+                        case .failure(_):
+                            return
+                        }
+                    }
+                } else {
+                    self?.avatarImage.image = UIImage(named: "avatar")
+                    self?.avatarActivityIndicator.stopAnimating()
+                }
+            case .failure:
+                return
+            }
+        }
+    }
 }
 
 extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
@@ -167,7 +201,11 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == self.tasksCollectionView {
-            return CGSize(width: tasksCollectionView.frame.width/1.1, height: 177)
+            if indexPath.last == tasks.count {
+                return CGSize(width: 177, height: 177)
+            } else {
+                return CGSize(width: collectionView.frame.width/1.1, height: 177)
+            }
         }
 
         else {

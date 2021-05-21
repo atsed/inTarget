@@ -103,6 +103,23 @@ class DatabaseModel {
         }
     }
     
+    func getUserName(completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        var userName : String = ""
+        database.document(currentUser.uid).getDocument { (document, error) in
+            if let document = document, document.exists {
+                userName = document.get("name") as? String ?? ""
+                userName = userName + " " + (document.get("surname") as? String ?? "")
+                completion(.success(userName))
+            } else {
+                completion(.failure(error ?? ImageLoader.ImageLoaderError.invalidInput))
+            }
+        }
+    }
+    
     func getAvatar(completion: @escaping (Result<String, Error>) -> Void) {
         guard let currentUser = Auth.auth().currentUser else {
             return
@@ -373,8 +390,41 @@ class DatabaseModel {
             case .failure(_):
                 return
             }
-            
         }
     }
+    
+    func deleteUnderTask(taskID : String,
+                              underTaskID : String,
+                              completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        database.document(currentUser.uid).collection("tasks").document(taskID).updateData([
+            "under tasks.\(underTaskID)": FieldValue.delete(),
+        ]) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success("ok"))
+            }
+        }
+    }
+    
+    func deleteTask(taskID : String,
+                              completion: @escaping (Result<String, Error>) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else {
+            return
+        }
+        
+        database.document(currentUser.uid).collection("tasks").document(taskID).delete() { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success("ok"))
+            }
+        }
+    }
+    
 }
 

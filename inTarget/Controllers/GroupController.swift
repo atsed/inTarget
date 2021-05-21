@@ -72,6 +72,12 @@ final class GroupController: UIViewController {
         
         scrollView.keyboardDismissMode = .onDrag
         
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(loadGroup), for: .valueChanged)
+        
+        scrollView.refreshControl = refreshControl
+        
         [underTaskCollectionView, underTaskActivityIndicator].forEach { scrollView.addSubview($0) }
         [membersTitle, membersCollectionView, membersActivityIndicator, underTasksTitle, scrollView].forEach { view.addSubview($0) }
         
@@ -130,8 +136,16 @@ final class GroupController: UIViewController {
         let backButtonImage = UIImage(systemName: "chevron.backward")
         navigationController?.navigationBar.backIndicatorImage = backButtonImage
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = backButtonImage
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "trash"),
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(didTapGroupDeleteButton))
+        
+        navigationItem.rightBarButtonItem?.tintColor = .accent
     }
     
+    @objc
     func loadGroup() {
         guard !groupID.isEmpty else {
             return
@@ -244,6 +258,63 @@ final class GroupController: UIViewController {
         }
     }
     
+    @objc
+    private func didTapUnderTaskDeleteButton(underTaskID: String) {        
+        let dialogMessage = UIAlertController(title: "Предупреждение", message: "Вы действительно хотите удалить подзадачу?", preferredStyle: .actionSheet)
+        
+        let okAction = UIAlertAction(title: "Удалить", style: .default, handler: { (action) -> Void in
+            self.underTaskActivityIndicator.startAnimating()
+            self.groupDatabase.deleteGroupUnderTask(groupID: self.groupID, underTaskID: underTaskID) { [weak self] result in
+                switch result {
+                case .success(_):
+                    self?.loadGroup()
+                    (self?.tabBarController as? MainTabBarController)?.reloadTasks()
+                    return
+                case .failure(_):
+                    self?.underTaskActivityIndicator.stopAnimating()
+                    return
+                }
+            }
+        })
+        
+        okAction.setValue(UIColor.red, forKey: "titleTextColor")
+
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        dialogMessage.addAction(cancelAction)
+        dialogMessage.addAction(okAction)
+        
+        self.present(dialogMessage, animated: true, completion: nil)
+    }
+    
+    @objc
+    private func didTapGroupDeleteButton() {
+        let dialogMessage = UIAlertController(title: "Предупреждение", message: "Вы действительно хотите удалить группу?", preferredStyle: .actionSheet)
+        
+        let okAction = UIAlertAction(title: "Удалить", style: .default, handler: { (action) -> Void in
+            self.underTaskActivityIndicator.startAnimating()
+            self.groupDatabase.deleteGroup(groupID: self.groupID) { [weak self] result in
+                switch result {
+                case .success(_):
+                    self?.navigationController?.popToRootViewController(animated: true)
+                    (self?.tabBarController as? MainTabBarController)?.reloadTasks()
+                    return
+                case .failure(_):
+                    return
+                }
+            }
+        })
+        
+        okAction.setValue(UIColor.red, forKey: "titleTextColor")
+
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        dialogMessage.addAction(cancelAction)
+        dialogMessage.addAction(okAction)
+        
+        self.present(dialogMessage, animated: true, completion: nil)
+    }
+    
     deinit {
         removeKeyboardNotifications()
     }
@@ -345,12 +416,17 @@ extension GroupController : UICollectionViewDelegateFlowLayout, UICollectionView
 
 extension GroupController: NewMemberCellDelegate, UnderTaskCellDelegate, NewUnderTaskCellDelegate {
     
+    
     func didTapAddMemberButton(email: String) {
         didTapActionMemberButton(email: email)
     }
     
     func didTapSelectButton(underTaskID: String, isCompleted: Bool) {
         didTapCompletedButton(underTaskID: underTaskID, isCompleted: isCompleted)
+    }
+    
+    func didTapDeleteButton(underTaskID: String) {
+        didTapUnderTaskDeleteButton(underTaskID: underTaskID)
     }
     
     func didTapAddUnderTaskButton(title: String, date: String) {

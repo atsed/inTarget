@@ -53,7 +53,6 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         headLabel.font = UIFont(name: "GothamPro", size: 34)
         headLabel.sizeToFit()
 
-        fixBackgroundSegmentControl(segmentedControl)
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .selected)
         segmentedControl.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .normal)
         segmentedControl.backgroundColor = .lightAccent
@@ -288,20 +287,17 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     
     @objc
     private func swipeSegmentedControl(_ sender: UISegmentedControl) {
-        print("segmentedControl.selectedSegmentIndex: \(segmentedControl.selectedSegmentIndex)")
         switch segmentedControl.selectedSegmentIndex {
         case 0:
-            print("CASE 0")
             valueSegmCon = 0
             headLabel.text = "Новая цель"
             scrollViewSegmCon.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         case 1:
-            print("CASE 1")
             valueSegmCon = 1
             headLabel.text = "Новая группа"
             scrollViewSegmCon.setContentOffset(CGPoint(x: view.bounds.width, y: 0), animated: true)
         default:
-            print("ERROR swipeSegmentedControl")
+            return
         }
     }
     
@@ -341,6 +337,7 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
                     case .success(let taskName):
                         (self?.tabBarController as? MainTabBarController)?.reloadVC1()
                         (self?.tabBarController as? MainTabBarController)?.reloadVC4()
+                        (self?.tabBarController as? MainTabBarController)?.reloadVC5()
                         (self?.tabBarController as? MainTabBarController)?.openGoalVC4(with: taskName)
                         self?.taskTitleField.text = ""
                         self?.didTapTaskDeleteImageButton()
@@ -385,9 +382,9 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
                 groupDatabase.createGroup(title, date, imageName) { [weak self] result in
                     switch result {
                     case .success(let groupName):
-                        print("GROUPNAME: \(groupName)")
                         (self?.tabBarController as? MainTabBarController)?.reloadVC1()
                         (self?.tabBarController as? MainTabBarController)?.reloadVC3()
+                        (self?.tabBarController as? MainTabBarController)?.reloadVC5()
                         (self?.tabBarController as? MainTabBarController)?.openGoalVC3(with: groupName)
                         self?.groupTitleField.text = ""
                         self?.didTapGroupDeleteImageButton()
@@ -420,7 +417,6 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true)
         guard let addImage = info[.editedImage] as? UIImage else {
-            print("No image found")
             return
         }
         image = addImage
@@ -442,19 +438,4 @@ class NewTargetController: UIViewController, UIImagePickerControllerDelegate & U
         return (dateString)
     }
 
-}
-
-extension UIViewController {
-    func fixBackgroundSegmentControl( _ segmentControl: UISegmentedControl){
-        if #available(iOS 13.0, *) {
-            //just to be sure it is full loaded
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                for i in 0...(segmentControl.numberOfSegments-1)  {
-                    let backgroundSegmentView = segmentControl.subviews[i]
-                    //it is not enogh changing the background color. It has some kind of shadow layer
-                    backgroundSegmentView.isHidden = true
-                }
-            }
-        }
-    }
 }

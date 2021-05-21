@@ -53,7 +53,6 @@ class GroupDatabaseModel {
     }
     
     func getGroups(completion: @escaping (Result<[Group], Error>) -> Void) {
-        
         let database = DatabaseModel()
         var completionGroups: [Group] = []
         database.getGroups() { [weak self] result in
@@ -255,6 +254,34 @@ class GroupDatabaseModel {
             }
             
         }
+    }
+    
+    func deleteGroupUnderTask(groupID : String,
+                              underTaskID : String,
+                              completion: @escaping (Result<String, Error>) -> Void) {
+        
+        groupDatabase.document(groupID).updateData([
+            "under tasks.\(underTaskID)": FieldValue.delete(),
+        ]) { err in
+            if let err = err {
+                completion(.failure(err))
+            } else {
+                completion(.success("ok"))
+            }
+        }
+    }
+    
+    func deleteGroup(groupID : String,
+                              completion: @escaping (Result<String, Error>) -> Void) {
+        
+        groupDatabase.document(groupID).delete() { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success("ok"))
+            }
+        }
+        
     }
     
 }

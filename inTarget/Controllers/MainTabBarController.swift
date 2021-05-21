@@ -12,14 +12,14 @@ final class MainTabBarController: UITabBarController {
     private let vc1 = TargetsController()
     private let vc2 = NewTargetController()
     private let vc3 = UINavigationController(rootViewController: GroupsController())
-    private let vc4 = UINavigationController(rootViewController: MyTargetsController())
+    private let vc4 = UINavigationController(rootViewController: MyTargetsController())    
+    private let vc5 = ProfileContainer.assemble(with: ProfileContext()).viewController
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBar.backgroundColor = .white
                 
         setupTabBar()
-        
     }
     
     func setupTabBar() {
@@ -27,11 +27,12 @@ final class MainTabBarController: UITabBarController {
         vc2.tabBarItem.image = UIImage(named: "vc2")
         vc3.tabBarItem.image = UIImage(named: "vc3")
         vc4.tabBarItem.image = UIImage(named: "vc4")
-        [vc1, vc2, vc3, vc4].forEach {
+        vc5.tabBarItem.image = UIImage(named: "vc5")
+        [vc1, vc2, vc3, vc4, vc5].forEach {
             ($0).tabBarItem.imageInsets = UIEdgeInsets.init(top: 5,left: 0,bottom: -5,right: 0)
         }
         
-        setViewControllers([vc1, vc2, vc3, vc4], animated: false)
+        setViewControllers([vc1, vc2, vc3, vc4, vc5], animated: false)
     }
     
     func reloadVC1() {
@@ -42,6 +43,13 @@ final class MainTabBarController: UITabBarController {
     func reloadVC2(valueSegmCon: Int) {
         vc2.valueSegmCon = valueSegmCon
     }
+        
+    func reloadVC3() {
+        guard let viewController = vc3.viewControllers.first as? GroupsController else {
+            return
+        }
+        viewController.reloadGroups()
+    }
     
     func reloadVC4() {
         guard let viewController = vc4.viewControllers.first as? MyTargetsController else {
@@ -50,11 +58,9 @@ final class MainTabBarController: UITabBarController {
         viewController.reloadTasks()
     }
     
-    func reloadVC3() {
-        guard let viewController = vc3.viewControllers.first as? GroupsController else {
-            return
-        }
-        viewController.reloadGroups()
+    func reloadVC5() {
+        debugPrint("HERE")
+        vc5.viewDidLoad()
     }
     
     func openGoalVC3(with groupID: String) {
@@ -71,5 +77,24 @@ final class MainTabBarController: UITabBarController {
         reloadVC1()
         reloadVC3()
         reloadVC4()
+        reloadVC5()
+    }
+    
+    func reloadAvatars() {
+        vc1.reloadAvatar()
+        
+        guard let vc3 = vc3.viewControllers.first as? GroupsController else {
+            return
+        }
+        
+        vc3.reloadAvatar()
+        
+        guard let vc4 = vc4.viewControllers.first as? MyTargetsController else {
+            return
+        }
+        
+        vc4.reloadAvatar()
+        
+        vc5.viewDidLoad()
     }
 }

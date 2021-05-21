@@ -7,39 +7,58 @@
 
 import Foundation
 
-extension String {
-    func underTasksString(value: Int) -> String {
-//        var underTasksLabel: String
-//        if "1".containsString("\(self % 10)")      {underTasksLabel = "день"}
-//        if "234".containsString("\(self % 10)")    {dayString = "дня" }
-        //        if "567890".containsString("\(self % 10)") {dayString = "дней"}
-        //        if 11...14 ~= self % 100                   {dayString = "дней"}
-        //        return "\(self) " + dayString
-        var underTasksLabel: String = ""
+extension String {    
+    func changeLabel(count: Int, label: String) -> String {
         
-        if value == 1 {
-            underTasksLabel = "подзадача"
+        var resultLabel: String = ""
+        
+        if count == 1 {
+            if label == "подзадач" {
+                resultLabel = "подзадача"
+            } else if label == "целей" {
+                resultLabel = "цель"
+            } else if label == "групп" {
+                resultLabel = "группа"
+            }
         }
-        if value % 10 == 2 ||
-                    value % 10 == 3 ||
-                    value % 10 == 4 {
-            underTasksLabel = "подзадачи"
+        if count % 10 == 2 ||
+                    count % 10 == 3 ||
+                    count % 10 == 4 {
+            if label == "подзадач" {
+                resultLabel = "подзадачи"
+            } else if label == "целей" {
+                resultLabel = "цели"
+            } else if label == "групп" {
+                resultLabel = "группы"
+            }
         }
-        if value % 10 == 5 ||
-                    value % 10 == 6 ||
-                    value % 10 == 7 ||
-                    value % 10 == 8 ||
-                    value % 10 == 9 ||
-                    value % 10 == 0 {
-            underTasksLabel = "подзадач"
+        if count % 10 == 5 ||
+                    count % 10 == 6 ||
+                    count % 10 == 7 ||
+                    count % 10 == 8 ||
+                    count % 10 == 9 ||
+                    count % 10 == 0 {
+            if label == "подзадач" {
+                resultLabel = "подзадач"
+            } else if label == "целей" {
+                resultLabel = "целей"
+            } else if label == "групп" {
+                resultLabel = "групп"
+            }
         }
-        if value % 100 == 11 ||
-                    value % 100 == 12 ||
-                    value % 100 == 13 ||
-                    value % 100 == 14 {
-            underTasksLabel = "подзадач"
+        if count % 100 == 11 ||
+                    count % 100 == 12 ||
+                    count % 100 == 13 ||
+                    count % 100 == 14 {
+            if label == "подзадач" {
+                resultLabel = "подзадач"
+            } else if label == "целей" {
+                resultLabel = "целей"
+            } else if label == "групп" {
+                resultLabel = "групп"
+            }
         }
         
-        return underTasksLabel
+        return resultLabel
     }
 }
