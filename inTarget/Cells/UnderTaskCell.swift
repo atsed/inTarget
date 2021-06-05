@@ -132,13 +132,13 @@ class UnderTaskCell: UICollectionViewCell {
         titleLabel.pin
             .top()
             .height(16)
-            .width(200)
+            .horizontally()
         
         yearLabel.pin
             .below(of: titleLabel)
             .marginTop(6)
             .height(15)
-            .width(200)
+            .horizontally()
         
         textContainer.pin
             .wrapContent()

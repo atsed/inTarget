@@ -30,7 +30,6 @@ public class NewGroupCell: UICollectionViewCell {
         button.setTitle("Создать группу", for: .normal)
         button.titleLabel?.font = UIFont(name: "GothamPro", size: 16)
         button.setTitleColor(.accent, for: .normal)
-        //button.backgroundColor = .accent
         button.setTitleColor(.lightGray, for: .selected)
         button.layer.masksToBounds = true
         
@@ -53,7 +52,6 @@ public class NewGroupCell: UICollectionViewCell {
         layer.masksToBounds = false
         
         button.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
-        //setupConstraints()
     }
     
     @objc

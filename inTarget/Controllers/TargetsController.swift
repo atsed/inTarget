@@ -13,6 +13,9 @@ final class TargetsController: UIViewController {
     private let avatarImage = UIImageView()
     private let groupsLabel = UILabel()
     private let avatarActivityIndicator = UIActivityIndicatorView()
+    private let tasksActivityIndicator = UIActivityIndicatorView()
+    private let groupsActivityIndicator = UIActivityIndicatorView()
+    private let refreshScrollView = UIScrollView()
     
     private let tasksCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -47,6 +50,8 @@ final class TargetsController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         avatarActivityIndicator.hidesWhenStopped = true
+        tasksActivityIndicator.hidesWhenStopped = true
+        groupsActivityIndicator.hidesWhenStopped = true
         
         setup()
         reloadAvatar()
@@ -56,6 +61,9 @@ final class TargetsController: UIViewController {
     
     private func setup() {
         view.backgroundColor = .white
+        
+        tasksActivityIndicator.startAnimating()
+        groupsActivityIndicator.startAnimating()
         
         headLabel.text = "Цели"
         headLabel.textColor = .black
@@ -79,7 +87,13 @@ final class TargetsController: UIViewController {
         groupsCollectionView.delegate = self
         groupsCollectionView.dataSource = self
         
-        [headLabel, avatarImage, avatarActivityIndicator, tasksCollectionView, groupsLabel, groupsCollectionView].forEach { view.addSubview($0) }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(reloadAll), for: .valueChanged)
+        
+        refreshScrollView.refreshControl = refreshControl
+        
+        [tasksCollectionView, tasksActivityIndicator, groupsLabel, groupsCollectionView, groupsActivityIndicator].forEach { refreshScrollView.addSubview($0) }
+        [headLabel, avatarImage, avatarActivityIndicator, refreshScrollView].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
@@ -104,7 +118,18 @@ final class TargetsController: UIViewController {
             .height(60)
             .width(60)
         
+        refreshScrollView.pin
+            .below(of: avatarImage)
+            .bottom()
+            .horizontally()
+        
         tasksCollectionView.pin
+            .below(of: avatarImage)
+            .marginTop(10)
+            .horizontally()
+            .height(220)
+        
+        tasksActivityIndicator.pin
             .below(of: avatarImage)
             .marginTop(10)
             .horizontally()
@@ -117,6 +142,12 @@ final class TargetsController: UIViewController {
             .sizeToFit()
         
         groupsCollectionView.pin
+            .below(of: groupsLabel)
+            .marginTop(30)
+            .horizontally(16)
+            .bottom(6)
+        
+        groupsActivityIndicator.pin
             .below(of: groupsLabel)
             .marginTop(30)
             .horizontally(16)
@@ -145,25 +176,41 @@ final class TargetsController: UIViewController {
         (self.tabBarController as? MainTabBarController)?.openGoalVC3(with: groupID)
     }
     
-    func reloadTasks() {
-        database.getTasks { result in
+    @objc
+    func reloadAll() {
+        reloadTasks()
+        reloadGroups()
+    }
+    
+    private func reloadTasks() {
+        self.refreshScrollView.refreshControl?.beginRefreshing()
+        self.tasksActivityIndicator.startAnimating()
+        database.getTasks { [weak self] result in
             switch result {
             case .success(let tasks):
-                self.tasks = tasks
-                self.tasksCollectionView.reloadData()
+                self?.tasks = tasks
+                self?.tasksCollectionView.reloadData()
+                self?.tasksActivityIndicator.stopAnimating()
+                self?.refreshScrollView.refreshControl?.endRefreshing()
             case .failure:
+                self?.refreshScrollView.refreshControl?.endRefreshing()
                 return
             }
         }
     }
     
-    func reloadGroups() {
-        groupDatabase.getGroups() { result in
+    private func reloadGroups() {
+        self.refreshScrollView.refreshControl?.beginRefreshing()
+        self.groupsActivityIndicator.startAnimating()
+        groupDatabase.getGroups() { [weak self] result in
             switch result {
             case .success(let groups):
-                self.groups = groups
-                self.groupsCollectionView.reloadData()
+                self?.groups = groups
+                self?.groupsCollectionView.reloadData()
+                self?.groupsActivityIndicator.stopAnimating()
+                self?.refreshScrollView.refreshControl?.endRefreshing()
             case .failure:
+                self?.refreshScrollView.refreshControl?.endRefreshing()
                 return
             }
         }
@@ -207,7 +254,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
                 return CGSize(width: collectionView.frame.width/1.1, height: 177)
             }
         }
-
+        
         else {
             return CGSize(width: groupsCollectionView.frame.width, height: 64)
         }
@@ -216,13 +263,10 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         if collectionView == self.tasksCollectionView {
-            
             return tasks.count + 1
-            
         }
         else {
             return groups.count + 1
-            
         }
     }
     
@@ -233,7 +277,6 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
                 guard let newTaskCell = tasksCollectionView.dequeueReusableCell(withReuseIdentifier: "NewTaskCell", for: indexPath) as? NewTaskCell else {
                     return UICollectionViewCell()
                 }
-                
                 newTaskCell.delegate = self
                 return newTaskCell
             }
@@ -241,7 +284,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
             guard let cell = tasksCollectionView.dequeueReusableCell(withReuseIdentifier: "TaskCell", for: indexPath) as? TaskCell else {
                 return UICollectionViewCell()
             }
-        
+            
             let task = tasks[indexPath.row]
             cell.configure(with: task)
             cell.delegate = self
@@ -261,7 +304,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
             guard let groupCell = collectionView.dequeueReusableCell(withReuseIdentifier: "GroupCell", for: indexPath) as? GroupCell else {
                 return UICollectionViewCell()
             }
-        
+            
             let group = groups[indexPath.row]
             groupCell.configure(with: group)
             groupCell.delegate = self
@@ -269,7 +312,7 @@ extension TargetsController : UICollectionViewDelegateFlowLayout, UICollectionVi
             return groupCell
         }
     }
-
+    
 }
 
 extension TargetsController: TaskCellDelegate, NewTaskCellDelegate, GroupCellDelegate, NewGroupCellDelegate {

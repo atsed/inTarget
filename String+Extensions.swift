@@ -12,7 +12,7 @@ extension String {
         
         var resultLabel: String = ""
         
-        if count == 1 {
+        if count % 10 == 1 {
             if label == "подзадач" {
                 resultLabel = "подзадача"
             } else if label == "целей" {

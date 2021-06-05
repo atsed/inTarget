@@ -8,7 +8,6 @@
 import UIKit
 
 extension UIImage {
-    
     static let checkMarkFalse = UIImage(systemName: "circle")
     static let checkMarkTrue = UIImage(systemName: "largecircle.fill.circle")
 }

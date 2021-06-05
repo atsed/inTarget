@@ -58,7 +58,6 @@ class MemberCell: UICollectionViewCell {
                 }
             }
         }
-        
         avatarView.layer.cornerRadius = 45/2
     }
     

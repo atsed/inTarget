@@ -12,6 +12,8 @@ final class MyTargetsController: UIViewController {
     private let headLabel = UILabel()
     private let avatarImage = UIImageView()
     private let avatarActivityIndicator = UIActivityIndicatorView()
+    private let activityIndicator = UIActivityIndicatorView()
+    private let refreshScrollView = UIScrollView()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -31,6 +33,7 @@ final class MyTargetsController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         avatarActivityIndicator.hidesWhenStopped = true
+        activityIndicator.hidesWhenStopped = true
         reloadAvatar()
         reloadTasks()
         
@@ -51,7 +54,13 @@ final class MyTargetsController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        [headLabel, avatarImage, avatarActivityIndicator, collectionView].forEach { view.addSubview($0) }
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(reloadTasks), for: .valueChanged)
+        
+        refreshScrollView.refreshControl = refreshControl
+        
+        [collectionView, activityIndicator].forEach { refreshScrollView.addSubview($0) }
+        [headLabel, avatarImage, avatarActivityIndicator, refreshScrollView].forEach { view.addSubview($0) }
     }
     
     override func viewDidLayoutSubviews() {
@@ -76,7 +85,18 @@ final class MyTargetsController: UIViewController {
             .height(60)
             .width(60)
         
+        refreshScrollView.pin
+            .below(of: avatarImage)
+            .bottom()
+            .horizontally()
+        
         collectionView.pin
+            .below(of: headLabel)
+            .marginTop(30)
+            .horizontally()
+            .bottom(6)
+        
+        activityIndicator.pin
             .below(of: headLabel)
             .marginTop(30)
             .horizontally()
@@ -93,13 +113,19 @@ final class MyTargetsController: UIViewController {
         self.navigationController?.pushViewController(myTargetController, animated: true)
     }
     
+    @objc
     func reloadTasks() {
-        database.getTasks { result in
+        self.refreshScrollView.refreshControl?.beginRefreshing()
+        activityIndicator.startAnimating()
+        database.getTasks { [weak self] result in
             switch result {
             case .success(let tasks):
-                self.data = tasks
-                self.collectionView.reloadData()
+                self?.data = tasks
+                self?.collectionView.reloadData()
+                self?.activityIndicator.stopAnimating()
+                self?.refreshScrollView.refreshControl?.endRefreshing()
             case .failure:
+                self?.refreshScrollView.refreshControl?.endRefreshing()
                 return
             }
         }

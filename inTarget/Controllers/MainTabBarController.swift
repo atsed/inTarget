@@ -36,8 +36,7 @@ final class MainTabBarController: UITabBarController {
     }
     
     func reloadVC1() {
-        vc1.reloadTasks()
-        vc1.reloadGroups()
+        vc1.reloadAll()
     }
     
     func reloadVC2(valueSegmCon: Int) {

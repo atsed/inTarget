@@ -99,7 +99,8 @@ class GroupCell: UICollectionViewCell {
         titleLabel.text = group.title
         groupID = group.randomName
         
-        let labelUnderTasks : String = underTasksString(value: group.underTasks.count)
+        let label: String = "целей"
+        let labelUnderTasks = label.changeLabel(count: group.underTasks.count, label: label)
         underTasksLabel.text = String(group.underTasks.count) + " " + labelUnderTasks
         
         var completedTasks = 0
@@ -198,37 +199,5 @@ class GroupCell: UICollectionViewCell {
             return
         }
         delegate?.didTapOpenGroupButton(groupID: groupID)
-    }
-}
-
-extension GroupCell {
-    func underTasksString(value: Int) -> String {
-        
-        var underTasksLabel: String = ""
-        
-        if value == 1 {
-            underTasksLabel = "цель"
-        }
-        if value % 10 == 2 ||
-            value % 10 == 3 ||
-            value % 10 == 4 {
-            underTasksLabel = "цели"
-        }
-        if value % 10 == 5 ||
-            value % 10 == 6 ||
-            value % 10 == 7 ||
-            value % 10 == 8 ||
-            value % 10 == 9 ||
-            value % 10 == 0 {
-            underTasksLabel = "целей"
-        }
-        if value % 100 == 11 ||
-            value % 100 == 12 ||
-            value % 100 == 13 ||
-            value % 100 == 14 {
-            underTasksLabel = "целей"
-        }
-        
-        return underTasksLabel
     }
 }

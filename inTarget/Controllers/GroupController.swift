@@ -178,6 +178,7 @@ final class GroupController: UIViewController {
                     self?.users.append(user)
                     self?.membersCollectionView.reloadData()
                     self?.membersActivityIndicator.stopAnimating()
+                    self?.scrollView.refreshControl?.endRefreshing()
                 case .failure(_):
                     return
                 }

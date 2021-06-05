@@ -13,6 +13,7 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
     private let avatarButton = UIButton()
     private let activityIndicator = UIActivityIndicatorView()
     private let avatarActivityIndicator = UIActivityIndicatorView()
+    private let refreshScrollView = UIScrollView()
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -60,13 +61,17 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        [headLabel, avatarButton, avatarActivityIndicator, collectionView, activityIndicator].forEach { view.addSubview($0)}
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(reloadGroups), for: .valueChanged)
+        
+        refreshScrollView.refreshControl = refreshControl
+        
+        [collectionView, activityIndicator].forEach { refreshScrollView.addSubview($0)}
+        [headLabel, avatarButton, avatarActivityIndicator, refreshScrollView].forEach { view.addSubview($0)}
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        activityIndicator.pin.center()
         
         headLabel.pin
             .top(view.pin.safeArea.top + 30)
@@ -84,9 +89,16 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
             .right(view.pin.safeArea.left + 20)
             .height(60)
             .width(60)
+        
+        refreshScrollView.pin
+            .below(of: avatarButton)
+            .bottom()
+            .horizontally()
+        
+        activityIndicator.pin.center()
                 
         collectionView.pin
-            .below(of: headLabel)
+            .below(of: avatarButton)
             .marginTop(30)
             .horizontally(16)
             .bottom(6)
@@ -182,7 +194,9 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
         }
     }
     
+    @objc
     func reloadGroups() {
+        self.refreshScrollView.refreshControl?.beginRefreshing()
         activityIndicator.startAnimating()
         groupDatabase.getGroups() { [weak self] result in
             switch result {
@@ -190,7 +204,9 @@ class GroupsController: UIViewController, UIImagePickerControllerDelegate & UINa
                 self?.data = groups
                 self?.collectionView.reloadData()
                 self?.activityIndicator.stopAnimating()
+                self?.refreshScrollView.refreshControl?.endRefreshing()
             case .failure:
+                self?.refreshScrollView.refreshControl?.endRefreshing()
                 return
             }
         }

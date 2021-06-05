@@ -79,7 +79,6 @@ public class NewMemberCell: UICollectionViewCell {
             self.animatePlaceholderColor(self.newMemberEmailField)
             return
         }
-
         delegate?.didTapAddMemberButton(email: email)
         newMemberEmailField.text = ""
     }
