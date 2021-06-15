@@ -1,6 +1,5 @@
-language: objective-c
-xcode_workspace: inTarget.xcworkspace
-xcode_scheme: inTargetTests
+language:
+  - swift
 osx_image: xcode12.5
-xcode_destination: platform=iOS Simulator,OS=14.5,name=iPhone 12
-podfile: Podfile
+script:
+  - xcodebuild -scheme SwiftExample -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 12,OS=14.5' build test
