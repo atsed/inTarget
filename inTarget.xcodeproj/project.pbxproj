@@ -31,6 +31,7 @@
 		427E42E6262B8BD800EC1F37 /* InjectionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427E42E4262B8BD700EC1F37 /* InjectionHelper.swift */; };
 		427E42E7262B8BD800EC1F37 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427E42E5262B8BD700EC1F37 /* UIViewController+Extensions.swift */; };
 		42C74410267914FF0082656D /* inTargetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C7440F267914FF0082656D /* inTargetTests.swift */; };
+		42C744182679370D0082656D /* HelloTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C744172679370C0082656D /* HelloTests.swift */; };
 		42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE1F05261A35D900BE996C /* SignUpController.swift */; };
 		42CE55062651A35500E4DC12 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE55002651A35500E4DC12 /* ProfilePresenter.swift */; };
 		42CE55072651A35500E4DC12 /* ProfileRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42CE55012651A35500E4DC12 /* ProfileRouter.swift */; };
@@ -104,6 +105,7 @@
 		42C7440D267914FF0082656D /* inTargetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = inTargetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		42C7440F267914FF0082656D /* inTargetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = inTargetTests.swift; sourceTree = "<group>"; };
 		42C74411267914FF0082656D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		42C744172679370C0082656D /* HelloTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloTests.swift; sourceTree = "<group>"; };
 		42CE1F05261A35D900BE996C /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		42CE55002651A35500E4DC12 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 		42CE55012651A35500E4DC12 /* ProfileRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRouter.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 			children = (
 				42C7440F267914FF0082656D /* inTargetTests.swift */,
 				42C74411267914FF0082656D /* Info.plist */,
+				42C744172679370C0082656D /* HelloTests.swift */,
 			);
 			path = inTargetTests;
 			sourceTree = "<group>";
@@ -501,6 +504,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42C744182679370D0082656D /* HelloTests.swift in Sources */,
 				42C74410267914FF0082656D /* inTargetTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
