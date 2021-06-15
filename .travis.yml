@@ -1,1 +1,4 @@
-language: swift
+language: objective-c
+xcode_project: inTarget.xcworkspace # path to your xcodeproj folder
+xcode_scheme: inTargetTests
+xcode_destination: platform=iOS Simulator,OS=14.5,name=iPhone 12
