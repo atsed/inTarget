@@ -1,4 +1,5 @@
 language: objective-c
-xcode_project: inTarget.xcworkspace # path to your xcodeproj folder
+xcode_workspace: inTarget.xcworkspace
 osx_image: xcode12.5
 xcode_destination: platform=iOS Simulator,OS=14.5,name=iPhone 12
+podfile: Podfile
