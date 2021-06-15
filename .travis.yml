@@ -1,6 +1,6 @@
 language: objective-c
 xcode_workspace: inTarget.xcworkspace
-xcode_scheme: inTargetTests
+xcode_scheme: inTarget
 osx_image: xcode12.5
 xcode_destination: platform=iOS Simulator,OS=14.5,name=iPhone 12
 podfile: Podfile
