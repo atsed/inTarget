@@ -23,11 +23,11 @@
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/1.png" width="250">
   </kbd>
-  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+  &nbsp;
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/2.png" width="250">
   </kbd>
-  &nbsp; &rarr; &nbsp;
+  &rarr;
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/3.png" width="250">
   </kbd>
@@ -39,11 +39,11 @@
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/4.png" width="250">
   </kbd>
-  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+  &nbsp;
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/5.png" width="250">
   </kbd>
-  &nbsp; &#8646; &nbsp;
+  &#8646;
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/6.png" width="250">
   </kbd>
@@ -55,11 +55,11 @@
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/12.png" width="250">
   </kbd>
-  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+  &nbsp;
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/7.png" width="250">
   </kbd>
-  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+  &nbsp;
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/8.png" width="250">
   </kbd>
@@ -71,7 +71,7 @@
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/12.png" width="250">
   </kbd>
-  &nbsp; &rarr; &nbsp;
+  &rarr;
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/9.png" width="250">
   </kbd>
@@ -83,7 +83,7 @@
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/7.png" width="250">
   </kbd>
-  &nbsp; &rarr; &nbsp;
+  &rarr;
   <kbd>
     <img src="https://github.com/atsed/inTarget/blob/develop/Images/11.png" width="250">
   </kbd>
