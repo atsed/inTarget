@@ -9,6 +9,7 @@ import UIKit
 import PinLayout
 
 final class TargetsController: UIViewController {
+    private let tv = UITableView()
     private let headLabel = UILabel()
     private let avatarImage = UIImageView()
     private let groupsLabel = UILabel()
