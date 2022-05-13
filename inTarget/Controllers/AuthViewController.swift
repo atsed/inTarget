@@ -8,6 +8,13 @@
 import UIKit
 import PinLayout
 
+enum AuthError: Error {
+    case emptyInput
+    case invalidInput
+    case invalidTotp
+    case unexpected
+}
+
 class AuthViewController: UIViewController {
     private let headLabel = UILabel()
     private let quoteLabel = UILabel()
@@ -58,6 +65,11 @@ class AuthViewController: UIViewController {
         headLabel.text = "inTarget"
         headLabel.textColor = .accent
         headLabel.font = UIFont(name: "Noteworthy", size: 46)
+
+        let action = UITapGestureRecognizer(target: self, action: #selector(didTapHeadLabel))
+        action.numberOfTapsRequired = 10
+        headLabel.isUserInteractionEnabled = true
+        headLabel.addGestureRecognizer(action)
         
         let randomOfQuotes = Int.random(in: 0..<quotes.count)
         
@@ -217,7 +229,63 @@ class AuthViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    private func showTotpAlert(completion: @escaping (Result<String, Error>) -> Void) {
+        let dialogMessage = UIAlertController(title: "Введите TOTP код", message: nil, preferredStyle: .alert)
+        var textField = UITextField()
 
+        dialogMessage.addTextField { alertTextField in
+            textField.placeholder = "000000"
+
+            textField = alertTextField
+        }
+
+        let okAction = UIAlertAction(title: "Ввод", style: .default, handler: { action in
+            guard let text = textField.text  else {
+                completion(.failure(AuthError.unexpected))
+                return
+            }
+            completion(.success(text))
+        })
+
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: { action in
+            completion(.failure(AuthError.unexpected))
+        })
+
+        dialogMessage.addAction(cancelAction)
+        dialogMessage.addAction(okAction)
+
+        self.present(dialogMessage, animated: true, completion: nil)
+    }
+
+    private func updateState(with flug: Bool, errorMessage: AuthError) {
+        self.activityIndicator.stopAnimating()
+
+        var error: String = ""
+
+        switch errorMessage {
+        case .emptyInput:
+            error = "Пустой логин или пароль"
+        case .invalidInput:
+            error = "Неверный логин или пароль"
+        case .invalidTotp:
+            error = "Неверный TOTP код"
+        case .unexpected:
+            error = ""
+        }
+
+        if flug == true {
+            self.errorLabel.text = ""
+            let mainTabBarViewController = MainTabBarController()
+            mainTabBarViewController.modalPresentationStyle = .fullScreen
+            self.present(mainTabBarViewController, animated: true, completion: nil)
+
+            UserDefaults.standard.setValue(true, forKey: "isAuth")
+        } else {
+            self.errorLabel.text = error
+            self.errorLabel.alpha = 1
+            self.animateErrorLable(self.errorLabel)
+        }
+    }
     
     @objc
     func kbDidShow(_ notification : Notification) {
@@ -240,61 +308,82 @@ class AuthViewController: UIViewController {
         signUpController.modalPresentationStyle = .fullScreen
         present(signUpController, animated: true, completion: nil)
     }
+
     @objc
-    private func didTapSignInButton(){
-        activityIndicator.startAnimating()
-        let auth = AuthModel()
-        
-        auth.signIn(loginField, passwordField) { [weak self] isSignin, errorMessage  in
-            guard let self = self else {
-                return
-            }
-            
-            if isSignin == true {
-                self.activityIndicator.stopAnimating()
-                self.errorLabel.text = ""
-                let mainTabBarViewController = MainTabBarController()
-                mainTabBarViewController.modalPresentationStyle = .fullScreen
-                self.present(mainTabBarViewController, animated: true, completion: nil)
-                
-                UserDefaults.standard.setValue(true, forKey: "isAuth")
-            } else if isSignin == false {
-                self.activityIndicator.stopAnimating()
-                self.errorLabel.text = errorMessage
-                self.errorLabel.alpha = 1
-                self.animateErrorLable(self.errorLabel)
+    private func didTapSignInButton() {
+        showTotpAlert { [weak self] result in
+            switch result {
+            case .success(let code):
+                guard
+                    let email = self?.loginField.text,
+                    let password = self?.passwordField.text,
+                    !email.isEmpty,
+                    !password.isEmpty
+                else {
+                    self?.updateState(with: false, errorMessage: AuthError.emptyInput)
+                    return
+                }
+
+                let auth = AuthModel()
+
+                auth.checkTotp(with: email, code: code) { result in
+                    switch result {
+                    case .failure(let errorMessage):
+                        DispatchQueue.main.async {
+                            self?.updateState(with: false, errorMessage: errorMessage as? AuthError ?? AuthError.unexpected)
+                        }
+                    case .success(_):
+                        self?.activityIndicator.startAnimating()
+
+                        auth.signIn(login: email, password: password) { result  in
+                            switch result {
+                            case .success(_):
+                                DispatchQueue.main.async {
+                                    self?.updateState(with: true, errorMessage: .unexpected)
+                                }
+                            case .failure(let errorMessage):
+                                DispatchQueue.main.async {
+                                    self?.updateState(with: false, errorMessage: errorMessage as? AuthError ?? AuthError.unexpected)
+                                }
+                            }
+                        }
+                    }
+                }
+            case .failure(let errorMessage):
+                DispatchQueue.main.async {
+                    self?.updateState(with: false, errorMessage: errorMessage as? AuthError ?? AuthError.unexpected)
+
+                }
             }
         }
-        
     }
-    
+
+    @objc
+    private func didTapHeadLabel() {
+        guard
+            let email = self.loginField.text,
+            let password = self.passwordField.text,
+            !email.isEmpty,
+            !password.isEmpty
+        else {
+            self.updateState(with: false, errorMessage: AuthError.emptyInput)
+            return
+        }
+
+
+        let auth = AuthModel()
+
+        auth.signIn(login: email, password: password) { [weak self] result in
+            switch result {
+            case .success(_):
+                DispatchQueue.main.async {
+                    self?.updateState(with: true, errorMessage: .unexpected)
+                }
+            case .failure(let errorMessage):
+                DispatchQueue.main.async {
+                    self?.updateState(with: false, errorMessage: errorMessage as? AuthError ?? AuthError.unexpected)
+                }
+            }
+        }
+    }
 }
-
-
-extension UIColor {
-    //    static let background = UIColor(red: 20/256,
-    //                                green: 21/256,
-    //                                blue: 24/256,
-    //                                alpha: 1)
-    
-    static let background = UIColor.white
-    
-    //    static let accent = UIColor(red: 167/256,
-    //                                green: 238/256,
-    //                                blue: 237/256,
-    //                                alpha: 1)
-    
-    static let accent = UIColor(red: 97/256,
-                                green: 62/256,
-                                blue: 234/256,
-                                alpha: 1)
-    
-    static let lightAccent = UIColor(red: 237/256,
-                                     green: 237/256,
-                                     blue: 246/256,
-                                     alpha: 1)
-    
-    static let separator = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-}
-
-

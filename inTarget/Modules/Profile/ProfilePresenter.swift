@@ -15,7 +15,8 @@ final class ProfilePresenter {
     private let router: ProfileRouterInput
     private let interactor: ProfileInteractorInput
     
-    init(router: ProfileRouterInput, interactor: ProfileInteractorInput) {
+    init(router: ProfileRouterInput,
+         interactor: ProfileInteractorInput) {
         self.router = router
         self.interactor = interactor
     }
@@ -43,6 +44,7 @@ extension ProfilePresenter: ProfileViewOutput {
     }
     
     func didLoadView() {
+        reloadTotp()
         reloadAvatar()
         reloadName()
         reloadTasksCount()
@@ -69,6 +71,13 @@ extension ProfilePresenter: ProfileViewOutput {
                 return
             }
         }
+    }
+
+    func reloadTotp() {
+        let totp = Totp()
+        let value = totp.getTotpCode()
+
+        view?.updateTotp(with: value)
     }
     
     func reloadTasksCount() {

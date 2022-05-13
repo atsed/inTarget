@@ -9,24 +9,33 @@ import Foundation
 import Firebase
 
 class AuthModel {
-    
-    func signIn(_ loginField: UITextField, _ passwordField: UITextField, completion: @escaping (Bool?, String?) -> Void) {
-        guard let loginText = loginField.text,
-              let passwordText = passwordField.text,
-              loginText != "", passwordText != "" else {
-            
-            completion(false, "Пустой логин или пароль")
-            return
-        }
-        
-        Auth.auth().signIn(withEmail: loginText, password: passwordText) { (user, error) in
-            guard user != nil else {
-                completion(false, "Неверный логин или пароль")
+    private let secureDatabase = TotpModel()
+
+    func signIn(login: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
+        Auth.auth().signIn(withEmail: login, password: password) { user, error in
+            guard
+                error == nil,
+                let user = user
+            else {
+                completion(.failure(AuthError.invalidInput))
                 return
             }
-            
-            completion(true, "True")
+
+            let totp = Totp()
+            totp.putUidCode(uid: user.user.uid)
+            completion(.success(""))
         }
         return
+    }
+
+    func checkTotp(with email: String, code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        secureDatabase.checkTotp(email: email, code: code) { result in
+            switch result {
+            case .success:
+                completion(.success(""))
+            case .failure:
+                completion(.failure(AuthError.invalidTotp))
+            }
+        }
     }
 }

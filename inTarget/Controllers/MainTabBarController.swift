@@ -2,7 +2,7 @@
 //  MainTabBarController.swift
 //  inTarget
 //
-//  Created by Георгий on 06.04.2021.
+//  Created by Desta on 06.04.2021.
 //
 
 import UIKit
@@ -12,13 +12,13 @@ final class MainTabBarController: UITabBarController {
     private let vc1 = TargetsController()
     private let vc2 = NewTargetController()
     private let vc3 = UINavigationController(rootViewController: GroupsController())
-    private let vc4 = UINavigationController(rootViewController: MyTargetsController())    
+    private let vc4 = UINavigationController(rootViewController: MyTargetsController())
     private let vc5 = ProfileContainer.assemble(with: ProfileContext()).viewController
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBar.backgroundColor = .white
-                
+
         setupTabBar()
     }
     

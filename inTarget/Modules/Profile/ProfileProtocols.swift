@@ -20,6 +20,7 @@ protocol ProfileViewInput: AnyObject {
     func setUserName(with userName: String)
     func setTasksCount(with tasksCount: Int)
     func setGroupsCount(with groupsCount: Int)
+    func updateTotp(with value: String)
 }
 
 protocol ProfileViewOutput: AnyObject {
@@ -29,6 +30,7 @@ protocol ProfileViewOutput: AnyObject {
     func didLoadView()
     func didTapTasksCardButton()
     func didTapGroupsCardButton()
+    func reloadTotp()
 }
 
 protocol ProfileInteractorInput: AnyObject {

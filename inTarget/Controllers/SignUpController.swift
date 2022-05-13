@@ -190,9 +190,9 @@ inTarget
     @objc
     private func didTapSignUpButton(){
         activityIndicator.startAnimating()
-        let signUp = SignUpModel()
-        
-        signUp.singUp(nameField, surnameField, loginField, passwordField) { [weak self] isSignUp, errorMessage in
+        let signUpModel = SignUpModel()
+
+        signUpModel.singUp(with: nameField, surnameField: surnameField, loginField: loginField, passwordField: passwordField) { [weak self] isSignUp, errorMessage in
             guard let self = self else {
                 return
             }
@@ -231,13 +231,13 @@ inTarget
     func kbDidShow(_ notification : Notification) {
         let userInfo = notification.userInfo
         kbFrameSize = (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  + kbFrameSize.height)
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height + kbFrameSize.height)
         scrollView.contentOffset = CGPoint(x: 0, y: kbFrameSize.height / 2)
     }
     
     @objc
     func kbDidHide() {
         scrollView.contentOffset = CGPoint.zero
-        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height  - kbFrameSize.height)
+        scrollView.contentSize = CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height - kbFrameSize.height)
     }
 }

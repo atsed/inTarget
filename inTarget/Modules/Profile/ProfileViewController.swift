@@ -10,11 +10,14 @@ import UIKit
 import PinLayout
 
 final class ProfileViewController: UIViewController {
+    private let scrollView = UIScrollView()
     private let headLabel = UILabel()
     private let logoutButton = UIButton()
     private let avatarButton = LoadingButtonImage()
     private let avatarActivityIndicator = UIActivityIndicatorView()
     private let userNameLabel = UILabel()
+
+    private let totpLabel = UILabel()
     
     private let tasksCardContainer = UIView()
     private let tasksCardButton = UIButton(type: .system)
@@ -48,6 +51,10 @@ final class ProfileViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+        let timer = Timer(fireAt: Date(), interval: 0, target: self, selector: #selector(didReloadTotp), userInfo: nil, repeats: true)
+        RunLoop.main.add(timer, forMode: .common)
+
         avatarActivityIndicator.startAnimating()
         tasksActivityIndicator.startAnimating()
         groupsActivityIndicator.startAnimating()
@@ -81,6 +88,10 @@ final class ProfileViewController: UIViewController {
         userNameLabel.text = ""
         userNameLabel.textAlignment = .center
         userNameLabel.textColor = .black
+
+        totpLabel.font = UIFont(name: "GothamPro", size: 80)
+        totpLabel.textColor = .accent
+        totpLabel.textAlignment = .center
         
         tasksCardButton.backgroundColor = .accent
         groupsCardButton.backgroundColor = .lightAccent
@@ -128,13 +139,17 @@ final class ProfileViewController: UIViewController {
         [tasksCardButton, tasksCardCountLabel, tasksCardNameLabel, tasksActivityIndicator].forEach { tasksCardContainer.addSubview($0) }
         [groupsCardButton, groupsCardCountLabel, groupsCardNameLabel, groupsActivityIndicator].forEach { groupsCardContainer.addSubview($0) }
         
-        [activityIndicator, headLabel, logoutButton, avatarButton, avatarActivityIndicator, userNameLabel, tasksCardContainer, groupsCardContainer, footerLabel].forEach { view.addSubview($0) }
+        [activityIndicator, headLabel, logoutButton, avatarButton, avatarActivityIndicator, userNameLabel, totpLabel, tasksCardContainer, groupsCardContainer, footerLabel].forEach { scrollView.addSubview($0) }
+
+        view.addSubview(scrollView)
         
         output.didLoadView()
 	}
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
+        scrollView.pin.all()
         
         activityIndicator.pin
             .center()
@@ -168,9 +183,15 @@ final class ProfileViewController: UIViewController {
             .marginTop(20)
             .horizontally()
             .height(24)
+
+        totpLabel.pin
+            .below(of: userNameLabel)
+            .marginTop(30)
+            .horizontally()
+            .sizeToFit(.width)
         
         tasksCardContainer.pin
-            .below(of: userNameLabel)
+            .below(of: totpLabel)
             .marginTop(30)
             .left(16)
             .width(view.bounds.width/2 - 8 - 16)
@@ -194,7 +215,7 @@ final class ProfileViewController: UIViewController {
             .all()
         
         groupsCardContainer.pin
-            .below(of: userNameLabel)
+            .below(of: totpLabel)
             .marginTop(30)
             .right(16)
             .width(view.bounds.width/2 - 8 - 16)
@@ -222,6 +243,10 @@ final class ProfileViewController: UIViewController {
             .marginBottom(6)
             .hCenter()
             .sizeToFit()
+    }
+
+    func updateTotp(with value: String) {
+        totpLabel.text = value
     }
     
     func setAvatar(with avatarID: String) {
@@ -261,6 +286,11 @@ final class ProfileViewController: UIViewController {
     @objc
     private func didTapAvatarButton() {
         output.didTapAvatarButton()
+    }
+
+    @objc
+    private func didReloadTotp() {
+        output.reloadTotp()
     }
     
     @objc

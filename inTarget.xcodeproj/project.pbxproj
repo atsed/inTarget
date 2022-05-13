@@ -65,6 +65,10 @@
 		42D6B0932638903800A005EA /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D6B0922638903800A005EA /* Group.swift */; };
 		42D6B09726399C0200A005EA /* GroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D6B09626399C0000A005EA /* GroupController.swift */; };
 		42E63A8F261D22B500185433 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42E63A8E261D22B500185433 /* AuthModel.swift */; };
+		5A9D82D92818DCB900865F63 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A9D82D82818DCB900865F63 /* UIColor+Extension.swift */; };
+		5AE5427F281737D4008D8BB0 /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5427E281737D4008D8BB0 /* KeyChain.swift */; };
+		5AE5428128173A10008D8BB0 /* Totp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5428028173A10008D8BB0 /* Totp.swift */; };
+		5AE5428328173D96008D8BB0 /* TotpModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5428228173D96008D8BB0 /* TotpModel.swift */; };
 		F30B4DAD7792EFFBD37175E4 /* Pods_inTarget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE767FC530C52BF3571652C /* Pods_inTarget.framework */; };
 /* End PBXBuildFile section */
 
@@ -142,6 +146,10 @@
 		42D6B09626399C0000A005EA /* GroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupController.swift; sourceTree = "<group>"; };
 		42E63A8E261D22B500185433 /* AuthModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
 		53B6FBA80B33ABDC8A253F41 /* Pods-inTarget.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-inTarget.debug.xcconfig"; path = "Target Support Files/Pods-inTarget/Pods-inTarget.debug.xcconfig"; sourceTree = "<group>"; };
+		5A9D82D82818DCB900865F63 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
+		5AE5427E281737D4008D8BB0 /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
+		5AE5428028173A10008D8BB0 /* Totp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Totp.swift; sourceTree = "<group>"; };
+		5AE5428228173D96008D8BB0 /* TotpModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotpModel.swift; sourceTree = "<group>"; };
 		DCE767FC530C52BF3571652C /* Pods_inTarget.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_inTarget.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2BE8270891E8AF03666B1EE /* Pods-inTarget.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-inTarget.release.xcconfig"; path = "Target Support Files/Pods-inTarget/Pods-inTarget.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -223,6 +231,7 @@
 		42CE550D2652E01F00E4DC12 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				5AE5427D2817379D008D8BB0 /* Security */,
 				42CE550E2652E02E00E4DC12 /* View */,
 			);
 			path = Core;
@@ -241,10 +250,6 @@
 			isa = PBXGroup;
 			children = (
 				42D0FF94261765AE007A5C2A /* inTarget */,
-				420822C02633504A006870C4 /* UIImage+Extensions.swift */,
-				420822AF262FB059006870C4 /* String+Extensions.swift */,
-				427E42E4262B8BD700EC1F37 /* InjectionHelper.swift */,
-				427E42E5262B8BD700EC1F37 /* UIViewController+Extensions.swift */,
 				42C7440E267914FF0082656D /* inTargetTests */,
 				42D0FF93261765AE007A5C2A /* Products */,
 				42D0FFB426176906007A5C2A /* Fonts */,
@@ -270,7 +275,9 @@
 				42E63A8D261D22B500185433 /* Models */,
 				42D0FFB126176688007A5C2A /* Controllers */,
 				42CE550C2651C6C300E4DC12 /* Modules */,
+				5A9D82DA2818DCCB00865F63 /* Extensions */,
 				42D0FFB026176676007A5C2A /* Supporting files */,
+				427E42E4262B8BD700EC1F37 /* InjectionHelper.swift */,
 			);
 			path = inTarget;
 			sourceTree = "<group>";
@@ -338,6 +345,27 @@
 				42D6B0922638903800A005EA /* Group.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		5A9D82DA2818DCCB00865F63 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5A9D82D82818DCB900865F63 /* UIColor+Extension.swift */,
+				420822C02633504A006870C4 /* UIImage+Extensions.swift */,
+				427E42E5262B8BD700EC1F37 /* UIViewController+Extensions.swift */,
+				420822AF262FB059006870C4 /* String+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		5AE5427D2817379D008D8BB0 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				5AE5427E281737D4008D8BB0 /* KeyChain.swift */,
+				5AE5428028173A10008D8BB0 /* Totp.swift */,
+				5AE5428228173D96008D8BB0 /* TotpModel.swift */,
+			);
+			path = Security;
 			sourceTree = "<group>";
 		};
 		B7C63F6DAFB897F45C0E5040 /* Frameworks */ = {
@@ -531,13 +559,16 @@
 				04D39ABD261C5F6E0092486F /* MyTargetsController.swift in Sources */,
 				4202FF142627577D00613A38 /* ImageLoader.swift in Sources */,
 				42CE55122652E2DA00E4DC12 /* LoadingButtonImage.swift in Sources */,
+				5AE5428328173D96008D8BB0 /* TotpModel.swift in Sources */,
 				42CE55102652E07600E4DC12 /* LoadingImageView.swift in Sources */,
 				42D0FF96261765AE007A5C2A /* AppDelegate.swift in Sources */,
 				4227B6D32624D2D900F9097F /* Task.swift in Sources */,
 				420822AC262DEB04006870C4 /* MyTargetController.swift in Sources */,
 				420822B0262FB059006870C4 /* String+Extensions.swift in Sources */,
+				5AE5428128173A10008D8BB0 /* Totp.swift in Sources */,
 				42D0FF98261765AE007A5C2A /* SceneDelegate.swift in Sources */,
 				420E50162644406000395737 /* NewMemberCell.swift in Sources */,
+				5AE5427F281737D4008D8BB0 /* KeyChain.swift in Sources */,
 				42D6B08D2638818E00A005EA /* NewGroupCell.swift in Sources */,
 				427E42E7262B8BD800EC1F37 /* UIViewController+Extensions.swift in Sources */,
 				04D39AC0261C5F7F0092486F /* GroupsController.swift in Sources */,
@@ -549,6 +580,7 @@
 				42CE1F06261A35D900BE996C /* SignUpController.swift in Sources */,
 				4227B68026247A2300F9097F /* DatabaseModel.swift in Sources */,
 				0481A751262838E00027AD5D /* NewTaskCell.swift in Sources */,
+				5A9D82D92818DCB900865F63 /* UIColor+Extension.swift in Sources */,
 				42CE55092651A35500E4DC12 /* ProfileProtocols.swift in Sources */,
 				42D6B09126388E4400A005EA /* GroupDatabaseModel.swift in Sources */,
 				42CE55082651A35500E4DC12 /* ProfileViewController.swift in Sources */,
@@ -745,13 +777,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C2357J7XQW;
+				DEVELOPMENT_TEAM = R26JY69RPL;
 				INFOPLIST_FILE = "inTarget/Supporting files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget1;
+				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -767,14 +799,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C2357J7XQW;
+				DEVELOPMENT_TEAM = R26JY69RPL;
 				INFOPLIST_FILE = "inTarget/Supporting files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget1;
+				PRODUCT_BUNDLE_IDENTIFIER = test.inTarget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
