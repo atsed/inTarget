@@ -52,7 +52,12 @@ final class ProfileViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-        let timer = Timer(fireAt: Date(), interval: 0, target: self, selector: #selector(didReloadTotp), userInfo: nil, repeats: true)
+        let timer = Timer(fireAt: Date(),
+                          interval: 0,
+                          target: self,
+                          selector: #selector(didReloadTotp),
+                          userInfo: nil,
+                          repeats: true)
         RunLoop.main.add(timer, forMode: .common)
 
         avatarActivityIndicator.startAnimating()

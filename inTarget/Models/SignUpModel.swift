@@ -9,9 +9,7 @@ import Foundation
 import Firebase
 
 class SignUpModel {
-    private let database = DatabaseModel()
-    private let secureDatabase = TotpModel()
-    
+
     func singUp(with nameField : UITextField,
                 surnameField : UITextField,
                 loginField : UITextField,
@@ -31,7 +29,7 @@ class SignUpModel {
             completion(false, "Заполните все поля")
             return
         }
-        Auth.auth().createUser(withEmail: loginText, password: passwordText) { [weak self] (user, error) in
+        Auth.auth().createUser(withEmail: loginText, password: passwordText) { (user, error) in
             guard
                 error == nil,
                 let user = user
@@ -39,16 +37,22 @@ class SignUpModel {
                 completion(false, error!.localizedDescription)
                 return
             }
+            let database = DatabaseModel()
 
-            self?.database.createDatabase(name: nameText, surname: surnameText) { result in
+            database.createDatabase(name: nameText, surname: surnameText) { result in
                 switch result {
                 case .success:
-                    self?.secureDatabase.createDatabase(email: loginText, uid: user.user.uid) { result in
+                    let secureDatabase = TotpModel()
+                    secureDatabase.createDatabase(email: loginText, uid: user.user.uid) { result in
                         switch result {
                         case .success:
-                            completion(true, "True")
+                            DispatchQueue.main.async {
+                                completion(true, "True")
+                            }
                         case .failure:
-                            completion(false, "Error: \(NSError())")
+                            DispatchQueue.main.async {
+                                completion(false, "Error: \(NSError())")
+                            }
                         }
                     }
                 case .failure(let error):
@@ -66,6 +70,7 @@ class SignUpModel {
             completion(.failure(NSError()))
             return
         }
+        let secureDatabase = TotpModel()
         secureDatabase.createDatabase(email: email, uid: currentUser.uid) { result in
             switch result {
             case .success:
